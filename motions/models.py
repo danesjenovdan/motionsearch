@@ -55,11 +55,11 @@ class MotionLink(BaseModel):
     value = models.URLField(null=True, blank=True)
 
 
-# class MotionComment(BaseModel):
-#     user = models.ForeignKey('users.User', null=True, on_delete=models.SET_NULL)
-#     text = models.TextField(null=False, blank=False)
-#
-#
+class MotionComment(BaseModel):
+    user = models.ForeignKey('users.User', null=True, on_delete=models.SET_NULL)
+    text = models.TextField(null=False, blank=False)
+
+
 # class MotionVote(BaseModel):
 #     user = models.ForeignKey('users.User', null=True, on_delete=models.SET_NULL)
 #     value = models.IntegerField(choices=VoteValue.CHOICES)
@@ -77,7 +77,7 @@ class Motion(BaseModel):
     where_used = models.ManyToManyField(MotionWhereUsed, blank=True, related_name='where_used')
     info_text = models.ManyToManyField(MotionInfoText, blank=True, related_name='info_text')
     links = models.ManyToManyField(MotionLink, blank=True, related_name='links')
-    # comments = models.ManyToManyField(MotionComment, blank=True, related_name='comments')
+    comments = models.ManyToManyField(MotionComment, blank=True, related_name='comments')
     # votes = models.ManyToManyField(MotionVote, blank=True, related_name='votes')
 
     @property
