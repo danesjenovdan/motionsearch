@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from motions.models import MotionCategory, MotionDifficulty, DebateFormat, Motion, MotionAgeRange, MotionType, \
-    MotionTrainingFocus, MotionImproPrep, MotionWhereUsed, MotionInfoText, MotionLink
+    MotionTrainingFocus, MotionImproPrep, MotionWhereUsed, MotionInfoText, MotionLink, MotionComment
 
 
 class MotionCategorySerializer(serializers.ModelSerializer):
@@ -64,16 +64,10 @@ class MotionLinkSerializer(serializers.ModelSerializer):
         fields = ['id', 'value']
 
 
-# class MotionCommentSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = MotionComment
-#         fields = ['id', 'user', 'text']
-
-
-# class CommenterSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Commenter
-#         fields = ['id', 'user', 'text']
+class MotionCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MotionComment
+        fields = ['id', 'user', 'text']
 
 
 # class MotionVoteSerializer(serializers.ModelSerializer):
@@ -82,14 +76,13 @@ class MotionLinkSerializer(serializers.ModelSerializer):
 #         fields = ['id', 'user', 'value']
 
 
-# class VoterSerializer(serializers.ModelSerializer):
-#     vote =
-#     class Meta:
-#         model = Voter
-#         fields = ['id', 'motion', 'vote', 'created_at']
-
-
 class MotionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Motion
+        fields = ['topic']
+
+
+class MotionDetailedSerializer(serializers.ModelSerializer):
     category = MotionCategorySerializer(many=True)
     difficulties = MotionDifficultySerializer(many=True)
     debate_formats = DebateFormatSerializer(many=True)
@@ -100,8 +93,27 @@ class MotionSerializer(serializers.ModelSerializer):
     where_used = MotionWhereUsedSerializer(many=True)
     info_text = MotionInfoTextSerializer(many=True)
     links = MotionLinkSerializer(many=True)
-    # comments = MotionCommentSerializer(many=True)
-    # votes = MotionVoteSerializer(many=True)
+
+    class Meta:
+        model = Motion
+        fields = [
+            'category', 'difficulties', 'debate_formats', 'age_range', 'type', 'training_focus', 'impro_prep',
+            'where_used', 'info_text', 'links', 'created_at'
+        ]
+
+
+class MotionDetailedCommentsSerializer(serializers.ModelSerializer):
+    category = MotionCategorySerializer(many=True)
+    difficulties = MotionDifficultySerializer(many=True)
+    debate_formats = DebateFormatSerializer(many=True)
+    age_range = MotionAgeRangeSerializer(many=True)
+    type = MotionTypeSerializer(many=True)
+    training_focus = MotionTrainingFocusSerializer(many=True)
+    impro_prep = MotionImproPrepSerializer(many=True)
+    where_used = MotionWhereUsedSerializer(many=True)
+    info_text = MotionInfoTextSerializer(many=True)
+    links = MotionLinkSerializer(many=True)
+    comments = MotionCommentSerializer(many=True)
 
     class Meta:
         model = Motion
