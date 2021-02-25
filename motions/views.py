@@ -9,7 +9,7 @@ from motions.models import MotionCategory, MotionDifficulty, DebateFormat, Motio
 from motions.serializers import MotionCategorySerializer, MotionDifficultySerializer, DebateFormatSerializer, \
     MotionAgeRangeSerializer, MotionTypeSerializer, MotionTrainingFocusSerializer, \
     MotionImproPrepSerializer, MotionWhereUsedSerializer, MotionInfoTextSerializer, MotionLinkSerializer, \
-    MotionCommentSerializer, MotionDetailedSerializer, MotionSerializer, MotionDetailedCommentsSerializer
+    MotionCommentSerializer, MotionDetailedSerializer, MotionSerializer
 
 
 class MotionCategoryViewSet(viewsets.ModelViewSet):
@@ -75,13 +75,10 @@ class MotionCommentViewSet(viewsets.ModelViewSet):
 
 class MotionViewSet(viewsets.ModelViewSet):
     queryset = Motion.objects.all()
-    serializer_class = MotionSerializer
-    serializer_detailed_class = MotionDetailedSerializer
-    serializer_detailed_comments_class = MotionDetailedCommentsSerializer
+    serializer_class = MotionSerializer  # for basic info - topic and category
+    serializer_detailed_class = MotionDetailedSerializer  # for detailed info - all Motion model fields
 
     def get_serializer_class(self):
-        if self.request.query_params.get('detailed_comments', False):
-            return self.serializer_detailed_comments_class
-        if self.request.query_params.get('detailed', False):
+        if self.request.query_params.get('detailed', False):  # arg for detailed motion info
             return self.serializer_detailed_class
         return super(MotionViewSet, self).get_serializer_class()

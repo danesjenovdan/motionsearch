@@ -18,4 +18,8 @@ router.register(r'info-text', MotionInfoTextViewSet, basename='MotionInfoText')
 router.register(r'links', MotionLinkViewSet, basename='MotionLink')
 router.register(r'', MotionViewSet, basename='Motion')
 
-urlpatterns = router.urls
+urlpatterns = [
+    url(r'^(?P<motion_pk>\d+)/comments/$', MotionCommentViewSet.as_view({'get': 'retrieve'}), name="motion_comments"),
+]
+
+urlpatterns += router.urls

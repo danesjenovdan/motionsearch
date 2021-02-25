@@ -70,16 +70,12 @@ class MotionCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'text']
 
 
-# class MotionVoteSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = MotionVote
-#         fields = ['id', 'user', 'value']
-
-
 class MotionSerializer(serializers.ModelSerializer):
+    category = MotionCategorySerializer(many=True)
+
     class Meta:
         model = Motion
-        fields = ['topic']
+        fields = ['topic', 'category']
 
 
 class MotionDetailedSerializer(serializers.ModelSerializer):
@@ -93,27 +89,6 @@ class MotionDetailedSerializer(serializers.ModelSerializer):
     where_used = MotionWhereUsedSerializer(many=True)
     info_text = MotionInfoTextSerializer(many=True)
     links = MotionLinkSerializer(many=True)
-
-    class Meta:
-        model = Motion
-        fields = [
-            'category', 'difficulties', 'debate_formats', 'age_range', 'type', 'training_focus', 'impro_prep',
-            'where_used', 'info_text', 'links', 'created_at'
-        ]
-
-
-class MotionDetailedCommentsSerializer(serializers.ModelSerializer):
-    category = MotionCategorySerializer(many=True)
-    difficulties = MotionDifficultySerializer(many=True)
-    debate_formats = DebateFormatSerializer(many=True)
-    age_range = MotionAgeRangeSerializer(many=True)
-    type = MotionTypeSerializer(many=True)
-    training_focus = MotionTrainingFocusSerializer(many=True)
-    impro_prep = MotionImproPrepSerializer(many=True)
-    where_used = MotionWhereUsedSerializer(many=True)
-    info_text = MotionInfoTextSerializer(many=True)
-    links = MotionLinkSerializer(many=True)
-    comments = MotionCommentSerializer(many=True)
 
     class Meta:
         model = Motion

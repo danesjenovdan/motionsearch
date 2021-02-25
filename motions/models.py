@@ -5,7 +5,7 @@ from django.db import models
 from motions.behaviors.models import BaseModel
 
 
-class VoteValue(object):
+class VoteValue:
     UPVOTE = 1
     DOWNVOTE = -1
 
@@ -58,11 +58,7 @@ class MotionLink(BaseModel):
 class MotionComment(BaseModel):
     user = models.ForeignKey('users.User', null=True, on_delete=models.SET_NULL)
     text = models.TextField(null=False, blank=False)
-
-
-# class MotionVote(BaseModel):
-#     user = models.ForeignKey('users.User', null=True, on_delete=models.SET_NULL)
-#     value = models.IntegerField(choices=VoteValue.CHOICES)
+    motion = models.ForeignKey('motions.Motion', null=True, on_delete=models.CASCADE)
 
 
 class Motion(BaseModel):
@@ -77,8 +73,6 @@ class Motion(BaseModel):
     where_used = models.ManyToManyField(MotionWhereUsed, blank=True)
     info_text = models.ManyToManyField(MotionInfoText, blank=True)
     links = models.ManyToManyField(MotionLink, blank=True)
-    comments = models.ManyToManyField(MotionComment, blank=True)
-    # votes = models.ManyToManyField(MotionVote, blank=True)
 
     @property
     def quality_score(self):
