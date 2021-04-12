@@ -67,7 +67,6 @@
                       type="radio"
                       name="impro/prep"
                       :value="impro"
-                      v-model="teamsPerMatch"
                       >
                   </div>
                   <div class="radio-container">
@@ -76,7 +75,6 @@
                       type="radio"
                       name="impro/prep"
                       :value="prep"
-                      v-model="teamsPerMatch"
                       >
                   </div>
                 </div>

@@ -1,10 +1,10 @@
 <template>
  <div class="split-container">
       <div class="split left">
-          <motion/>
+          <filters/>
       </div>
       <div class="split hidden-xs">
-        <motion-comments/>
+        <motion-list/>
       </div>
     </div>
 </template>
@@ -13,11 +13,14 @@
   import Motion from '../components/Motion.vue'
   import Filters from '../components/Filters.vue'
   import MotionComments from '../components/MotionComments.vue'
+  import MotionList from '../components/MotionList.vue'
 
   export default {
   components: {
     Motion,
-    MotionComments
+    MotionComments,
+    Filters,
+    MotionList
   }
 }
 
