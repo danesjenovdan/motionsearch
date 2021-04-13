@@ -39,7 +39,7 @@ const routes = [
       path: '/motionSuggest',
       name: 'MotionSuggest',
       component: MotionSuggest
-    },
+    }
   ];
 
 const router = createRouter({

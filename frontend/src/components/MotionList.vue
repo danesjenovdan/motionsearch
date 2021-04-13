@@ -1,35 +1,36 @@
 <template>
     <div class="parent-container">
         <div class="header"> 
-          <button type="submit">SUGGEST A MOTION</button> 
           <button class="login" type="submit">LOG IN</button> 
+          <button type="submit">SUGGEST A MOTION</button> 
         </div>
         <div class="line"/>
-        <div class="parentContainer">
+        <div class="motions-container">
           <div class="left">
-            <h3>Motions</h3>
-              <div class="motions-container" v-for="motion in motions" :key="motion._id">
-                <p class="motions-date">Added on {{motion.date}}</p>
-                <p class="motions-title">{{motion.text}}</p>
-                <div>
+            <div class="motions-title-bar">
+              <h3>Motions</h3>
+              <div class="motions-sort">
+                <p>Sort by</p>
+                <div class="sort-button"><span class="sort-button-text"><b>Date Added</b></span></div>
+                <div class="sort-button"><span class="sort-button-text"><b>Quality</b></span></div>
               </div>
             </div>
+            <div class="motions-list" v-for="motion in motions" :key="motion._id">
+              <div class="motion-text-container">
+                <p class="motions-date">Added on {{motion.date}}</p>
+                <p class="motions-title">{{motion.text}}</p>
+              </div>
+              <div class="votes">
+                <voting/>
+              </div>
           </div>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
-  const tags = [
-        'culture', 
-        'sport',
-        'employment',
-        'europian union',
-        'culture', 
-        'sport',
-        'employment',
-        'europian union'
-      ]
+  import Voting from './Voting.vue'
   const motions = [
       {
         _id: "first", 
@@ -57,11 +58,11 @@
       }
       ]
   export default {
-    components: [
-    ],
+    components: {
+      Voting
+    },
     data() {
       return {
-        tags,
         motions,
 
       }
@@ -76,7 +77,6 @@
         text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
       }
         )
-            console.log('motions: ', motions);
       },
       removeUsedWhere: (index) => {
         usedWhere.splice(index, 1)
@@ -88,12 +88,20 @@
 
 <style scoped lang="scss">
 
-    .header {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: end;
-    }
+  .header {
+    margin-right: 40px;
+  }
+  .motions-title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+  }
+  .motions-sort {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
     .share-bar {
     position: relative;
     width: 100%;
@@ -135,12 +143,32 @@
     font-style: normal;
     letter-spacing: normal;
     line-height: normal;
-    border-bottom: 1px solid black;
-
   }
-
-  .motions-container {
+  .sort-button {
+    /* Style for "Rounded Re" */
+    border-radius: 20px;
+    background-color: rgb(48, 152, 243, 0.2);
+    padding: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  .sort-button-text {
+    color: #000000;
+    font-family: "IBM Plex Mono";
+    opacity: 1;
+    font-size: 14px;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: normal;
+    line-height: 18px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .motions-list {
     border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
   .motions-date {
     color: #252525;
@@ -160,46 +188,20 @@
     letter-spacing: normal;
     text-align: left;
   }
-  .textAreaContainer{
-    display:inline-block;
-    position:relative;
-    margin-bottom: 20px;
+  .votes {
+    width: 78px;
+    height: 78px;
+    flex-shrink: 0;
+    margin-right: 20px;
+    background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
   }
-
-  .textAreaButton {
-    position:absolute;
-    bottom:0px;
-    right:10px;
-    background:none;
-    border:none;
-    margin:0;
-    padding:0;
-    cursor: pointer;
-    color: #3098f3;
-    font-family: Poppins;
-    font-size: 18px;
-    font-weight: 700;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: normal;
-    text-align: left;
-    text-decoration: underline;
-  }
-
-  textarea {
-    display: block;
-    resize: none;
-    width: 100%;
-    height: 100%; 
-    box-sizing: border-box;
-  }
-
 	.parent-container {
 		display:flex;
     margin: 0 auto;
     flex-direction: column;
     justify-content: center;
     align-items: initial;
+    overflow-x: auto;
 	}
   .favourite{
     background-image: '../assets/favourite.svg';
@@ -207,26 +209,18 @@
   .background {
     background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
   }
-  .shareContainer {
-    display: flex;
-    flex-direction: row;
-    background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
-  }
-  .parentContainer {
+
+  .motions-container {
       display: flex;
       flex-direction: row;
       overflow: hidden;
+      padding: 0px 40px 0px 40px;
   }
   .motionButtons {
     display:flex;
     justify-content: space-between;
   }
-  .links {
-    background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
-    padding: 20px;
-    margin-left: 20px;
-    margin-top: 20px;
-  }
+
   .left {
     display: flex;
     flex-direction: column;
@@ -240,34 +234,13 @@
     margin-left: 0px;
     margin-right: 0px;
   }
-  .tags {
-    list-style: none;
-    margin-top: 20px;
-    overflow: hidden; 
-    padding: 0;
-  }
-  .tag {
-    display: inline-block;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin: 10px;
-    border-radius: 14px;
-    border: 2px solid #3098f3;
-  }
-  .tag-text {
-    color: #000000;
-    font-family: "IBM Plex Mono";
-    font-size: 14px;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: 18px;
-    text-align: center;
-  }
   input {
     box-sizing: border-box;
   }
-
+  .motion-text-container {
+    display: flex;
+    flex-direction: column;
+  }
   .motion-text {
     /* Style for "EU member" */
     color: #252525;
@@ -301,7 +274,6 @@
     line-height: normal;
   }
   button {
-
     box-shadow: none;
     border: none;
     max-width: 380px;

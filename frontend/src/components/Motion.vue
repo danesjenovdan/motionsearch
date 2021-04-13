@@ -3,8 +3,8 @@
       <div class="grandParentContaniner">
           <div class="parentContainer">
             <div class="motionButtons">
-              <p>upvote/downvote placeholder</p>
-              <img src="../assets/favourite.png"/>
+              <voting/>
+              <favourite/>
             </div>
             <p>Added on 7/11/2021</p>
             <span class="motion-text">EU member states should 
@@ -24,7 +24,8 @@
 </template>
 
 <script>
-  import favourite from '../assets/favourite.svg'
+  import Favourite from './Favourite.vue'
+  import Voting from './Voting.vue'
   const tags = [
         'culture', 
         'sport',
@@ -36,9 +37,10 @@
         'europian union'
       ]
   export default {
-    components: [
-      favourite
-    ],
+    components: {
+      Voting,
+      Favourite
+    },
     data() {
       return {
         tags
@@ -56,9 +58,6 @@
     justify-content: center;
     align-items: center;
 	}
-  .favourite{
-    background-image: '../assets/favourite.svg';
-  }
   .background {
     background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
   }

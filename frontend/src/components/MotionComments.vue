@@ -5,10 +5,10 @@
           <button type="submit">SUGGEST A MOTION</button> 
         </div>
         <div class="line"/>
-          <div class="share-bar">
+        <div class="share-bar">
           <div class="share-bar-split">
             <h1>Share this motion!</h1>
-            <input type="url" :value="`https://djnd.si/sideflip/#`">
+            <input type="url" class="share-input" :value="`https://djnd.si/sideflip/#`">
           </div>
         </div>
         <div class="parentContainer">
@@ -21,7 +21,7 @@
               </div>
               <p v-for="el in usedWhere" :key="el">{{el}}</p>
               <div class="commentContainer" v-for="comment in comments" :key="comment._id">
-                <p>{{comment.username}} | {{comment.date}}</p>
+                <i><p>{{comment.username}} | {{comment.date}}</p></i>
                 <p>{{comment.text}}</p>
                 <div>
               </div>
@@ -46,16 +46,6 @@
 </template>
 
 <script>
-  const tags = [
-        'culture', 
-        'sport',
-        'employment',
-        'europian union',
-        'culture', 
-        'sport',
-        'employment',
-        'europian union'
-      ]
   const comments = [
       {
         _id: "first", 
@@ -87,7 +77,6 @@
     ],
     data() {
       return {
-        tags,
         comments,
 
       }
@@ -116,8 +105,9 @@
 
 .share-bar {
   position: relative;
-  width: 100%;
   overflow: hidden;
+  margin-left: 40px;
+  margin-right: 40px;
   display: flex;
   flex-direction: row;
   padding: 20px;
@@ -143,6 +133,11 @@
     margin-left: 20px;
   }
 }
+  .share-input {
+    min-width:0; /* Remove the automatic minimum size set so the element can shrink*/
+    width: 100%; /* Set any value of width here as reference*/
+    flex: 1; /* make the item grow to fill the remaining space */
+  }
   h3 {
     color: #252525;
     font-family: "Poppins";
@@ -202,9 +197,6 @@
     justify-content: center;
     align-items: initial;
 	}
-  .favourite{
-    background-image: '../assets/favourite.svg';
-  }
   .background {
     background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
   }
@@ -216,8 +208,7 @@
   .parentContainer {
       display: flex;
       flex-direction: row;
-      margin-top: 10px;
-      margin-bottom: 40px;
+      margin: 10px 40px 40px 40px;
       overflow: hidden;
   }
   .motionButtons {
@@ -246,34 +237,13 @@
     margin-left: 0px;
     margin-right: 0px;
   }
-  .tags {
-    list-style: none;
-    margin-top: 20px;
-    overflow: hidden; 
-    padding: 0;
-  }
-  .tag {
-    display: inline-block;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin: 10px;
-    border-radius: 14px;
-    border: 2px solid #3098f3;
-  }
-  .tag-text {
-    color: #000000;
-    font-family: "IBM Plex Mono";
-    font-size: 14px;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: 18px;
-    text-align: center;
-  }
+
   input {
     box-sizing: border-box;
   }
-
+  .header {
+    margin-right: 40px;
+  }
   .motion-text {
     /* Style for "EU member" */
     color: #252525;

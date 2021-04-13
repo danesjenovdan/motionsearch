@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <router-view/>
-    <div class="side-flip-logo"></div>
     <footer>
       <p>Development team:</p>
       <div class="logo zip"></div>
@@ -29,17 +28,10 @@ body {
   overflow: hidden;
 }
 .side-flip-logo {
-  width: 240px;
-  height: 80px;
-  background-image: url('./assets/logo.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  display: block;
+  display: flex;
+  flex-direction: row;
   position: absolute;
   top: 0;
-  left: 50%;
-  margin-left: -120px;
   margin-top: 22px;
 }
 a:link {
@@ -194,4 +186,16 @@ footer {
     display: none !important;
   }
 }
+
+  .split-right {
+    padding: 0px;
+    height: 100vh;
+    min-width: 320px;
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  }
+  .split-right::-webkit-scrollbar {display: none;}
 </style>

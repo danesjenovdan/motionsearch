@@ -2,11 +2,17 @@
     <div class="container">
       <div :class="['filterBox', { selected: true }]">
         <img src="../assets/topic.svg">
-        <i><span class="filterTitle" :onclick="togglePopup"> Topic </span></i>
+        <i><span class="filterTitle" :onclick="togglePopup"> Topic </i></span>
          <div class="popup">
             <div class="popup-container" id="myPopup">
               <div class="popup-box">
-                <span class="popup-text">teeexteee</span>
+                <div class="checkmark-container">
+                  <div v-for="category in categories" :key="category">
+                    <input :id="category" type='checkbox'/>
+                    {{category}}
+                  </div>
+                </div>
+              <div class="popup-apply"> Apply</div>
               </div>
               <div class="popup-arrow">
               </div>
@@ -15,45 +21,54 @@
       </div>
       <div class="filterBox">
         <img src="../assets/difficulty.svg">
-        <i><span class="filterTitle"> Difficulty </span></i>
+        <span class="filterTitle"><i> Difficulty </i></span>
       </div>
       <div class="filterBox">
         <img src="../assets/format.svg">
-        <i><span class="filterTitle"> Format </span></i>
+        <span class="filterTitle"><i> Format </i></span>
       </div>
       <div class="filterBox">
         <img src="../assets/age.svg">
-        <i><span class="filterTitle"> Age </span></i>
+        <span class="filterTitle"><i> Age </i></span>
       </div>
       <div class="filterBox">
         <img src="../assets/type.svg">
-        <i><span class="filterTitle"> Motion type </span></i>
+        <span class="filterTitle"><i> Motion type </i></span>
       </div>
       <div class="filterBox">
         <img src="../assets/focus.svg">
-        <i><span class="filterTitle"> Training  focus</span></i>
+        <span class="filterTitle"><i> Training  focus</i></span>
       </div>
       <div class="filterBox">
         <img src="../assets/impro.svg">
-        <i><span class="filterTitle"> Either impro or prep </span></i>
+        <span class="filterTitle"><i> Either impro or prep </i></span>
       </div>
       <div class="filterBox">
         <img src="../assets/keyword.svg">
-        <i><span class="filterTitle"> Keyword </span></i>
+        <span class="filterTitle"><i> Keyword </i></span>
       </div>
       <div class="filterBox">
         <img src="../assets/random.svg">
-        <i><span class="filterTitle"> Show me a random motion </span></i>
+        <span class="filterTitle"><i> Show me a random motion </i></span>
       </div>
     </div>
 </template>
 
 <script>
+
   export default {
+    data() {
+      return {
+        categories: [
+          'Art and Culture',
+          'Criminal Justice System',
+          'Business',
+          'Development',
+        ]
+      }
+    },
     methods: {
       togglePopup: (event) => {
-        console.log('event: ', event);
-        console.log("yeet")
         var popup = document.getElementById("myPopup");
         popup.classList.toggle("show");
       }
@@ -63,10 +78,21 @@
 
 <style scoped>
   .container {
+    margin: 80px 0px 40px 0px;
     display: grid;
     grid-template-columns: 30% 30% 30%;
     column-gap: 3%;
     row-gap: 3%;
+  }
+  .checkmark-container {
+    margin: 80px 0px 40px 0px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    column-gap: 3%;
+    row-gap: 3%;
+  }
+  .popup-apply{
+    border-top: 1px solid black;
   }
   .selected {
     border: 4px solid #3098f3;
@@ -86,7 +112,7 @@
     font-style: normal;
     letter-spacing: normal;
     line-height: 26px;
-    text-align: left;
+    text-align: center;
   }
   .filterTitle:hover {
     cursor: pointer;

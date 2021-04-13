@@ -1,9 +1,10 @@
 <template>
  <div class="split-container">
       <div class="split left">
-          <motion/>
+          <div class="debate-logo"><img src="../assets/motion-generator-logo.svg">&nbsp;&nbsp; Easiest way to find a motion for debating</div>
+          <motion class="motion"/>
       </div>
-      <div class="split hidden-xs">
+      <div class="split-right hidden-xs">
         <motion-comments/>
       </div>
     </div>
@@ -13,17 +14,39 @@
   import Motion from '../components/Motion.vue'
   import MotionComments from '../components/MotionComments.vue'
 
+
   export default {
   components: {
     Motion,
-    MotionComments
+    MotionComments,
   }
 }
 
 </script>
 
 <style scoped>
-
+  img {
+    height: 80px;
+  }
+  .debate-logo {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    margin-top: 22px;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 10%;
+    /* Style for "Easiest wa" */
+    color: #252525;
+    font-family: Poppins;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
+    line-height: 29px;
+    text-align: left;
+  }
 	.grandParentContaniner{
 		display:flex;
     margin: 0 auto; ;
@@ -33,6 +56,13 @@
   .hidden-xs {
     height:90vh;
   }
+
+  @media (max-width: 1199px) {
+    .split-right {
+      flex-shrink: 0;
+    }
+  }
+
   .background {
     background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
   }
