@@ -2,14 +2,14 @@
     <div class="container">
       <div :class="['filterBox', { selected: true }]">
         <img src="../assets/topic.svg">
-        <i><span class="filterTitle" :onclick="togglePopup"> Topic </i></span>
+       <span class="filterTitle" :onclick="togglePopup"><i> Topic </i></span>
          <div class="popup">
             <div class="popup-container" id="myPopup">
               <div class="popup-box">
                 <div class="checkmark-container">
                   <div v-for="category in categories" :key="category">
                     <input :id="category" type='checkbox'/>
-                    {{category}}
+                    <label class="popup-text" :for="category">{{category}}</label>
                   </div>
                 </div>
               <div class="popup-apply"> Apply</div>
@@ -84,15 +84,100 @@
     column-gap: 3%;
     row-gap: 3%;
   }
+
+/* Base for label styling */
+  [type="checkbox"]:not(:checked),
+  [type="checkbox"]:checked {
+    position: absolute;
+    left: 0;
+    opacity: 0.01;
+  }
+  [type="checkbox"]:not(:checked) + label,
+  [type="checkbox"]:checked + label {
+    position: relative;
+    padding-left: 2.3em;
+    font-size: 1.05em;
+    line-height: 1.7;
+    cursor: pointer;
+  }
+
+  /* checkbox aspect */
+  [type="checkbox"]:not(:checked) + label:before,
+  [type="checkbox"]:checked + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.4em;
+    height: 1.4em;
+    border: 1px solid rgb(0, 0, 0);
+    background: #FFF;
+    border-radius: .2em;
+    box-shadow: inset 0 1px 3px rgba(0,0,0, .1), 0 0 0 rgba(33, 97, 180, 0.2);
+    -webkit-transition: all .275s;
+        transition: all .275s;
+  }
+    [type="checkbox"]:checked + label:before {
+          background: #3098f3;
+    }
+
+  /* checked mark aspect */
+  [type="checkbox"]:not(:checked) + label:after,
+  [type="checkbox"]:checked + label:after {
+    content: '✓';
+    position: absolute;
+    top: .525em;
+    left: .18em;
+    font-size: 1.375em;
+    color: #ffffff;
+    line-height: 0;
+    -webkit-transition: all .2s;
+        transition: all .2s;
+  }
+
+  /* checked mark aspect changes */
+  [type="checkbox"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0) rotate(45deg);
+        transform: scale(0) rotate(45deg);
+  }
+
+  [type="checkbox"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1) rotate(0);
+        transform: scale(1) rotate(0);
+  }
+
+  /* Disabled checkbox */
+  [type="checkbox"]:disabled:not(:checked) + label:before,
+  [type="checkbox"]:disabled:checked + label:before {
+    box-shadow: none;
+    border-color: #bbb;
+    background-color: #e9e9e9;
+  }
+
+  [type="checkbox"]:disabled:checked + label:after {
+    color: #777;
+  }
+
+  [type="checkbox"]:disabled + label {
+    color: rgb(199, 199, 199);
+  }
+
+  /* Accessibility */
+  [type="checkbox"]:checked:focus + label:before,
+  [type="checkbox"]:not(:checked):focus + label:before {
+    box-shadow: inset 0 1px 3px rgba(0,0,0, .1), 0 0 0 6px rgba(203, 34, 237, .2);
+  }
+
   .checkmark-container {
     margin: 80px 0px 40px 0px;
     display: grid;
     grid-template-columns: 50% 50%;
     column-gap: 3%;
     row-gap: 3%;
-  }
-  .popup-apply{
-    border-top: 1px solid black;
+    width: 100%;
+    align-items: left;
   }
   .selected {
     border: 4px solid #3098f3;
@@ -123,10 +208,32 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
+    width: 500px;
+    max-width: 1000px !important;
   }
-
+  .popup-text {
+/* Style for "Nature Eco" */
+    color: #000000;
+    font-family: "IBM Plex Mono";
+    font-size: 14px;
+    font-style: italic;
+    letter-spacing: normal;
+    line-height: 47px;
+    text-align: left;
+  }
+  .popup-apply {
+    color: #3098f3;
+    font-family: Poppins;
+    font-size: 18px;
+    font-weight: 700;
+    font-style: normal;
+    letter-spacing: normal;
+    line-height: 47px;
+    text-align: right;
+    text-decoration: underline;
+    border-top: 1px solid black;
+  }
   .popup-box {
-    height: 80%;
     margin: 10px;
   }
 
