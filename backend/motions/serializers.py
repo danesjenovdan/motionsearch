@@ -3,12 +3,21 @@ from rest_framework import serializers
 from motions.models import MotionCategory, MotionDifficulty, DebateFormat, Motion, MotionAgeRange, MotionType, \
     MotionTrainingFocus, MotionImproPrep, MotionWhereUsed, MotionInfoText, MotionLink, MotionComment
 
+from django.db import models
+from django.utils import timezone
+
+
+class AutoDateTimeField(models.DateTimeField):
+    def pre_save(self, model_instance, add):
+        return timezone.now()
 
 class MotionCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = MotionCategory
         fields = ['id', 'value']
-
+        def create(self, validated_data):
+            category = MotionCategory.objects.get_or_create(**validated_data)
+            return category
 
 class MotionDifficultySerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,7 +84,25 @@ class MotionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Motion
-        fields = ['topic', 'category']
+        fields = ['id', 'topic', 'category', 'created_at']
+    
+    def create(self, validated_data):
+        categories_data = validated_data.pop('category')
+        motion = Motion.objects.create(**validated_data)
+        topics = []
+        for category_data in categories_data:
+            category = MotionCategory.objects.create(motion=motion, **category_data)
+            motion.category.add(category)
+        return motion
+
+    def update(motion, self, validated_data):
+        categories_data = validated_data.pop('category')
+        motion = Motion.objects.create(**validated_data)
+        topics = []
+        for category_data in categories_data:
+            category = MotionCategory.objects.create(motion=motion, **category_data)
+            motion.category.add(category)
+        return motion
 
 
 class MotionDetailedSerializer(serializers.ModelSerializer):

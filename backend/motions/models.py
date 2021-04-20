@@ -3,6 +3,15 @@ from __future__ import unicode_literals
 from django.utils.translation import gettext as _
 from django.db import models
 from motions.behaviors.models import BaseModel
+from django.db import models
+from django.utils import timezone
+
+
+class AutoDateTimeField(models.DateTimeField):
+    def pre_save(self, model_instance, add):
+        return timezone.now()
+
+
 
 
 class VoteValue:
@@ -73,6 +82,7 @@ class Motion(BaseModel):
     where_used = models.ManyToManyField(MotionWhereUsed, blank=True)
     info_text = models.ManyToManyField(MotionInfoText, blank=True)
     links = models.ManyToManyField(MotionLink, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     @property
     def quality_score(self):
