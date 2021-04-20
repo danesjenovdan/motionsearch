@@ -31,9 +31,10 @@ const routes = [
       component: ResetPassword
     },
     {
-      path: '/motion',
+      path: '/motion/:id',
       name: 'MotionView',
-      component: MotionView
+      component: MotionView,
+      props: true
     },
     {
       path: '/motionSuggest',

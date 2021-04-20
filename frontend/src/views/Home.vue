@@ -4,7 +4,7 @@
           <div class="debate-logo"><img src="../assets/motion-generator-logo.svg">&nbsp;&nbsp; Easiest way to find a motion for debating</div>
           <filters/>          
       </div>
-      <div class="split-right hidden-xs">
+      <div class="split-right">
         <motion-list/>
       </div>
     </div>

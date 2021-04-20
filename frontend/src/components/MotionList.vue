@@ -1,86 +1,92 @@
 <template>
     <div class="parent-container">
         <div class="header"> 
-          <button class="login" type="submit">LOG IN</button> 
+          <a href="/login"><button class="login" type="submit">LOG IN</button></a>
           <button type="submit">SUGGEST A MOTION</button> 
         </div>
         <div class="line"/>
         <div class="motions-container">
-          <div class="left">
             <div class="motions-title-bar">
-              <h3>Motions</h3>
+              <h3>Motions </h3>
               <div class="motions-sort">
                 <p>Sort by</p>
                 <div class="sort-button"><span class="sort-button-text"><b>Date Added</b></span></div>
                 <div class="sort-button"><span class="sort-button-text"><b>Quality</b></span></div>
               </div>
             </div>
-            <div class="motions-list" v-for="motion in motions" :key="motion._id">
+            <div class="motions-list" v-for="motion in motions" :key="motion.id">
               <div class="motion-text-container">
-                <p class="motions-date">Added on {{motion.date}}</p>
-                <p class="motions-title">{{motion.text}}</p>
+                <p class="motions-date">Added on {{motion.created_at}}</p>
+                <a :href="'/motion/'+motion.id"><p class="motions-title">{{motion.topic}}</p></a>
               </div>
               <div class="votes">
                 <voting/>
               </div>
           </div>
-        </div>
     </div>
   </div>
 </template>
 
 <script>
   import Voting from './Voting.vue'
-  const motions = [
-      {
-        _id: "first", 
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      },
-      {
-        _id: "second", 
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      },
-      {
-        _id: "third", 
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      },
-      {
-        _id: "third", 
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      }
-      ]
+
+  let motions = [];
+  let page = 1;
+  let refresh = true;
   export default {
-    components: {
-      Voting
-    },
     data() {
       return {
         motions,
-
+        page,
+        refresh
       }
     },
+    components: {
+      Voting
+    },
     methods: {
-      addUsedWhere: () => {
-        motions.push(
-          {
-            _id: "second", 
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      }
-        )
+      async loadNextPage() {
+        try {
+          this.page += 1;
+          const result = await this.getMotions(this.page)
+          if(result) this.motions = this.motions.concat(result)
+          else this.page -= 1
+          this.refresh = true
+        } catch (error) {
+          this.refresh = true
+        }
       },
-      removeUsedWhere: (index) => {
-        usedWhere.splice(index, 1)
+      getMotions: async(page) => {
+        try {
+          const result = await fetch(`http://localhost:8000/api/v1/motions/?page=${page}`, {
+              method: 'get',
+              headers: {
+                'content-type': 'application/json'
+              }
+            })
+          const body = await result.json(); // .json() is asynchronous and therefore must be awaited
+          return body.results;
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      handleScroll(e) {
+        // compare height of motions-container to window height to enable next scrolling
+        let element = document.querySelector('.motions-container')
+        if ( element.getBoundingClientRect().bottom < window.innerHeight && this.refresh) {
+          this.loadNextPage()
+          this.refresh = false
+        }
       }
+    },
+    mounted() {
+      window.addEventListener("scroll", this.handleScroll)
+    },
+    unmounted() {
+      window.removeEventListener("scroll", this.handleScroll)
+    },
+    async created() {
+      this.motions = await this.getMotions(1)
     }
   }
 
@@ -169,6 +175,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
   .motions-date {
     color: #252525;
@@ -193,6 +201,7 @@
     height: 78px;
     flex-shrink: 0;
     margin-right: 20px;
+    margin-left:20px;
     background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
   }
 	.parent-container {
@@ -212,19 +221,13 @@
 
   .motions-container {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       overflow: hidden;
       padding: 0px 40px 0px 40px;
   }
   .motionButtons {
     display:flex;
     justify-content: space-between;
-  }
-
-  .left {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
   }
 
   .line {

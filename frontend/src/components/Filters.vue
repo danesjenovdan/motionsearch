@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="filters-container">
       <div :class="['filterBox', { selected: true }]">
         <img src="../assets/topic.svg">
        <span class="filterTitle" :onclick="togglePopup"><i> Topic </i></span>
@@ -77,7 +77,7 @@
 </script>
 
 <style scoped>
-  .container {
+  .filters-container {
     margin: 80px 0px 40px 0px;
     display: grid;
     grid-template-columns: 30% 30% 30%;
@@ -112,13 +112,11 @@
     height: 1.4em;
     border: 1px solid rgb(0, 0, 0);
     background: #FFF;
-    border-radius: .2em;
-    box-shadow: inset 0 1px 3px rgba(0,0,0, .1), 0 0 0 rgba(33, 97, 180, 0.2);
     -webkit-transition: all .275s;
         transition: all .275s;
   }
     [type="checkbox"]:checked + label:before {
-          background: #3098f3;
+      background: #3098f3;
     }
 
   /* checked mark aspect */
@@ -167,17 +165,16 @@
   /* Accessibility */
   [type="checkbox"]:checked:focus + label:before,
   [type="checkbox"]:not(:checked):focus + label:before {
-    box-shadow: inset 0 1px 3px rgba(0,0,0, .1), 0 0 0 6px rgba(203, 34, 237, .2);
   }
 
   .checkmark-container {
     margin: 80px 0px 40px 0px;
     display: grid;
-    grid-template-columns: 50% 50%;
-    column-gap: 3%;
-    row-gap: 3%;
+    grid-template-columns: 45% 45%;
+    column-gap: 10%;
+    row-gap: 5%;
     width: 100%;
-    align-items: left;
+    align-items: start;
   }
   .selected {
     border: 4px solid #3098f3;

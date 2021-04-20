@@ -1,7 +1,7 @@
 <template>
     <div class="motionCommentsContainer">
         <div class="header"> 
-          <button class="login" type="submit">LOG IN</button> 
+          <a href="/login"><button class="login" type="submit">LOG IN</button></a>
           <button type="submit">SUGGEST A MOTION</button> 
         </div>
         <div class="line"/>
@@ -102,37 +102,36 @@
 </script>
 
 <style scoped lang="scss">
-
-.share-bar {
-  position: relative;
-  overflow: hidden;
-  margin-left: 40px;
-  margin-right: 40px;
-  display: flex;
-  flex-direction: row;
-  padding: 20px;
-  // background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
-  background-image: linear-gradient(-62deg, #cee7fd 0%, #f7fafd 100%);
-  z-index: 2;
-  .share-bar-split {
-    width: 100%;
+  .share-bar {
+    position: relative;
+    overflow: hidden;
+    margin-left: 40px;
+    margin-right: 40px;
     display: flex;
     flex-direction: row;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-    &.hidden {
-      display: none !important;
+    padding: 20px;
+    // background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
+    background-image: linear-gradient(-62deg, #cee7fd 0%, #f7fafd 100%);
+    z-index: 2;
+    .share-bar-split {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      &.hidden {
+        display: none !important;
+      }
+    }
+    h1 {
+      margin-top: 0;
+      // width: 100%;
+    }
+    input {
+      margin-left: 20px;
     }
   }
-  h1 {
-    margin-top: 0;
-    // width: 100%;
-  }
-  input {
-    margin-left: 20px;
-  }
-}
   .share-input {
     min-width:0; /* Remove the automatic minimum size set so the element can shrink*/
     width: 100%; /* Set any value of width here as reference*/

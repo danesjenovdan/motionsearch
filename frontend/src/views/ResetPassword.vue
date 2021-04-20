@@ -12,7 +12,7 @@
             </form>
             <div class="line"></div>
             <div class="login-text">
-            <p><a href="/register">Back to log in.</a></p>
+            <p><a href="/login">Back to log in.</a></p>
             </div>
       </div>
     </div>

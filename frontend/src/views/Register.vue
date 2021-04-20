@@ -2,17 +2,19 @@
   <div class="background">
       <div class="grandParentContaniner">
           <div class="registertrationFormContainer">
-           <form>
+           <form
+            @submit="register"
+            >
             <h1>Register your account</h1><br>
-              <label for="fname">Username</label><br>
+              <label for="username">Username</label><br>
               <input type="text" id="username" name="username"><br>
-              <label for="lname">Email address</label><br>
+              <label for="email">Email address</label><br>
               <input type="email" id="email" name="email"><br>
-              <label for="lname">Password</label><br>
+              <label for="password">Password</label><br>
               <input type="password" id="password" name="password"><br>
-              <label for="lname">Confirm password</label><br>
+              <label for="confirmpwd">Confirm password</label><br>
               <input type="password" id="confirmpwd" name="confirmpwd"><br>
-               <button type="submit">Submit</button> 
+               <button type="submit" @click="register">Submit</button> 
             </form>
             <div class="line"></div>
             <div class="login-text">
@@ -24,6 +26,39 @@
 </template>
 
 <script>
+  export default {
+    data() { 
+      return {
+        username: '',
+        password: '',
+        confirmpwd: '',
+        email: '',
+        favorites: []
+      }
+    },
+    methods : {
+      validate(password, confirmpwd) {
+        return password === confirmpwd
+      },
+      register: async function(e){
+        e.preventDefault()
+        if (!password.value || !this.validate(password.value, confirmpwd.value)) return false
+        const response = await fetch('http://localhost:8000/api/v1/users/', {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: username.value,
+            password: password.value,
+            email: email.value,
+            favorites: []
+          }) // body data type must match "Content-Type" header
+        });
+        return response.json();
+      }
+    }
+  }
 </script>
 
 <style scoped>

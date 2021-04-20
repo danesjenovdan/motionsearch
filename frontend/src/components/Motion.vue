@@ -6,15 +6,11 @@
               <voting/>
               <favourite/>
             </div>
-            <p>Added on 7/11/2021</p>
-            <span class="motion-text">EU member states should 
-                guarantee people under 25 a 
-                temporary workplace when 
-                they have been unemployed 
-                for six months.</span>
+            <p>Added on {{motion.created_at}}</p>
+            <span class="motion-text">{{motion.topic}}</span>
             <div class="line"></div>
             <ul class="tags">
-              <li class="tag" v-for="tag in tags" :key="tag">
+              <li class="tag" v-for="tag in motion.categories" :key="tag">
                 <span class="tag-text">{{ tag }}</span>
               </li>
             </ul>
@@ -26,25 +22,39 @@
 <script>
   import Favourite from './Favourite.vue'
   import Voting from './Voting.vue'
-  const tags = [
-        'culture', 
-        'sport',
-        'employment',
-        'europian union',
-        'culture', 
-        'sport',
-        'employment',
-        'europian union'
-      ]
+  let motion = {}
   export default {
+    data() {
+      return {
+        motion,
+      }
+    },
     components: {
       Voting,
       Favourite
     },
-    data() {
-      return {
-        tags
-      }
+     props: [
+       'id',
+       ],
+    methods: {
+      getMotion: async(id) => {
+        try {
+          const result = await fetch(`http://localhost:8000/api/v1/motions/${id}/`, {
+              method: 'get',
+              headers: {
+                'content-type': 'application/json'
+              }
+            })
+          return await result.json(); // .json() is asynchronous and therefore must be awaited
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    },
+    async created() {
+      console.log('this.id: ', this.id);
+      this.motion = await this.getMotion(this.id)
+      console.log('this.motion: ', this.motion);
     }
   }
 

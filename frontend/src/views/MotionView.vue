@@ -2,7 +2,7 @@
  <div class="split-container">
       <div class="split left">
           <div class="debate-logo"><img src="../assets/motion-generator-logo.svg">&nbsp;&nbsp; Easiest way to find a motion for debating</div>
-          <motion class="motion"/>
+          <motion class="motion" :id="id" />
       </div>
       <div class="split-right hidden-xs">
         <motion-comments/>
@@ -19,7 +19,9 @@
   components: {
     Motion,
     MotionComments,
-  }
+    }, props: [
+      'id'
+      ],
 }
 
 </script>

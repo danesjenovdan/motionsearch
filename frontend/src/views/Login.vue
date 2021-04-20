@@ -10,7 +10,7 @@
               <label for="lname">Password</label><br>
               <input type="password" id="password" name="password"><br>
               <a style="float:right;" href="/reset">Forgot your password?</a><br>
-              <button type="submit">LOG IN</button> 
+            <a href="/login"><button class="login" type="submit">LOG IN</button></a>
             </form>
             <div class="line"></div>
             <div class="login-text">
