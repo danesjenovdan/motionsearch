@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: motion-search-backend-deployment
+  labels:
+    app: motion-search-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: motion-search-backend
+  template:
+    metadata:
+      labels:
+        app: motion-search-backend
+    spec:
+      initContainers:
+        - name: collectstatic
+          image: motion-search-backend
+          command:
+            - python
+            - manage.py
+            - collectstatic
+            - --no-input
+          # env:
+          #   - name: DJANGO_SETTINGS_MODULE
+          #     value: motion-search-backend_project.settings.k8s
+        - name: migrate
+          image: motion-search-backend
+          command:
+            - python
+            - manage.py
+            - migrate
+          # env:
+          #   - name: DJANGO_SETTINGS_MODULE
+          #     value: motion-search-backend_project.settings.k8s
+          # envFrom:
+          #   - secretRef:
+          #       name: motion-search-backend-credentials
+      containers:
+        - name: motion-search-backend
+          image: rg.fr-par.scw.cloud/djnd/motion-search-backend:latest
+          # command:
+          #   - gunicorn
+          #   - motion-search-backend_project.wsgi:application
+          #   - -b
+          #   - 0.0.0.0:8000
+          #   - --log-level
+          #   - DEBUG
+          command:
+            - python
+            - manage.py
+            - runserver
+            - 0.0.0.0:8000
+          ports:
+            - containerPort: 8000
+          # envFrom:
+          #     - secretRef:
+          #         name: motion-search-backend-credentials
+          # env:
+          #   - name: DJANGO_SETTINGS_MODULE
+          #     value: motion-search-backend_project.settings.k8s
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: motion-search-backend
+spec:
+  selector:
+    app: motion-search-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: motion-search-backend
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+spec:
+  tls:
+    - hosts:
+        - motion-search-backend.lb.djnd.si
+      secretName: motion-search-backend-tls
+  rules:
+    - host: motion-search-backend.lb.djnd.si
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: motion-search-backend
+                port:
+                  number: 8000
