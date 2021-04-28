@@ -58,7 +58,7 @@
       },
       getMotions: async(page) => {
         try {
-          const result = await fetch(`http://localhost:8000/api/v1/motions/?page=${page}`, {
+          const result = await fetch(`https://motion-search-backend.lb.djnd.si/api/v1/motions/?page=${page}`, {
               method: 'get',
               headers: {
                 'content-type': 'application/json'

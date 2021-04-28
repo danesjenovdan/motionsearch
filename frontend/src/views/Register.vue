@@ -43,7 +43,7 @@
       register: async function(e){
         e.preventDefault()
         if (!password.value || !this.validate(password.value, confirmpwd.value)) return false
-        const response = await fetch('http://localhost:8000/api/v1/users/', {
+        const response = await fetch('https://motion-search-backend.lb.djnd.si/api/v1/users/', {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           headers: {
             'Content-Type': 'application/json'

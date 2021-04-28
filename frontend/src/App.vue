@@ -10,10 +10,6 @@
   </div>
 </template>
 
-<script>
-
-</script>
-
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital@1&family=Poppins:ital,wght@0,300;0,400;0,900;1,900&display=swap');
 body {

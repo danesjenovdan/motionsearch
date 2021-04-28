@@ -39,7 +39,7 @@
     methods: {
       getMotion: async(id) => {
         try {
-          const result = await fetch(`http://localhost:8000/api/v1/motions/${id}/`, {
+          const result = await fetch(`https://motion-search-backend.lb.djnd.si/api/v1/motions/${id}/`, {
               method: 'get',
               headers: {
                 'content-type': 'application/json'
