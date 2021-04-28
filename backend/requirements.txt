@@ -1,7 +1,4 @@
 django
 djangorestframework
-<<<<<<< HEAD
 django-oauth-toolkit-1.5.0
-=======
 django-cors-headers
->>>>>>> 21ca26e2ee9f9c732ebc104db17fc708bc6c72d5
