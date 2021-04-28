@@ -25,7 +25,8 @@ ENV PYTHONUNBUFFERED=1 \
 
 # Install the project requirements.
 COPY requirements.txt /code/requirements.txt
-RUN pip install -r /code/requirements.txt
+RUN pip install --verbose -r /code/requirements.txt
+
 
 WORKDIR /code
 
