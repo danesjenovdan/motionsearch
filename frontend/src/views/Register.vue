@@ -1,25 +1,27 @@
 <template>
-  <div class="background">
-      <div class="grandParentContaniner">
-          <div class="registertrationFormContainer">
-           <form
-            @submit="register"
-            >
-            <h1>Register your account</h1><br>
-              <label for="username">Username</label><br>
-              <input type="text" id="username" name="username"><br>
-              <label for="email">Email address</label><br>
-              <input type="email" id="email" name="email"><br>
-              <label for="password">Password</label><br>
-              <input type="password" id="password" name="password"><br>
-              <label for="confirmpwd">Confirm password</label><br>
-              <input type="password" id="confirmpwd" name="confirmpwd"><br>
-               <button type="submit" @click="register">Submit</button> 
-            </form>
-            <div class="line"></div>
-            <div class="login-text">
-            <p>Already have an account? <a href="/login">Log in.</a></p>
-            </div>
+  <div class="login-container background">
+    <div class="wrapper">
+      <div class="debate-logo">
+        <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+        <span>Easiest way to find a motion for debating</span>
+      </div>
+      <div class="registration-form-container">
+        <form @submit="register">
+          <h1>Register your account</h1>
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password">
+          <label for="confirmpwd">Confirm password</label>
+          <input type="password" id="confirmpwd" name="confirmpwd">
+          <button type="submit" @click="register">Submit</button>
+        </form>
+        <hr class="line"/>
+        <div class="login-text">
+          <p>Already have an account? <a href="/login">Log in.</a></p>
+        </div>
       </div>
     </div>
   </div>
@@ -27,7 +29,7 @@
 
 <script>
   export default {
-    data() { 
+    data() {
       return {
         username: '',
         password: '',
@@ -61,66 +63,5 @@
   }
 </script>
 
-<style scoped>
-
-	.grandParentContaniner{
-		display:flex;
-    margin: 0 auto; ;
-    justify-content: center;
-    align-items: center;
-	}
-    
-  .background {
-    background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
-  }
-  .registertrationFormContainer {
-      display: flex;
-      flex-direction: column;
-      background-color: #ffffff;
-      padding: 40px;
-      margin-top: 100px;
-      margin-bottom: 40px;
-  }
-  .line {
-    margin-top: 26px;
-    border-top: 1px solid;
-  }
-  .login-text {
-    display: flex;
-    justify-content: center;
-  }
-  input {
-      box-sizing: border-box;
-  }
-
-  button {
-    box-shadow: none;
-    border: none;
-    max-width: 380px;
-    padding-left: 30px;
-    padding-right: 30px;
-    height: 60px;
-    border-radius: 30px;
-    background-color: #3098f3;
-    opacity: 0.7;
-    color: #ffffff;
-    font-family: "Poppins";
-    font-style: italic;
-    font-size: 30px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 2.16px;
-    display: block;
-    margin: auto;
-    margin-top: 26px;
-    cursor: pointer;
-    float: right;
-  }
-  button:disabled {
-    opacity: 0.1;
-  }
-  button:hover {
-    opacity: 1;
-  }
-
+<style scoped lang="scss">
 </style>
