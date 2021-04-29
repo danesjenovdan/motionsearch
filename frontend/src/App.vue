@@ -4,10 +4,13 @@
       <router-view/>
     </div>
     <footer>
-      <p>Development team:</p>
-      <div class="logo zip"></div>
-      <div class="logo hdd"></div>
-      <div class="logo idea"></div>
+      <div class="left-side">
+        <p>Development team:</p>
+        <img src="./assets/ZiP_logo.png" alt="ZiP logo">
+        <img src="./assets/HDD_logo.png" alt="HDD logo">
+        <img src="./assets/IDEA_logo.png" alt="IDEA logo">
+      </div>
+      <img src="./assets/EU_logo.png" alt="EU logo">
     </footer>
   </div>
 </template>
@@ -94,54 +97,76 @@ input[type=number] {
 }
 
 footer {
-  // position: relative;
-  width: 100%;
   flex-shrink: 0;
-  // min-height: 100px;
   background: #ffffff;
   border-top: 1px solid #3098f3;
-  // overflow: hidden;
-  display: block;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-height: 40px;
+    margin-right: 40px;
+    margin-bottom: 10px;
+
+    @media (min-width: 576px) {
+      margin: 0;
+    }
+
+    @media (min-width: 768px) {
+      max-height: 60px;
+    }
+
+    @media (min-width: 992px) {
+      margin-left: 40px;
+    }
+  }
+
+  .left-side {
+    margin: 10px 0;
+
+    img {
+      margin: 10px;
+
+      @media (min-width: 576px) {
+        margin: 0 20px 0 0;
+      }
+
+      @media (min-width: 768px) {
+        margin-right: 20px;
+      }
+
+      @media (min-width: 992px) {
+        margin-left: 40px;
+        margin-right: 0;
+      }
+    }
+  }
+
+  @media (min-width: 576px) {
+    padding: 15px 30px;
+    justify-content: space-between;
+    flex-direction: row;
+  }
 
   p {
     color: #252525;
     font-family: Poppins;
     font-size: 16px;
     font-weight: 300;
-    line-height: 14px;
-    padding: 10px;
+    line-height: 60px;
     margin: 0;
-    margin-top: -9px;
-    line-height: 100px;
     float: left;
-    @media (max-width: 575px) {
-      display: none;
-    }
-  }
-  .logo {
-    width: 100px;
-    height: 100px;
-    float: left;
-    // background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    &.zip {
-      background-image: url('./assets/ZiP_logo.png');
-    }
-    &.hdd {
-      background-image: url('./assets/HDD_logo.png');
-      width: 180px;
-    }
-    &.idea {
-      background-image: url('./assets/IDEA_logo.png');
-    }
-    &.eu {
-      background-image: url('./assets/EU_logo.png');
-      width: 240px;
-      float: right;
+    display: none;
+
+    @media (min-width: 992px) {
+      display: block;
     }
   }
 }
+
 .split-container {
   width: 100%;
   height: 100%;
