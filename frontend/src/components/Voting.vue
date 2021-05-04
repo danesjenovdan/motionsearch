@@ -8,11 +8,12 @@
 
 <script>
 export default {
+  props: ["votes"],
   data() {
     return{
       upSelected: false,
       downSelected: false,
-      number: Math.floor(Math.random() * 100),
+      number: this.votes,
     }
   }, 
   methods: {
@@ -31,6 +32,11 @@ export default {
         this.number -= 1;
         }
       this.number = this.downSelected ? this.number-1 : this.number+1
+    }
+  },
+  watch: { 
+    votes: function(newVal, oldVal) { // watch it
+      this.number = newVal
     }
   }
 }

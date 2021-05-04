@@ -6,7 +6,7 @@
         <span>Easiest way to find a motion for debating</span>
       </div>
       <div class="registration-form-container">
-        <form>
+        <form @submit="login">
           <h1>Please log in to contribute to use Motion Generator features.</h1>
           <label for="username">Username</label>
           <input type="text" id="username" name="username">
@@ -25,6 +25,29 @@
     </div>
   </div>
 </template>
+
+
+<script>
+  export default {
+    data() {
+      return {
+        username: '',
+        password: '',
+      }
+    },
+    methods : {
+      login: async function(e){
+        e.preventDefault()
+        try {
+          await this.$store.dispatch('login', {username: username.value, password: password.value})
+          window.location.href = '/';
+        } catch (error) {
+          console.log('error: ', error);
+        }
+      }
+    }
+  }
+</script>
 
 <style scoped lang="scss">
 </style>

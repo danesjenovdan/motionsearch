@@ -5,7 +5,7 @@
           <motion class="motion" :id="id" />
       </div>
       <div class="split-right hidden-xs">
-        <motion-comments/>
+        <motion-comments :id="id" />
       </div>
     </div>
 </template>

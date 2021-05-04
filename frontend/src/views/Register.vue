@@ -45,19 +45,13 @@
       register: async function(e){
         e.preventDefault()
         if (!password.value || !this.validate(password.value, confirmpwd.value)) return false
-        const response = await fetch('https://motion-search-backend.lb.djnd.si/api/v1/users/', {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+        const response = await this.$store.dispatch('register', {
             username: username.value,
             password: password.value,
             email: email.value,
-            favorites: []
-          }) // body data type must match "Content-Type" header
-        });
-        return response.json();
+          })
+        console.log('response: ', response);
+        if (response) window.location.href = '/login'
       }
     }
   }

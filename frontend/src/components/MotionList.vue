@@ -1,7 +1,7 @@
 <template>
     <div class="parent-container">
         <div class="header"> 
-          <a href="/login"><button class="login" type="submit">LOG IN</button></a>
+          <a href="/login"><button v-show="!isAuth" class="login" type="submit">LOG IN</button></a>
           <button type="submit">SUGGEST A MOTION</button> 
         </div>
         <div class="line"/>
@@ -20,7 +20,7 @@
                 <a :href="'/motion/'+motion.id"><p class="motions-title">{{motion.topic}}</p></a>
               </div>
               <div class="votes">
-                <voting/>
+                <voting :votes="motion.votes" />
               </div>
           </div>
     </div>
@@ -38,7 +38,8 @@
       return {
         motions,
         page,
-        refresh
+        refresh,
+        isAuth: false
       }
     },
     components: {
@@ -48,26 +49,12 @@
       async loadNextPage() {
         try {
           this.page += 1;
-          const result = await this.getMotions(this.page)
+          const result = await this.$store.dispatch('getMotions', {page: this.page})
           if(result) this.motions = this.motions.concat(result)
           else this.page -= 1
           this.refresh = true
         } catch (error) {
           this.refresh = true
-        }
-      },
-      getMotions: async(page) => {
-        try {
-          const result = await fetch(`https://motion-search-backend.lb.djnd.si/api/v1/motions/?page=${page}`, {
-              method: 'get',
-              headers: {
-                'content-type': 'application/json'
-              }
-            })
-          const body = await result.json(); // .json() is asynchronous and therefore must be awaited
-          return body.results;
-        } catch (error) {
-          console.log(error);
         }
       },
       handleScroll(e) {
@@ -86,7 +73,8 @@
       window.removeEventListener("scroll", this.handleScroll)
     },
     async created() {
-      this.motions = await this.getMotions(1)
+      this.isAuth = await this.$store.dispatch('isAuth')
+      this.motions = await this.$store.dispatch('getMotions', {page: 1})
     }
   }
 
