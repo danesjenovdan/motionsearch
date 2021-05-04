@@ -1,4 +1,5 @@
 django
 djangorestframework
-django-oauth-toolkit-1.5.0
+django-oauth-toolkit
 django-cors-headers
+drf_social_oauth2

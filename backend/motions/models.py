@@ -19,17 +19,18 @@ class VoteValue:
     DOWNVOTE = -1
 
     CHOICES = (
-        (UPVOTE, _('Upvote')),
-        (DOWNVOTE, _('Downvote')),
+        (1, _('Upvote')),
+        (2, _('Downvote')),
+        (3, _('No vote'))
     )
 
 
 class MotionCategory(BaseModel):
-    value = models.CharField(max_length=255, null=False, blank=False)
+    value = models.CharField(max_length=255, null=True, blank=True)
 
 
 class MotionDifficulty(BaseModel):
-    value = models.CharField(max_length=255, null=False, blank=False)
+    value = models.CharField(max_length=255, null=True, blank=True)
 
 
 class DebateFormat(BaseModel):
@@ -57,7 +58,7 @@ class MotionWhereUsed(BaseModel):
 
 
 class MotionInfoText(BaseModel):
-    value = models.TextField(null=False, blank=False)
+    value = models.TextField( null=True, blank=True)
 
 
 class MotionLink(BaseModel):
@@ -65,24 +66,31 @@ class MotionLink(BaseModel):
 
 
 class MotionComment(BaseModel):
-    user = models.ForeignKey('users.User', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.SET_NULL)
     text = models.TextField(null=False, blank=False)
-    motion = models.ForeignKey('motions.Motion', null=True, on_delete=models.CASCADE)
+    motion = models.ForeignKey('motions.Motion', null=False, blank=False,on_delete=models.CASCADE)
 
+class MotionVote(BaseModel):
+    user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.CASCADE,  unique=True)
+    choices = models.PositiveSmallIntegerField(
+       choices=VoteValue.CHOICES,
+       default=3,
+   )
+    motion = models.ForeignKey('motions.Motion', null=False, blank=False,on_delete=models.CASCADE)
 
 class Motion(BaseModel):
     topic = models.TextField(blank=True, null=True)
     category = models.ManyToManyField(MotionCategory, blank=True)
-    difficulties = models.ManyToManyField(MotionDifficulty, blank=True)
-    debate_formats = models.ManyToManyField(DebateFormat, blank=True)
-    age_range = models.ManyToManyField(MotionAgeRange, blank=True)
-    type = models.ManyToManyField(MotionType, blank=True)
-    training_focus = models.ManyToManyField(MotionTrainingFocus, blank=True)
-    impro_prep = models.ManyToManyField(MotionImproPrep, blank=True)
+    difficulties = models.ForeignKey(MotionDifficulty, on_delete=models.CASCADE)
+    debate_formats = models.ForeignKey(DebateFormat, on_delete=models.CASCADE)
+    age_range = models.ForeignKey(MotionAgeRange, on_delete=models.CASCADE)
+    type = models.ForeignKey(MotionType, on_delete=models.CASCADE)
+    training_focus = models.ForeignKey(MotionTrainingFocus, on_delete=models.CASCADE)
+    impro_prep = models.ForeignKey(MotionImproPrep, on_delete=models.CASCADE)
     where_used = models.ManyToManyField(MotionWhereUsed, blank=True)
     info_text = models.ManyToManyField(MotionInfoText, blank=True)
     links = models.ManyToManyField(MotionLink, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    votes = models.IntegerField(default=0, blank=True, db_index=True)
 
     @property
     def quality_score(self):

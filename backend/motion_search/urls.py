@@ -19,7 +19,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    re_path(r'^auth/', include('drf_social_oauth2.urls', namespace='drf')),
+    re_path(r'^auth/', include('oauth2_provider.urls', namespace='drf')),
     url(r'^api/v1/motions/', include('motions.urls'), name='motions'),
     url(r'^api/v1/users/', include('users.urls'), name='users'),
 ]

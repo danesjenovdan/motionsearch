@@ -1,12 +1,33 @@
 from django.core.management import BaseCommand
+from oauth2_provider.models import Application
 
 from motions.models import MotionCategory, MotionDifficulty, DebateFormat, MotionAgeRange, MotionType, \
     MotionTrainingFocus, MotionImproPrep, MotionWhereUsed, MotionLink
+from users.models import User
 
 
 class Command(BaseCommand):
     help = 'Ineserts initial data.'
 
+    def insertApplication(self):
+        user = User(
+            first_name='The guy',
+            username='super',
+            email='test@test.com',
+            is_active=True,
+        )
+        user.save()
+        user.set_password('geslo123')
+        user.save()
+
+        Application(
+            client_id='NMBhhYpE4hOCFTxsgdHhKN0smPraXfd1sxsgLB2t',
+            client_secret='YmjUSqEplD67rCjg8mw0uWXlg7afEFRfgPWnE8l8XECgaYDvOxtbCYXBwQBuEDXTNRlZkkC1tFLpsv5tTWdngbQ8fx08n9vE4fcDnBWvwJEY8AEl8vb3MOwutvd33E5L',
+            user=user,
+            client_type='confidential',
+            authorization_grant_type= 'password',
+            name='client'
+        ).save()
     def insert_categories(self):
         objs = [
             {'value': 'Art and Culture'},
@@ -261,3 +282,4 @@ class Command(BaseCommand):
         self.insert_impro_prep()
         self.insert_where_used()
         self.insert_links()
+        self.insertApplication()

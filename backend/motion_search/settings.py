@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'motions',
     'users',
     'oauth2_provider',
-    'drf_social_oauth2',
-    'social_django'
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -136,58 +135,15 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
             'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-            'drf_social_oauth2.authentication.SocialAuthentication'
         ),
 }
 
 AUTH_USER_MODEL = 'users.User'
 
 OAUTH2_PROVIDER = {
-    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'drf_social_oauth2.authentication.SocialAuthentication',
-    ),
-}
-
-AUTHENTICATION_BACKENDS = (
-    # Facebook OAuth2
-    'social_core.backends.facebook.FacebookAppOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
-
-    # Google OAuth2
-    'social_core.backends.google.GoogleOAuth2',
-
-    'drf_social_oauth2.backends.DjangoOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-# Facebook configuration
-SOCIAL_AUTH_FACEBOOK_KEY = '290563391104397'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'b3fea1fb795be35953e003404675c3c4'
-
-# Define SOCIAL_AUTH_FACEBOOK_SCOPE to get extra permissions from Facebook.
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id, name, email'
-}
-
-# Google configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '751466585012-48dl84f6odf3bejj6t5p8uofp22mlphf.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '-pZ_G2ox72IG1LerwZc8uNtw'
-
-# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-]
-
-OAUTH2_PROVIDER = {
-    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'
-}
 
 LOGIN_URL='/admin/login/'
 CORS_ALLOW_ALL_ORIGINS = True
