@@ -61,7 +61,7 @@ spec:
           #       name: motion-search-backend-credentials
       containers:
         - name: motion-search-backend
-          image: rg.fr-par.scw.cloud/djnd/motion-search-backend:latest
+          image: motion-search-backend
           # command:
           #   - gunicorn
           #   - motion-search-backend_project.wsgi:application
