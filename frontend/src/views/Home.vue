@@ -1,22 +1,27 @@
 <template>
  <div class="split-container">
-      <div class="split left">
-          <div class="debate-logo"><img src="../assets/motion-generator-logo.svg">&nbsp;&nbsp; Easiest way to find a motion for debating</div>
-          <filters/>          
+   <div class="container-child">
+     <div class="wrapper">
+       <div class="debate-logo">
+        <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+        <span>Easiest way to find a motion for debating</span>
       </div>
-      <div class="split-right">
-        <motion-list/>
-      </div>
+      <filters/>
     </div>
+  </div>
+  <div class="container-child">
+    <motion-list/>
+  </div>
+</div>
 </template>
 
 <script>
-  import Motion from '../components/Motion.vue'
-  import Filters from '../components/Filters.vue'
-  import MotionComments from '../components/MotionComments.vue'
-  import MotionList from '../components/MotionList.vue'
+import Motion from '../components/Motion.vue'
+import Filters from '../components/Filters.vue'
+import MotionComments from '../components/MotionComments.vue'
+import MotionList from '../components/MotionList.vue'
 
-  export default {
+export default {
   components: {
     Motion,
     MotionComments,
@@ -27,40 +32,45 @@
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
-  .hidden-xs {
-    height:90vh;
+.hidden-xs {
+  height:90vh;
+}
+
+.debate-logo {
+  display: none;
+  margin: 20px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
   }
-  .background {
-    background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
+
+  @media (min-width: 1200px) {
+    margin: 0;
+    flex-direction: row;
   }
+
   img {
     height: 80px;
-  }
-  .line {
-    margin-top: 26px;
-    border-top: 1px solid;
+    margin-bottom: 20px;
+
+    @media (min-width: 1200px) {
+      margin-bottom: 0;
+    }
   }
 
-  .debate-logo {
-    display: flex;
-    flex-direction: row;
-    position: absolute;
-    margin-top: 22px;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 10%;
-    /* Style for "Easiest wa" */
-    color: #252525;
-    font-family: Poppins;
-    font-size: 18px;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: 29px;
-    text-align: left;
+  span {
+    @media (min-width: 768px) {
+      text-align: center;
+    }
+
+    @media (min-width: 1200px) {
+      text-align: left;
+    }
   }
+}
 
 </style>
+
