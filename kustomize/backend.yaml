@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: motion-search-backend-pv-claim
+  labels:
+    app: motion-search-backend
+spec:
+  storageClassName: 'scw-bssd-retain'
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,6 +28,10 @@ spec:
       labels:
         app: motion-search-backend
     spec:
+      volumes:
+        - name: motion-search-backend-persistent-storage
+          persistentVolumeClaim:
+            claimName: motion-search-backend-pv-claim
       initContainers:
         - name: collectstatic
           image: motion-search-backend
@@ -31,9 +49,13 @@ spec:
             - python
             - manage.py
             - migrate
-          # env:
-          #   - name: DJANGO_SETTINGS_MODULE
-          #     value: motion-search-backend_project.settings.k8s
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: motion-search-backend_project.k8s
+              # value: motion-search-backend_project.settings.k8s
+          volumeMounts:
+            - name: motion-search-backend-persistent-storage
+              mountPath: /pvc
           # envFrom:
           #   - secretRef:
           #       name: motion-search-backend-credentials
@@ -57,8 +79,12 @@ spec:
           # envFrom:
           #     - secretRef:
           #         name: motion-search-backend-credentials
-          # env:
-          #   - name: DJANGO_SETTINGS_MODULE
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: motion-search-backend_project.k8s
+          volumeMounts:
+            - name: motion-search-backend-persistent-storage
+              mountPath: /pvc
           #     value: motion-search-backend_project.settings.k8s
 ---
 apiVersion: v1
