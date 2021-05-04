@@ -42,7 +42,7 @@ spec:
             - --no-input
           # env:
           #   - name: DJANGO_SETTINGS_MODULE
-          #     value: motion-search-backend_project.settings.k8s
+          #     value: motion_search.settings.k8s
         - name: migrate
           image: motion-search-backend
           command:
@@ -51,8 +51,8 @@ spec:
             - migrate
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: motion-search-backend_project.k8s
-              # value: motion-search-backend_project.settings.k8s
+              value: motion_search.k8s
+              # value: motion_search.settings.k8s
           volumeMounts:
             - name: motion-search-backend-persistent-storage
               mountPath: /pvc
@@ -81,7 +81,8 @@ spec:
           #         name: motion-search-backend-credentials
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: motion-search-backend_project.k8s
+              value: motion_search.k8s
+              # value: motion_search.settings.k8s
           volumeMounts:
             - name: motion-search-backend-persistent-storage
               mountPath: /pvc
