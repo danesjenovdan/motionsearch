@@ -43,32 +43,6 @@ h1 {
   }
 }
 
-textarea,
-select,
-input {
-  border: 4px solid #3098f3;
-  background-color: #ffffff;
-  line-height: 60px;
-  font-family: Poppins;
-  font-size: 20px;
-  line-height: 48px;
-  font-weight: 400;
-}
-label {
-  color: #252525;
-  font-family: "IBM Plex Mono";
-  font-style: italic;
-  font-size: 20px;
-  line-height: 60px;
-}
-input[type=text] {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-input[type=number] {
-  width: 60px;
-}
-
 footer {
   flex-shrink: 0;
   background: #ffffff;

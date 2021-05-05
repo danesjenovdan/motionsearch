@@ -102,49 +102,6 @@
 
 <style scoped lang="scss">
 
-.btn {
-  text-decoration: none;
-  margin-left: 6px;
-  padding: 5px 9px;
-  border-radius: 30px;
-  font-size: 12px;
-  // box-shadow: none;
-  border: 2px solid #3098f3;
-  background-color: #3098f3;
-  // opacity: 0.7;
-  color: #ffffff;
-  font-family: "Poppins";
-  font-style: italic;
-  text-transform: uppercase;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.1;
-  }
-  &:hover {
-    opacity: 1;
-  }
-
-  &.login {
-    border-color: #ffcc00;
-    background-color: #ffffff;
-    color: #000000;
-  }
-
-  @media (min-width: 768px) {
-    font-size: 16px;
-    letter-spacing: 1px;
-    padding: 10px 15px;
-    margin-left: 10px;
-    border-width: 4px;
-  }
-
-  @media (min-width: 1200px) {
-    font-size: 24px;
-    letter-spacing: 2px;
-  }
-}
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -357,6 +314,7 @@ input {
   box-sizing: border-box;
 }
 
+/*
 a {
   color: #252525;
   font-family: Poppins;
@@ -368,5 +326,5 @@ a {
   text-align: left;
   text-decoration: underline;
 }
-
+*/
 </style>
