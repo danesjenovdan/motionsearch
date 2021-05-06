@@ -14,7 +14,7 @@
       <div class="motions-title-bar">
         <div>
           <h3>Motions</h3>
-          <button class="btn">Filters</button>
+          <button class="btn" @click="toggleFilters">Filters</button>
         </div>
         <div class="motions-sort">
           <p>Sort by</p>
@@ -85,6 +85,9 @@
           this.loadNextPage()
           this.refresh = false
         }
+      },
+      toggleFilters() {
+        this.$emit('toggle-filters')
       }
     },
     mounted() {
@@ -123,7 +126,7 @@
     }
 
     img {
-      height: 50px;
+      height: 40px;
     }
   }
 }
@@ -205,7 +208,7 @@
       .sort-button {
         border-radius: 20px;
         background-color: rgb(48, 152, 243, 0.2);
-        padding: 10px;
+        padding: 5px 10px;
         margin-left: 10px;
         cursor: pointer;
         color: #000000;

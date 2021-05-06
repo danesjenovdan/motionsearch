@@ -1,22 +1,23 @@
 <template>
+  <div>
     <div class="filters-container">
       <div :class="['filterBox', { selected: true }]">
         <img src="../assets/topic.svg">
-       <span :onclick="togglePopup"><i>Topic</i></span>
-         <div class="popup">
-            <div class="popup-container" id="myPopup">
-              <div class="popup-box">
-                <div class="checkmark-container">
-                  <div v-for="category in categories" :key="category">
-                    <input :id="category" type='checkbox'/>
-                    <label class="popup-text" :for="category">{{category}}</label>
-                  </div>
+        <span :onclick="togglePopup"><i>Topic</i></span>
+        <div class="popup">
+          <div class="popup-container" id="myPopup">
+            <div class="popup-box">
+              <div class="checkmark-container">
+                <div v-for="category in categories" :key="category">
+                  <input :id="category" type='checkbox'/>
+                  <label class="popup-text" :for="category">{{category}}</label>
                 </div>
-              <div class="popup-apply"> Apply</div>
               </div>
-              <div class="popup-arrow">
-              </div>
+              <div class="popup-apply">Apply</div>
             </div>
+            <div class="popup-arrow">
+            </div>
+          </div>
         </div>
       </div>
       <div class="filterBox">
@@ -52,6 +53,10 @@
         <span><i>Show me a random motion</i></span>
       </div>
     </div>
+    <div class="apply-button">
+      <button class="btn" @click="toggleFilters">Apply</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -71,6 +76,9 @@
       togglePopup: (event) => {
         var popup = document.getElementById("myPopup");
         popup.classList.toggle("show");
+      },
+      toggleFilters() {
+        this.$emit('toggle-filters')
       }
     }
   }
@@ -91,6 +99,23 @@
     row-gap: 5%;
     margin: 80px 0 40px;
   }
+}
+
+.apply-button {
+  display: flex;
+  justify-content: center;
+
+  .btn {
+    margin-top: 20px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+  }
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
 }
 
 /* Base for label styling */
