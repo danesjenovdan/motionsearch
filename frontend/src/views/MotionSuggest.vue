@@ -299,47 +299,6 @@ export default {
   border-top: 1px solid;
 }
 
-textarea,
-select,
-input {
-  border: 3px solid #3098f3;
-  background-color: #ffffff;
-  font-family: Poppins;
-  font-size: 16px;
-  padding: 10px;
-
-  @media (min-width: 768px) {
-    font-size: 20px;
-    border-width: 4px;
-  }
-}
-
-select {
-  width: 50%;
-  height: 48px;
-
-  @media (min-width: 768px) {
-    height: 60px;
-  }
-}
-
-input[type=number] {
-  width: 60px;
-}
-
-label {
-  color: #252525;
-  font-family: "IBM Plex Mono";
-  font-style: italic;
-  font-size: 16px;
-  line-height: 32px;
-
-  @media (min-width: 768px) {
-    font-size: 20px;
-    line-height: 40px;
-  }
-}
-
 .setting-container {
   width: 50%;
 

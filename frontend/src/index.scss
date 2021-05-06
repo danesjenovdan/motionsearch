@@ -23,6 +23,38 @@ body {
   background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
 }
 
+.debate-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+
+  img {
+    margin-bottom: 20px;
+
+    @media (min-width: 768px) {
+      margin-bottom: 0;
+      margin-right: 20px;
+    }
+  }
+
+  span {
+    color: #252525;
+    font-family: Poppins;
+    font-size: 18px;
+    line-height: 29px;
+    text-align: center;
+
+    @media (min-width: 768px) {
+      text-align: left;
+    }
+  }
+}
+
 .split-container {
   height: 100%;
   display: flex;
@@ -41,19 +73,53 @@ body {
 
     &:nth-child(1) {
       background-image: linear-gradient(to right, #f5f0e2 0%, #fbfbfa 100%);
+    }
 
-      .wrapper {
+    .wrapper {
+      padding: 20px 20px 60px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      @media (min-width: 992px) {
         padding: 20px 20px 60px;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
+      }
 
-        @media (min-width: 992px) {
-          padding: 20px 20px 60px;
+      @media (min-width: 1200px) {
+        padding: 20px 60px 60px;
+      }
+
+      .debate-logo {
+        display: none;
+        margin: 20px;
+
+        @media (min-width: 768px) {
+          display: flex;
+          flex-direction: column;
         }
 
         @media (min-width: 1200px) {
-          padding: 20px 60px 60px;
+          margin: 0;
+          flex-direction: row;
+        }
+
+        img {
+          height: 80px;
+          margin-bottom: 20px;
+
+          @media (min-width: 1200px) {
+            margin-bottom: 0;
+          }
+        }
+
+        span {
+          @media (min-width: 768px) {
+            text-align: center;
+          }
+
+          @media (min-width: 1200px) {
+            text-align: left;
+          }
         }
       }
     }
@@ -208,35 +274,48 @@ body {
   }
 }
 
-.debate-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+textarea,
+select,
+input {
+  border: 3px solid #3098f3;
+  background-color: #ffffff;
+  font-family: Poppins;
+  font-size: 16px;
+  padding: 10px;
 
   @media (min-width: 768px) {
-    flex-direction: row;
+    font-size: 20px;
+    border-width: 4px;
   }
+}
 
-  img {
-    margin-bottom: 20px;
+select {
+  width: 50%;
+  height: 48px;
 
-    @media (min-width: 768px) {
-      margin-bottom: 0;
-      margin-right: 20px;
-    }
+  @media (min-width: 768px) {
+    height: 60px;
   }
+}
 
-  span {
-    color: #252525;
-    font-family: Poppins;
-    font-size: 18px;
-    line-height: 29px;
-    text-align: center;
+input {
+  box-sizing: border-box;
+}
 
-    @media (min-width: 768px) {
-      text-align: left;
-    }
+input[type=number] {
+  width: 60px;
+}
+
+label {
+  color: #252525;
+  font-family: "IBM Plex Mono";
+  font-style: italic;
+  font-size: 16px;
+  line-height: 32px;
+
+  @media (min-width: 768px) {
+    font-size: 20px;
+    line-height: 40px;
   }
 }
 

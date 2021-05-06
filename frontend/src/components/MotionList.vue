@@ -310,21 +310,4 @@
   border-top: 1px solid #3098f3;
 }
 
-input {
-  box-sizing: border-box;
-}
-
-/*
-a {
-  color: #252525;
-  font-family: Poppins;
-  font-size: 18px;
-  font-weight: 400;
-  font-style: normal;
-  letter-spacing: normal;
-  line-height: 40px;
-  text-align: left;
-  text-decoration: underline;
-}
-*/
 </style>
