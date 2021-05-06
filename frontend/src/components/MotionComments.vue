@@ -9,7 +9,6 @@
           <router-link to="/login" class="btn login">Log in</router-link>
         </div>
       </div>
-      <div class="line"/>
         <div class="share-bar">
           <div class="share-bar-split">
             <h1>Share this motion!</h1>
@@ -113,10 +112,18 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #3098f3;
+  // margin-bottom: 30px;
 
   @media (min-width: 768px) {
     justify-content: flex-end;
     padding: 20px;
+    position: static;
   }
 
   @media (min-width: 1200px) {
@@ -137,14 +144,18 @@
   .share-bar {
     position: relative;
     overflow: hidden;
-    margin-left: 40px;
-    margin-right: 40px;
+    margin: 30px 20px 0 20px;
     display: flex;
     flex-direction: row;
     padding: 20px;
     // background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
     background-image: linear-gradient(-62deg, #cee7fd 0%, #f7fafd 100%);
     z-index: 2;
+
+    @media (min-width: 1200px) {
+      margin: 30px 40px 0 40px;
+    }
+
     .share-bar-split {
       width: 100%;
       align-content: center;
@@ -219,8 +230,12 @@
   .parentContainer {
     display: flex;
     flex-direction: column-reverse;
-    margin: 10px 40px 40px 40px;
+    margin: 10px 20px 40px 20px;
     overflow: hidden;
+
+    @media (min-width: 1200px) {
+      margin: 10px 40px 40px 40px;
+    }
 
     @media (min-width: 1200px) {
       flex-direction: row;

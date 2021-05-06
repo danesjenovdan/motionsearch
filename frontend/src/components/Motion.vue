@@ -62,10 +62,13 @@
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  padding: 40px;
+  padding: 20px;
   margin-top: 100px;
   margin-bottom: 40px;
-  // max-width: 30vw;
+
+  @media (min-width: 992px) {
+    padding: 40px;
+  }
 
   p {
     font-family: "IBM Plex Mono";
