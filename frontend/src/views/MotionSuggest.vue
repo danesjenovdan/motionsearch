@@ -199,10 +199,10 @@ export default {
     }
 
     .header-buttons {
-      margin: 20px 30px 20px 0;
+      margin: 20px 10px 20px 0;
 
       @media (min-width: 1200px) {
-        margin-right: 60px;
+        margin: 20px 60px 20px 0;
       }
     }
   }

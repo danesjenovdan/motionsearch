@@ -35,7 +35,7 @@ h1 {
     content: '';
     display: block;
     position: absolute;
-    bottom: 5px;
+    bottom: 15px;
     z-index: -1;
     width: 100%;
     height: 16px;

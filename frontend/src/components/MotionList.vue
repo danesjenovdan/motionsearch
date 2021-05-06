@@ -136,6 +136,7 @@
   flex-direction: column;
   // overflow: hidden;
   padding: 0 20px;
+  margin-bottom: 20px;
 
   @media (min-width: 992px) {
     padding: 0 40px;

@@ -46,7 +46,7 @@ export default {
 
 .container-child:first-child {
   position: absolute;
-  top: 76px;
+  top: 66px;
   opacity: 0;
   z-index: -1;
 
@@ -58,13 +58,9 @@ export default {
   @media (min-width: 768px) {
     position: static;
     opacity: 1;
+    z-index: 1;
   }
 }
 
-/*
-.container-child:last-child {
-  z-index: 10;
-}
-*/
 </style>
 

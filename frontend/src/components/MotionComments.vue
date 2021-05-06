@@ -169,9 +169,9 @@
         flex-wrap: wrap;
       }
     }
+
     h1 {
-      margin-top: 0;
-      margin-right: 20px;
+      margin: 0 20px 0 0;
     }
   }
   .share-input {
