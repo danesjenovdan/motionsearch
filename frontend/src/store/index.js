@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = 'http://localhost:8000' || 'https://motion-search-backend.lb.djnd.si'
+const api = process.env.DEVELOPMENT ? 'http://localhost:8000' : 'https://motion-search-backend.lb.djnd.si';
 
 export const state = () => ({
   client_id:"NMBhhYpE4hOCFTxsgdHhKN0smPraXfd1sxsgLB2t",

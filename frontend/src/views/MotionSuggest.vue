@@ -6,7 +6,7 @@
            <form @submit="postMotion">
               <div class="textAreaContainer">
                 <label>Topic</label><br>
-                <textarea rows="3" cols="20" name="topic" id="topic"></textarea>
+                <textarea rows="3" cols="20" name="topic" ref="topic"></textarea>
                </div><br>
               <div class="inputContainer"> 
                 <label >Category</label>
@@ -34,7 +34,7 @@
               </div>
               <div class="inputContainer"> 
                 <label>Motion type</label>
-                <select v-model="type" name="motionType" id="motionType">
+                <select v-model="type" name="Type" id="type">
                   <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
                 </select>
               </div>
@@ -52,6 +52,7 @@
                     <input
                       type="radio"
                       name="impro/prep"
+                      v-model="improPrep"
                       :value="1"
                       >
                   </div>
@@ -60,6 +61,7 @@
                     <input
                       type="radio"
                       name="impro/prep"
+                      v-model="improPrep"
                       :value="2"
                       >
                   </div>
@@ -112,14 +114,13 @@
         improPrepArray: [],
         usedWhere: [],
         links: [],
-        topic: '',
         categories: 0,
         link: '',
         url: '',
         difficulty: 0,
         age: 0,
         debateFormat: 0,
-        motionType: 0,
+        type: 0,
         trainingFocus: 0,
         improPrep: 0
       }
@@ -155,14 +156,14 @@
         e.preventDefault()
         try {
           await this.$store.dispatch('postMotion', {
-            topic: this.topic,
+            topic: this.$refs.topic.value,
             where_used: JSON.parse(JSON.stringify(this.usedWhere)),
             links: JSON.parse(JSON.stringify(this.links)),
             category: this.categories,
-            difficulty: this.difficulty,
+            difficulties: this.difficulty,
             age_range: this.age,
             debate_formats: this.debateFormat,
-            type: this.motionType,
+            type: this.type,
             training_focus: this.trainingFocus,
             impro_prep: this.improPrep
           })
