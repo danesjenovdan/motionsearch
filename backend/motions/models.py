@@ -69,6 +69,7 @@ class MotionComment(BaseModel):
     user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.SET_NULL)
     text = models.TextField(null=False, blank=False)
     motion = models.ForeignKey('motions.Motion', null=False, blank=False,on_delete=models.CASCADE)
+    created_at = AutoDateTimeField(auto_now=True)
 
 class MotionVote(BaseModel):
     user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.CASCADE,  unique=True)

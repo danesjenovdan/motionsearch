@@ -6,6 +6,7 @@ import Login from './views/Login.vue'
 import ResetPassword from './views/ResetPassword.vue'
 import MotionView from './views/MotionView.vue'
 import MotionSuggest from './views/MotionSuggest.vue'
+import store from './store/store'
 
 import App from './App.vue'
 
@@ -48,5 +49,5 @@ const router = createRouter({
   routes,
 })
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(store).use(router).mount('#app')
 

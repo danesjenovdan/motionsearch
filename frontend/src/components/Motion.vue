@@ -1,10 +1,10 @@
 <template>
 <div class="parentContainer">
   <div class="motionButtons">
-    <voting/>
+    <voting :votes="motion.votes" :id="id"/>
     <favourite/>
   </div>
-  <p>Added on {{motion.created_at}}</p>
+  <p>Added on {{motion.created_at?.split('T')[0]}}</p>
   <span class="motion-text">{{motion.topic}}</span>
   <div class="line"></div>
   <ul class="tags">
@@ -33,24 +33,9 @@
        'id',
        ],
     methods: {
-      getMotion: async(id) => {
-        try {
-          const result = await fetch(`https://motion-search-backend.lb.djnd.si/api/v1/motions/${id}/`, {
-              method: 'get',
-              headers: {
-                'content-type': 'application/json'
-              }
-            })
-          return await result.json(); // .json() is asynchronous and therefore must be awaited
-        } catch (error) {
-          console.log(error);
-        }
-      },
     },
     async created() {
-      console.log('this.id: ', this.id);
-      this.motion = await this.getMotion(this.id)
-      console.log('this.motion: ', this.motion);
+      this.motion = await this.$store.dispatch('getMotion', {id: this.id})
     }
   }
 

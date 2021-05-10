@@ -7,114 +7,107 @@
     </div>
     <div class="header-buttons">
       <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-      <router-link to="/login" class="btn login">Log in</router-link>
+      <router-link to="/login" v-show="!isAuth" class="btn login">Log in</router-link>
     </div>
   </div>
   <div class="wrapper">
     <div class="motionSuggestContainer">
-      <h1>Suggest a motion</h1>
-      <form>
-        <div class="textAreaContainer">
-          <label>Motion text</label>
-          <textarea rows="3" cols="20" name="text"></textarea>
-         </div>
-        <div class="inputContainer">
-          <label>Topic</label>
-          <select name="Topic" id="topic">
-            <option value=null>Select</option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-          </select>
-        </div>
-        <div class="inputContainer">
-          <label>Difficulty</label>
-          <select name="Difficulty" id="difficulty">
-            <option value=null>Select</option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-          </select>
-        </div>
-        <div class="inputContainer">
-          <label>Age</label>
-          <select name="Age" id="age">
-            <option value=null>Select</option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-          </select>
-        </div>
-        <div class="inputContainer">
-          <label>Motion type</label>
-          <select name="motionType" id="motionType">
-            <option value=null>Select</option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-          </select>
-        </div>
-        <div class="inputContainer">
-          <label>Training focus</label>
-          <select name="trainingFocus" id="trainingFocus">
-            <option value=null>Select</option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-          </select>
-        </div>
-        <div class="inputContainer">
-          <label>Impro or prep</label>
-        <div class="setting-container">
-          <div class="radio-container">
-            <span class="label">impro</span>
-            <input
-              type="radio"
-              name="impro/prep"
-              :value="impro"
-              >
+      <h1>Suggest a motion</h1><br>
+        <form @submit="postMotion">
+          <div class="textAreaContainer">
+            <label>Topic</label><br>
+            <textarea rows="3" cols="20" name="topic" ref="topic"></textarea>
+            </div><br>
+          <div class="inputContainer"> 
+            <label >Category</label>
+            <select v-model="categories" name="Category" id="categories">
+              <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
+            </select>
           </div>
-          <div class="radio-container">
-            <span class="label">prep</span>
-            <input
-              type="radio"
-              name="impro/prep"
-              :value="prep"
-              >
+          <div class="inputContainer"> 
+            <label>Dificulty</label>
+            <select v-model="difficulty" name="Dificulty" id="difficulty">
+              <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
+            </select>
           </div>
-        </div>
-        </div>
-        <div class="inputContainer">
-          <div class="subtitleContainer">
-            <label>Add is used where</label>
-            <span class="subtitle">Press ENTER after each input</span>
+          <div class="inputContainer"> 
+            <label>Debate format</label>
+            <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
+              <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
+            </select>
           </div>
-          <div class="arrayContainer">
-            <div v-for="(element, index) in usedWhere" :element="element" :key="element" :vid-id="index">
-              <p><button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element}}</p>
+          <div class="inputContainer"> 
+            <label >Age</label>
+            <select v-model="age" name="Age" id="age">
+              <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
+            </select>
+          </div>
+          <div class="inputContainer"> 
+            <label>Motion type</label>
+            <select v-model="type" name="Type" id="type">
+              <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
+            </select>
+          </div>
+          <div class="inputContainer"> 
+            <label>Training focus</label>
+            <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
+                <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
+            </select>
+          </div>
+          <div class="inputContainer"> 
+            <label>Impro or prep</label>
+          <div class="setting-container teams">
+              <div class="radio-container">
+                <span class="label">impro</span>
+                <input
+                  type="radio"
+                  name="impro/prep"
+                  v-model="improPrep"
+                  :value="1"
+                  >
+              </div>
+              <div class="radio-container">
+                <span class="label">prep</span>
+                <input
+                  type="radio"
+                  name="impro/prep"
+                  v-model="improPrep"
+                  :value="2"
+                  >
+              </div>
             </div>
-            <input type="text" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
           </div>
-        </div>
-        <div class="inputContainer">
-          <div class="subtitleContainer">
-            <label>Add links</label>
-            <span class="subtitle">Press ENTER after each input</span>
-          </div>
-          <div class="arrayContainer">
-            <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-               <div><span v-on:click="removeLink(index)" class="">x</span> <a target="_blank" :href="link.url">{{link.title}}</a></div>
+          <div class="inputContainer"> 
+            <div class="subtitleContainer">
+              <label>Add is used where</label><br/>
+              <label class="subtitle"> Press Enter after each input</label>
             </div>
-            <input type="text" key="link.title" placeholder="Type here..." />
-            <input type="text" key="link.url" placeholder="Type here..." />
+            <div class="arrayContainer">
+              <div v-for="(element, index) in usedWhere" :element="element" :key="element" :vid-id="index">
+                  <button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element}}
+              </div>
+              <input type="text" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
+            </div>
           </div>
-        </div>
-      </form>
+          <div class="inputContainer"> 
+            <div class="subtitleContainer">
+              <label>Add links</label><br/>
+              <label class="subtitle"> Press Enter after each input</label>
+            </div>
+            <div class="arrayContainer">
+              <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
+                <button v-on:click="removeLink(index)" class="btn">x</button> <a target="_blank" :href="link.url">{{link.title}}</a>
+              </div>
+              <input type="text" id="link" key="links.title" placeholder="Type here..." />
+              <input type="text" id="url" key="links.url" placeholder="Type here..."/>
+              <div class="buttonContainer">
+                <p>Add another link</p> 
+                <button class="addLink" v-on:click="addLink"></button>
+              </div>
+            </div>
+          </div>
+          <button type="submit">Submit motion</button>
+        </form>
     </div>
   </div>
 </div>
@@ -127,25 +120,110 @@ const links = [{
   url:"www.yeet.com"
 }]
 
-export default {
-  data() {
-    return {
-      usedWhere,
-      links
-    }
-  },
-  methods: {
-    addUsedWhere: (event) => {
-      event.preventDefault()
-      usedWhere.push(event.target.value)
+  export default {
+    data() {
+      return {
+        categoryArray: [],
+        difficultiesArray: [],
+        ageArray: [],
+        debateFormatArray: [],
+        typeArray: [],
+        trainingFocusArray: [],
+        improPrepArray: [],
+        usedWhere: [],
+        links: [],
+        categories: 0,
+        link: '',
+        url: '',
+        difficulty: 0,
+        age: 0,
+        debateFormat: 0,
+        type: 0,
+        trainingFocus: 0,
+        improPrep: 0
+      }
     },
-    removeUsedWhere: (index) => {
-      event.preventDefault()
-      usedWhere.splice(index, 1)
-      console.log('usedWhere: ', usedWhere);
+    methods: {
+      addUsedWhere(event) {
+        event.preventDefault()
+        this.usedWhere.push(event.target.value)
+      },
+      removeUsedWhere: (index) => {
+        this.usedWhere.splice(index, 1)
+      },
+      addLink(event) {
+        event.preventDefault()
+        this.links.push({
+          title: link.value,
+          url: url.value
+        })
+        link.value = ''
+        url.value = ''
+      },
+      removeLink(index) {
+        this.links.splice(index, 1)
+      },
+      getOptions: (array) => {
+        return Object.keys(array).map(key => {
+          return array[key]
+        })
+      },
+      postMotion: async function(e){
+        e.preventDefault()
+        try {
+          await this.$store.dispatch('postMotion', {
+            topic: this.$refs.topic.value,
+            where_used: JSON.parse(JSON.stringify(this.usedWhere)),
+            links: JSON.parse(JSON.stringify(this.links)),
+            category: this.categories,
+            difficulties: this.difficulty,
+            age_range: this.age,
+            debate_formats: this.debateFormat,
+            type: this.type,
+            training_focus: this.trainingFocus,
+            impro_prep: this.improPrep
+          })
+          window.location.href = '/';
+        } catch (error) {
+          console.log('error: ', error);
+        }
+      }
+    },
+    computed:{
+      categoryOptions() {
+        return this.categoryArray;
+      },
+      difficultiesOptions() {
+        return this.difficultiesArray;
+      },
+      ageOptions() {
+        return this.ageArray;
+      },
+      debateFormatOptions() {
+        return this.debateFormatArray;
+      },
+      typeOptions() {
+        return this.typeArray;
+      },
+      trainingOptions() {
+        return this.trainingFocusArray;
+      },
+      improPrepOptions() {
+        return this.improPrepArray;
+      },
+      debateFormatOptions() {
+        return this.debateFormatArray;
+      }
+    },
+    async created() {
+      this.categoryArray = await this.$store.dispatch('getMotionAttributes', {type: 'categories'})
+      this.difficultiesArray = await this.$store.dispatch('getMotionAttributes', {type: 'difficulties'})
+      this.ageArray = await this.$store.dispatch('getMotionAttributes', {type: 'age-ranges'})
+      this.debateFormatArray = await this.$store.dispatch('getMotionAttributes', {type: 'debate-formats'})
+      this.typeArray = await this.$store.dispatch('getMotionAttributes', {type: 'types'})
+      this.trainingFocusArray = await this.$store.dispatch('getMotionAttributes', {type: 'training-focuses'})
     }
   }
-}
 </script>
 
 <style scoped lang="scss">
@@ -232,7 +310,19 @@ export default {
     }
   }
 }
-
+  .buttonContainer {
+    display: flex;
+      flex-direction: row;
+  }
+  .addLink {
+      background-image: url("../assets/plus.png");
+      background-repeat: no-repeat;
+      background-position: center; 
+      width: 42px;
+      height: 42px;
+      border-radius: 21px;
+      background-color: #3098f3;
+  }
 .textAreaContainer {
   position: relative;
   margin-bottom: 30px;

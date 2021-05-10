@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="container-child">
-      <motion-comments/>
+      <motion-comments :id="id"/>
     </div>
   </div>
 </template>

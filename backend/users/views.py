@@ -11,7 +11,6 @@ from motions.models import Motion
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('first_name', 'last_name')
     serializer_class = UserSerializer
-    permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
 
 class UserFavoriteMotionsViewSet(viewsets.ModelViewSet):
     queryset = FavoriteMotion.objects.all().order_by('-created_at')

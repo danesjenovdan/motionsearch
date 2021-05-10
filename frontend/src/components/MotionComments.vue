@@ -6,7 +6,7 @@
         </div>
         <div class="header-buttons">
           <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-          <router-link to="/login" class="btn login">Log in</router-link>
+          <router-link to="/login" v-show="!isAuth" class="btn login">Log in</router-link>
         </div>
       </div>
         <div class="share-bar">
@@ -19,13 +19,13 @@
           <div class="left">
             <h3>Comments</h3>
               <div class="textAreaContainer">
-                <textarea rows="3" cols="20" name="comment" form="usrform"> Write your comment here!
+                <textarea rows="3" cols="20" name="comment" id="comment" form="usrform"> Write your comment here!
                 </textarea>
-                  <button class="textAreaButton" v-on:click="addUsedWhere()">Submit</button>
+                  <button class="textAreaButton" v-on:click="addUsedWhere(id)">Submit</button>
               </div>
               <p v-for="el in usedWhere" :key="el">{{el}}</p>
               <div class="commentContainer" v-for="comment in comments" :key="comment._id">
-                <i><p>{{comment.username}} | {{comment.date}}</p></i>
+                <i><p>{{comment.username}} | {{comment.created_at?.split('T')[0]}}</p></i>
                 <p>{{comment.text}}</p>
                 <div>
               </div>
@@ -51,55 +51,41 @@
 
 <script>
   const comments = [
-      {
-        _id: "first",
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      },
-      /*{
-        _id: "second",
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      },
-      {
-        _id: "third",
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      },
-      {
-        _id: "third",
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      }*/
       ]
+  
   export default {
     components: [
     ],
+    props: [
+       'id',
+       ],
     data() {
       return {
         comments,
-
+        comment: '',
+        isAuth: false
       }
     },
     methods: {
-      addUsedWhere: () => {
-        comments.push(
-          {
-            _id: "second",
-        username: "Pekoči janez",
-        date: "21/7/2021",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-      }
-        )
-            console.log('comments: ', comments);
+      async addUsedWhere(id) {
+        try {
+          const response = await this.$store.dispatch('setComment', {text: comment.value, id})
+          console.log('response: ', response);
+          
+        } catch (error) {
+          console.log('error: ', error);
+          
+        }
+        this.comments = await this.$store.dispatch('getComments', {id: id})
+
       },
       removeUsedWhere: (index) => {
         usedWhere.splice(index, 1)
       }
+    },
+    async created() {
+      this.isAuth = await this.$store.dispatch('isAuth')
+      this.comments = await this.$store.dispatch('getComments', {id: this.id})
     }
   }
 

@@ -6,7 +6,7 @@
       </div>
       <div class="header-buttons">
         <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-        <router-link to="/login" class="btn login">Log in</router-link>
+        <router-link  v-show="!isAuth" to="/login" class="btn login">Log in</router-link>
       </div>
     </div>
     <div class="line"/>
@@ -24,11 +24,11 @@
       </div>
       <div class="motions-list" v-for="motion in motions" :key="motion.id">
         <div class="motion-text-container">
-          <p class="motions-date">Added on {{motion.created_at}}</p>
+          <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
           <a :href="'/motion/'+motion.id"><p class="motions-title">{{motion.topic}}</p></a>
         </div>
         <div class="votes">
-          <voting/>
+          <voting :votes="motion.votes" :id="motion.id"/>
         </div>
       </div>
     </div>
@@ -42,11 +42,13 @@
   let page = 1;
   let refresh = true;
   export default {
+    props: ['id'],
     data() {
       return {
         motions,
         page,
-        refresh
+        refresh,
+        isAuth: false
       }
     },
     components: {
@@ -56,26 +58,12 @@
       async loadNextPage() {
         try {
           this.page += 1;
-          const result = await this.getMotions(this.page)
+          const result = await this.$store.dispatch('getMotions', {page: this.page})
           if(result) this.motions = this.motions.concat(result)
           else this.page -= 1
           this.refresh = true
         } catch (error) {
           this.refresh = true
-        }
-      },
-      getMotions: async(page) => {
-        try {
-          const result = await fetch(`https://motion-search-backend.lb.djnd.si/api/v1/motions/?page=${page}`, {
-              method: 'get',
-              headers: {
-                'content-type': 'application/json'
-              }
-            })
-          const body = await result.json(); // .json() is asynchronous and therefore must be awaited
-          return body.results;
-        } catch (error) {
-          console.log(error);
         }
       },
       handleScroll(e) {
@@ -90,14 +78,19 @@
         this.$emit('toggle-filters')
       }
     },
+    watch: {
+      '$store.state.motions.filterCount': async function() {
+        this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
+      }
+    },
     mounted() {
-      window.addEventListener("scroll", this.handleScroll)
     },
     unmounted() {
       window.removeEventListener("scroll", this.handleScroll)
     },
     async created() {
-      this.motions = await this.getMotions(1)
+      this.isAuth = await this.$store.dispatch('isAuth')
+      this.motions = await this.$store.dispatch('getMotions', {page: 1})
     }
   }
 
