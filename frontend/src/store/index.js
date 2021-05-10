@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = process.env.DEVELOPMENT ? 'http://localhost:8000' : 'https://motion-search-backend.lb.djnd.si';
+const api = !process.env.DEVELOPMENT ? 'http://localhost:8000' : 'https://motion-search-backend.lb.djnd.si';
 
 export const state = () => ({
   client_id:"NMBhhYpE4hOCFTxsgdHhKN0smPraXfd1sxsgLB2t",
@@ -8,7 +8,10 @@ export const state = () => ({
   grant_type: "password",
   user: null,
   access_token: "",
-  refresh_token : ""
+  refresh_token : "",
+  motion_length: 0,
+  filters: {},
+  filterCount: 0
 })
 
 export const getters = {
@@ -27,6 +30,12 @@ export const getters = {
   grant_type (state) {
     return state.grant_type
   },
+  motion_length (state) {
+    return state.motion_length
+  },
+  getFilters (state) {
+    return state.filters
+  },
 }
 
 export const mutations = {
@@ -36,6 +45,32 @@ export const mutations = {
   access_token (state, token) {
     state.access_token = token
   },
+  motion_length (state, count) {
+    state.motion_length = count;
+  }
+}
+
+
+const mapFilters = (filters) => {
+  let filterString = ''
+  Object.keys(filters).forEach((key, index) => {
+    if(index !== 0) filterString += '&'
+    if (key === 'ageFilter') filterString += 'age_range='
+    if (key === 'formatFilter') filterString += 'debate_formats='
+    if (key === 'difficultyFilter') filterString += 'difficulties='
+    if (key === 'typeFilter') filterString += 'type='
+    if (key === 'trainingFilter') filterString += 'training_focus='
+    if (key === 'improPrepFilter') filterString += 'impro_prep='
+
+    filters[key].forEach((value, index) => {
+      console.log('(index-1): ', (index+1));
+      console.log('filters[key].length: ', filters[key].length);
+      console.log('(index-1) !== filters[key].length: ', (index-1) !== filters[key].length);
+      filterString += (index+1) !== filters[key].length ? value + ',' : value  
+    })
+  })
+  console.log('filterString: ', filterString);
+  return filterString
 }
 
 export const actions = {
@@ -61,27 +96,33 @@ export const actions = {
   async isAuth ({ getters }) {
     return getters.access_token ? true : false
   },
+  async getMotionLength ({ getters }) {
+    return getters.motion_length
+  },
 
   async logout () {
     await this.$auth.logout()
   },
-  async getMotions (context, payload) {
+
+  async getMotions ({ getters, commit }, payload) {
     try {
       // https://motion-search-backend.lb.djnd.si/api/v1/motions/
-      const result = await fetch(`${api}/api/v1/motions/?page=${payload.page}`, {
+      const filters = mapFilters(getters.getFilters)
+      console.log('filters: ', filters);
+      const result = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
           method: 'get',
           headers: {
             'content-type': 'application/json'
           }
         })
       const body = await result.json(); // .json() is asynchronous and therefore must be awaited
+      commit('motion_length', body.count);
       return body.results;
     } catch (error) {
       console.log(error);
     }
   },
   async getMotion (context, payload) {
-    console.log('payload: ', payload);
     try {
       const result = await fetch(`${api}/api/v1/motions/${payload.id}`, {
           method: 'get',
@@ -135,6 +176,21 @@ export const actions = {
       }) // body data type must match "Content-Type" header
     });
     const body = await response.json()
+    return body
+  },
+  async upvote ({ getters }, payload) {
+    const response = await fetch(`${api}/api/v1/motions/${payload.id}/votes/`, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getters.access_token}`
+      },
+      body: JSON.stringify({
+        choices: payload.choice,
+      }) // body data type must match "Content-Type" header
+    });
+    const body = await response.json()
+    console.log('body: ', body);
     return body
   },
   async register (context, payload) {

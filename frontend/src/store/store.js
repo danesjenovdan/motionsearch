@@ -4,7 +4,7 @@ import VuexPersistence from 'vuex-persist'
 
 const store = new Vuex.Store({
   modules: {
-    company: index
+    motions: index
   },
   plugins: [new VuexPersistence().plugin]
 })

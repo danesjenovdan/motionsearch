@@ -7,7 +7,7 @@
     </div>
     <div class="header-buttons">
       <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-      <router-link to="/login" class="btn login">Log in</router-link>
+      <router-link to="/login" v-show="!isAuth" class="btn login">Log in</router-link>
     </div>
   </div>
   <div class="wrapper">
@@ -100,7 +100,10 @@
               </div>
               <input type="text" id="link" key="links.title" placeholder="Type here..." />
               <input type="text" id="url" key="links.url" placeholder="Type here..."/>
-              <button v-on:click="addLink">Add link</button>
+              <div class="buttonContainer">
+                <p>Add another link</p> 
+                <button class="addLink" v-on:click="addLink"></button>
+              </div>
             </div>
           </div>
           <button type="submit">Submit motion</button>
@@ -307,7 +310,19 @@ const links = [{
     }
   }
 }
-
+  .buttonContainer {
+    display: flex;
+      flex-direction: row;
+  }
+  .addLink {
+      background-image: url("../assets/plus.png");
+      background-repeat: no-repeat;
+      background-position: center; 
+      width: 42px;
+      height: 42px;
+      border-radius: 21px;
+      background-color: #3098f3;
+  }
 .textAreaContainer {
   position: relative;
   margin-bottom: 30px;

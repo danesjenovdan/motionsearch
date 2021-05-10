@@ -1,7 +1,7 @@
 <template>
 <div class="parentContainer">
   <div class="motionButtons">
-    <voting :votes="motion.votes"/>
+    <voting :votes="motion.votes" :id="id"/>
     <favourite/>
   </div>
   <p>Added on {{motion.created_at?.split('T')[0]}}</p>

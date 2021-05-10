@@ -6,7 +6,7 @@
       </div>
       <div class="header-buttons">
         <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-        <router-link to="/login" v-show="!isAuth" class="btn login">Log in</router-link>
+        <router-link  v-show="!isAuth" to="/login" class="btn login">Log in</router-link>
       </div>
     </div>
     <div class="line"/>
@@ -24,11 +24,11 @@
       </div>
       <div class="motions-list" v-for="motion in motions" :key="motion.id">
         <div class="motion-text-container">
-          <p class="motions-date">Added on {{motion.created_at}}</p>
+          <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
           <a :href="'/motion/'+motion.id"><p class="motions-title">{{motion.topic}}</p></a>
         </div>
         <div class="votes">
-          <voting :votes="motion.votes"/>
+          <voting :votes="motion.votes" :id="motion.id"/>
         </div>
       </div>
     </div>
@@ -42,6 +42,7 @@
   let page = 1;
   let refresh = true;
   export default {
+    props: ['id'],
     data() {
       return {
         motions,
@@ -77,8 +78,12 @@
         this.$emit('toggle-filters')
       }
     },
+    watch: {
+      '$store.state.motions.filterCount': async function() {
+        this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
+      }
+    },
     mounted() {
-      window.addEventListener("scroll", this.handleScroll)
     },
     unmounted() {
       window.removeEventListener("scroll", this.handleScroll)
