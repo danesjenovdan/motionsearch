@@ -2,8 +2,4 @@ django
 djangorestframework
 django-oauth-toolkit
 django-cors-headers
-<<<<<<< HEAD
 drf_social_oauth2
-=======
-drf_social_oauth2
->>>>>>> 2c5418b180600abe0ca96d025f31b27f628b72f3
