@@ -83,7 +83,6 @@ export const actions = {
   async getMotion (context, payload) {
     console.log('payload: ', payload);
     try {
-      // https://motion-search-backend.lb.djnd.si/api/v1/motions/
       const result = await fetch(`${api}/api/v1/motions/${payload.id}`, {
           method: 'get',
           headers: {
@@ -96,9 +95,21 @@ export const actions = {
       console.log(error);
     }
   },
+  async postMotion ({ getters }, payload) {
+    const response = await fetch(`${api}/api/v1/motions/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getters.access_token}`
+      },
+      body: JSON.stringify(payload) // body data type must match "Content-Type" header
+    });
+    const body = await response.json()
+    console.log('body: ', body);
+    return body
+  },
   async getComments (context, payload) {
     try {
-      // https://motion-search-backend.lb.djnd.si/api/v1/motions/
       const result = await fetch(`${api}/api/v1/motions/${payload.id}/comments`, {
           method: 'get',
           headers: {
@@ -148,8 +159,27 @@ export const actions = {
       email: payload.email
     })
   },
-
-
+  async getMotionAttributes (context, payload) {
+    try {
+      let next = `${api}/api/v1/motions/${payload.type}?page=1`;
+      let results = []; 
+      while (next) {
+        const result = await fetch(next, {
+            method: 'get',
+            headers: {
+              'content-type': 'application/json'
+            }
+          })
+        
+        const body = await result.json();
+        next = body.next;
+        results = [...results, ...body.results];
+      }
+      return results;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
 }
 

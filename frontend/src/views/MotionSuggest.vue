@@ -3,59 +3,45 @@
       <div class="grandParentContaniner">
           <div class="motionSuggestContainer">
             <h1>Suggest a motion</h1><br>
-           <form>
+           <form @submit="postMotion">
               <div class="textAreaContainer">
-                <label>Motion text</label><br>
-                <textarea rows="3" cols="20" name="text"></textarea>
+                <label>Topic</label><br>
+                <textarea rows="3" cols="20" name="topic" id="topic"></textarea>
                </div><br>
               <div class="inputContainer"> 
-                <label >Topic</label>
-                <select name="Topic" id="topic">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
+                <label >Category</label>
+                <select v-model="categories" name="Category" id="categories">
+                  <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
                 </select>
               </div>
               <div class="inputContainer"> 
                 <label>Dificulty</label>
-                <select name="Dificulty" id="dificulty">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
+                <select v-model="difficulty" name="Dificulty" id="difficulty">
+                  <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
+                </select>
+              </div>
+              <div class="inputContainer"> 
+                <label>Debate format</label>
+                <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
+                  <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
                 </select>
               </div>
               <div class="inputContainer"> 
                 <label >Age</label>
-                <select name="Age" id="age">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
+                <select v-model="age" name="Age" id="age">
+                  <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
                 </select>
               </div>
               <div class="inputContainer"> 
                 <label>Motion type</label>
-                <select name="motionType" id="motionType">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
+                <select v-model="type" name="motionType" id="motionType">
+                  <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
                 </select>
               </div>
               <div class="inputContainer"> 
                 <label>Training focus</label>
-                <select name="trainingFocus" id="trainingFocus">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
+                <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
+                    <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
                 </select>
               </div>
               <div class="inputContainer"> 
@@ -66,7 +52,7 @@
                     <input
                       type="radio"
                       name="impro/prep"
-                      :value="impro"
+                      :value="1"
                       >
                   </div>
                   <div class="radio-container">
@@ -74,7 +60,7 @@
                     <input
                       type="radio"
                       name="impro/prep"
-                      :value="prep"
+                      :value="2"
                       >
                   </div>
                 </div>
@@ -86,7 +72,7 @@
                 </div>
                 <div class="arrayContainer">
                   <div v-for="(element, index) in usedWhere" :element="element" :key="element" :vid-id="index">
-                     <p><button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element}}</p>
+                     <button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element}}
                   </div>
                   <input type="text" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
                 </div>
@@ -98,12 +84,14 @@
                 </div>
                 <div class="arrayContainer">
                   <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                     <p><button v-on:click="removeLink(index)" class="btn">x</button> <a target="_blank" :href="link.url">{{link.title}}</a></p>
+                    <button v-on:click="removeLink(index)" class="btn">x</button> <a target="_blank" :href="link.url">{{link.title}}</a>
                   </div>
-                  <input type="text" key="link.title" placeholder="Type here..." />
-                  <input type="text" key="link.url" placeholder="Type here..." />
+                  <input type="text" id="link" key="links.title" placeholder="Type here..." />
+                  <input type="text" id="url" key="links.url" placeholder="Type here..."/>
+                  <button v-on:click="addLink">Add link</button>
                 </div>
               </div>
+              <button type="submit">Submit motion</button>
             </form>
       </div>
     </div>
@@ -112,29 +100,111 @@
 
 <script>
 
-  const usedWhere = []
-  const links = [{
-    title: "yeet",
-    url:"www.yeet.com"
-  }]
-
   export default {
     data() {
       return {
-        usedWhere,
-        links
+        categoryArray: [],
+        difficultiesArray: [],
+        ageArray: [],
+        debateFormatArray: [],
+        typeArray: [],
+        trainingFocusArray: [],
+        improPrepArray: [],
+        usedWhere: [],
+        links: [],
+        topic: '',
+        categories: 0,
+        link: '',
+        url: '',
+        difficulty: 0,
+        age: 0,
+        debateFormat: 0,
+        motionType: 0,
+        trainingFocus: 0,
+        improPrep: 0
       }
     },
     methods: {
-      addUsedWhere: (event) => {
+      addUsedWhere(event) {
         event.preventDefault()
-        usedWhere.push(event.target.value)
+        this.usedWhere.push(event.target.value)
       },
       removeUsedWhere: (index) => {
         event.preventDefault()
-        usedWhere.splice(index, 1)
-        console.log('usedWhere: ', usedWhere);
+        this.usedWhere.splice(index, 1)
+      },
+      addLink(event) {
+        event.preventDefault()
+        this.links.push({
+          title: link.value,
+          url: url.value
+        })
+        link.value = ''
+        url.value = ''
+      },
+      removeLink(index) {
+        event.preventDefault()
+        this.links.splice(index, 1)
+      },
+      getOptions: (array) => {
+        return Object.keys(array).map(key => {
+          return array[key]
+        })
+      },
+      postMotion: async function(e){
+        e.preventDefault()
+        try {
+          await this.$store.dispatch('postMotion', {
+            topic: this.topic,
+            where_used: JSON.parse(JSON.stringify(this.usedWhere)),
+            links: JSON.parse(JSON.stringify(this.links)),
+            category: this.categories,
+            difficulty: this.difficulty,
+            age_range: this.age,
+            debate_formats: this.debateFormat,
+            type: this.motionType,
+            training_focus: this.trainingFocus,
+            impro_prep: this.improPrep
+          })
+          window.location.href = '/';
+        } catch (error) {
+          console.log('error: ', error);
+        }
       }
+    },
+    computed:{
+      categoryOptions() {
+        return this.categoryArray;
+      },
+      difficultiesOptions() {
+        return this.difficultiesArray;
+      },
+      ageOptions() {
+        return this.ageArray;
+      },
+      debateFormatOptions() {
+        return this.debateFormatArray;
+      },
+      typeOptions() {
+        return this.typeArray;
+      },
+      trainingOptions() {
+        return this.trainingFocusArray;
+      },
+      improPrepOptions() {
+        return this.improPrepArray;
+      },
+      debateFormatOptions() {
+        return this.debateFormatArray;
+      }
+    },
+    async created() {
+      this.categoryArray = await this.$store.dispatch('getMotionAttributes', {type: 'categories'})
+      this.difficultiesArray = await this.$store.dispatch('getMotionAttributes', {type: 'difficulties'})
+      this.ageArray = await this.$store.dispatch('getMotionAttributes', {type: 'age-ranges'})
+      this.debateFormatArray = await this.$store.dispatch('getMotionAttributes', {type: 'debate-formats'})
+      this.typeArray = await this.$store.dispatch('getMotionAttributes', {type: 'types'})
+      this.trainingFocusArray = await this.$store.dispatch('getMotionAttributes', {type: 'training-focuses'})
     }
   }
 </script>

@@ -2,7 +2,7 @@
     <div class="motionCommentsContainer">
         <div class="header"> 
           <a href="/login"><button v-show="!isAuth" class="login" type="submit">LOG IN</button></a>
-          <button type="submit">SUGGEST A MOTION</button> 
+          <a href="/motionSuggest"><button type="submit">SUGGEST A MOTION</button></a>
         </div>
         <div class="line"/>
         <div class="share-bar">

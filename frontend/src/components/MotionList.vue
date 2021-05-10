@@ -1,8 +1,8 @@
 <template>
     <div class="parent-container">
         <div class="header"> 
-          <a href="/login"><button v-show="!isAuth" class="login" type="submit">LOG IN</button></a>
-          <button type="submit">SUGGEST A MOTION</button> 
+          <a href="/login"><button v-show="!isAuth" class="login">LOG IN</button></a>
+          <a href="/motionSuggest"><button>SUGGEST A MOTION</button></a>
         </div>
         <div class="line"/>
         <div class="motions-container">
