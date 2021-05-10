@@ -1,241 +1,325 @@
 <template>
-  <div class="background">
-      <div class="grandParentContaniner">
-          <div class="motionSuggestContainer">
-            <h1>Suggest a motion</h1><br>
-           <form>
-              <div class="textAreaContainer">
-                <label>Motion text</label><br>
-                <textarea rows="3" cols="20" name="text"></textarea>
-               </div><br>
-              <div class="inputContainer"> 
-                <label >Topic</label>
-                <select name="Topic" id="topic">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
-                </select>
-              </div>
-              <div class="inputContainer"> 
-                <label>Dificulty</label>
-                <select name="Dificulty" id="dificulty">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
-                </select>
-              </div>
-              <div class="inputContainer"> 
-                <label >Age</label>
-                <select name="Age" id="age">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
-                </select>
-              </div>
-              <div class="inputContainer"> 
-                <label>Motion type</label>
-                <select name="motionType" id="motionType">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
-                </select>
-              </div>
-              <div class="inputContainer"> 
-                <label>Training focus</label>
-                <select name="trainingFocus" id="trainingFocus">
-                  <option value=null>Select</option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
-                </select>
-              </div>
-              <div class="inputContainer"> 
-                <label>Impro or prep</label>
-              <div class="setting-container teams">
-                  <div class="radio-container">
-                    <span class="label">impro</span>
-                    <input
-                      type="radio"
-                      name="impro/prep"
-                      :value="impro"
-                      >
-                  </div>
-                  <div class="radio-container">
-                    <span class="label">prep</span>
-                    <input
-                      type="radio"
-                      name="impro/prep"
-                      :value="prep"
-                      >
-                  </div>
-                </div>
-              </div>
-              <div class="inputContainer"> 
-                <div class="subtitleContainer">
-                  <label>Add is used where</label><br/>
-                  <label class="subtitle"> Press Enter after each input</label>
-                </div>
-                <div class="arrayContainer">
-                  <div v-for="(element, index) in usedWhere" :element="element" :key="element" :vid-id="index">
-                     <p><button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element}}</p>
-                  </div>
-                  <input type="text" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
-                </div>
-              </div>
-              <div class="inputContainer"> 
-                <div class="subtitleContainer">
-                  <label>Add links</label><br/>
-                  <label class="subtitle"> Press Enter after each input</label>
-                </div>
-                <div class="arrayContainer">
-                  <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                     <p><button v-on:click="removeLink(index)" class="btn">x</button> <a target="_blank" :href="link.url">{{link.title}}</a></p>
-                  </div>
-                  <input type="text" key="link.title" placeholder="Type here..." />
-                  <input type="text" key="link.url" placeholder="Type here..." />
-                </div>
-              </div>
-            </form>
-      </div>
+<div class="background container">
+  <div class="header">
+    <div class="logo">
+      <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+      <span>Easiest way to find a motion for debating</span>
+    </div>
+    <div class="header-buttons">
+      <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
+      <router-link to="/login" class="btn login">Log in</router-link>
     </div>
   </div>
+  <div class="wrapper">
+    <div class="motionSuggestContainer">
+      <h1>Suggest a motion</h1>
+      <form>
+        <div class="textAreaContainer">
+          <label>Motion text</label>
+          <textarea rows="3" cols="20" name="text"></textarea>
+         </div>
+        <div class="inputContainer">
+          <label>Topic</label>
+          <select name="Topic" id="topic">
+            <option value=null>Select</option>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
+        <div class="inputContainer">
+          <label>Difficulty</label>
+          <select name="Difficulty" id="difficulty">
+            <option value=null>Select</option>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
+        <div class="inputContainer">
+          <label>Age</label>
+          <select name="Age" id="age">
+            <option value=null>Select</option>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
+        <div class="inputContainer">
+          <label>Motion type</label>
+          <select name="motionType" id="motionType">
+            <option value=null>Select</option>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
+        <div class="inputContainer">
+          <label>Training focus</label>
+          <select name="trainingFocus" id="trainingFocus">
+            <option value=null>Select</option>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
+        <div class="inputContainer">
+          <label>Impro or prep</label>
+        <div class="setting-container">
+          <div class="radio-container">
+            <span class="label">impro</span>
+            <input
+              type="radio"
+              name="impro/prep"
+              :value="impro"
+              >
+          </div>
+          <div class="radio-container">
+            <span class="label">prep</span>
+            <input
+              type="radio"
+              name="impro/prep"
+              :value="prep"
+              >
+          </div>
+        </div>
+        </div>
+        <div class="inputContainer">
+          <div class="subtitleContainer">
+            <label>Add is used where</label>
+            <span class="subtitle">Press ENTER after each input</span>
+          </div>
+          <div class="arrayContainer">
+            <div v-for="(element, index) in usedWhere" :element="element" :key="element" :vid-id="index">
+              <p><button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element}}</p>
+            </div>
+            <input type="text" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
+          </div>
+        </div>
+        <div class="inputContainer">
+          <div class="subtitleContainer">
+            <label>Add links</label>
+            <span class="subtitle">Press ENTER after each input</span>
+          </div>
+          <div class="arrayContainer">
+            <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
+               <div><span v-on:click="removeLink(index)" class="">x</span> <a target="_blank" :href="link.url">{{link.title}}</a></div>
+            </div>
+            <input type="text" key="link.title" placeholder="Type here..." />
+            <input type="text" key="link.url" placeholder="Type here..." />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
+const usedWhere = []
+const links = [{
+  title: "yeet",
+  url:"www.yeet.com"
+}]
 
-  const usedWhere = []
-  const links = [{
-    title: "yeet",
-    url:"www.yeet.com"
-  }]
-
-  export default {
-    data() {
-      return {
-        usedWhere,
-        links
-      }
+export default {
+  data() {
+    return {
+      usedWhere,
+      links
+    }
+  },
+  methods: {
+    addUsedWhere: (event) => {
+      event.preventDefault()
+      usedWhere.push(event.target.value)
     },
-    methods: {
-      addUsedWhere: (event) => {
-        event.preventDefault()
-        usedWhere.push(event.target.value)
-      },
-      removeUsedWhere: (index) => {
-        event.preventDefault()
-        usedWhere.splice(index, 1)
-        console.log('usedWhere: ', usedWhere);
-      }
+    removeUsedWhere: (index) => {
+      event.preventDefault()
+      usedWhere.splice(index, 1)
+      console.log('usedWhere: ', usedWhere);
     }
   }
+}
 </script>
 
 <style scoped lang="scss">
 
-	.grandParentContaniner{
-	  display:flex;
-    margin: 0 auto; ;
-    justify-content: center;
-    align-items: center;
-	}
-  
-  .inputContainer {
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .header {
+    width: 100%;
     display: flex;
-    border-top: 1px solid black;
-    padding: 10px;
     justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3098f3;
+
+    .logo {
+      display: flex;
+      align-items: center;
+
+      span {
+        font-family: Poppins;
+        font-size: 18px;
+        line-height: 29px;
+        color: #252525;
+        display: none;
+
+        @media (min-width: 992px) {
+          display: block;
+        }
+      }
+
+      img {
+        height: 50px;
+        margin: 10px 10px 10px 30px;
+        display: none;
+
+        @media (min-width: 768px) {
+          display: block;
+        }
+
+        @media (min-width: 768px) {
+          height: 80px;
+        }
+
+        @media (min-width: 1200px) {
+          margin: 10px 10px 10px 100px;
+        }
+      }
+    }
+
+    .header-buttons {
+      margin: 20px 10px 20px 0;
+
+      @media (min-width: 1200px) {
+        margin: 20px 60px 20px 0;
+      }
+    }
   }
+
+  .wrapper {
+    width: 100%;
+
+    @media (min-width: 768px) {
+      width: 75%
+    }
+
+    @media (min-width: 1200px) {
+      width: 50%
+    }
+
+    .motionSuggestContainer {
+      display: flex;
+      flex-direction: column;
+      background-color: #ffffff;
+      padding: 10px 20px;
+      margin: 40px 10px;
+
+      @media (min-width: 768px) {
+        margin: 60px 10px 40px;
+        padding: 20px 40px;
+      }
+    }
+  }
+}
+
+.textAreaContainer {
+  position: relative;
+  margin-bottom: 30px;
+
+  textarea {
+    display: block;
+    resize: none;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.inputContainer {
+  display: flex;
+  border-top: 1px solid black;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+
   .arrayContainer {
     display: flex;
     flex-direction: column;
     width: 50%;
+
+    span {
+      padding: 14px 28px 14px 0;
+      font-size: 16px;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    input {
+      margin-bottom: 10px;
+    }
   }
-  .radioContainer {
-    display: flex;
-    justify-content: space-evenly;
-    width: 50%;
+
+  &:last-child {
+    align-items: start;
   }
-  .subtitle {
-    color: #252525;
-    font-family: "IBM Plex Mono";
+}
+
+.radioContainer {
+  display: flex;
+  justify-content: space-evenly;
+  width: 50%;
+}
+
+.subtitle {
+  color: #252525;
+  font-family: "IBM Plex Mono";
+  font-size: 12px;
+  font-style: italic;
+  display: block;
+  margin-top: -5px;
+
+  @media (min-width: 768px) {
     font-size: 14px;
-    font-style: italic;
-    letter-spacing: normal;
-    margin-top: -50px;
-    text-align: left;
   }
-  .btn {
-    border: none;
-    background-color: inherit;
-    padding: 14px 28px;
-    font-size: 16px;
-    cursor: pointer;
-    display: inline-block;
-    color: black;
-  }
-  .textAreaContainer{
-    position: relative;
-    margin-bottom: 20px;
-  }
-   textarea {
-    display: block;
-    resize: none;
-    width: 100%;
-    height: 100%; 
-    box-sizing: border-box;
-  }
-  .background {
-    background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
-  }
-  .motionSuggestContainer {
-      display: flex;
-      flex-direction: column;
-      background-color: #ffffff;
-      width: 50vw;
-      padding: 40px;
-      margin-top: 100px;
-      margin-bottom: 40px;
-  }
-  .line {
-    margin-top: 26px;
-    border-top: 1px solid;
-  }
-  .login-text {
-    display: flex;
-    justify-content: center;
-  }
-  input {
-      box-sizing: border-box;
-  }
-  select {
-    width: 50%;
-    height: 60px;
-  }
-  .setting-container {
+}
+
+.line {
+  margin-top: 26px;
+  border-top: 1px solid;
+}
+
+.setting-container {
+  width: 50%;
+
+  @media (min-width: 768px) {
     display: flex;
     justify-content: start;
-    align-items: left;
-    width: 50%;
+
+  }
 
   .radio-container {
     padding-left: 2px;
     font-family: Poppins;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 60px;
+    font-size: 16px;
+    line-height: 48px;
     display: block;
     float: left;
     overflow: hidden;
-    margin-top: 14px;
+    @media (min-width: 768px) {
+      font-size: 20px;
+      line-height: 60px;
+    }
     span {
       display: block;
       float: right;
@@ -244,15 +328,16 @@
     }
     &:nth-child(1) {
       margin-right: 20%;
+      @media (min-width: 768px) {
+        margin-right: 20%;
+      }
     }
     input[type="radio"] {
       width: 30px;
       line-height: 60px;
       display: inline-block;
-      &:nth-child(1) {
-        top: 17px;
-      }
-      &:nth-child(2) {
+      top: 12px;
+      @media (min-width: 768px) {
         top: 17px;
       }
     }
@@ -279,6 +364,7 @@
       cursor: pointer;
       // border: 4px solid var(--bc, var(--border));
       border: 3px solid #3098f3;
+      border-radius: 50%;
       background: var(--b, var(--background));
       transition: background .3s, border-color .3s, box-shadow .2s;
       &:after {
@@ -288,6 +374,12 @@
         top: 0;
         position: absolute;
         transition: transform var(--d-t, .3s) var(--d-t-e, ease), opacity var(--d-o, .2s);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--active-inner);
+        opacity: 0;
+        transform: scale(var(--s, .7));
       }
       &:checked {
         --b: var(--active);
@@ -336,6 +428,7 @@
         margin-left: 4px;
       }
     }
+
     input[type='checkbox'] {
       &:not(.switch) {
         border-radius: 7px;
@@ -378,23 +471,7 @@
         }
       }
     }
-    input[type='radio'] {
-      border-radius: 50%;
-      &:after {
-        width: 19px;
-        height: 19px;
-        border-radius: 50%;
-        background: var(--active-inner);
-        opacity: 0;
-        transform: scale(var(--s, .7));
-      }
-      // &:checked {
-      //   --s: .5;
-      // }
-    }
   }
-  }
-
-
+}
 
 </style>
