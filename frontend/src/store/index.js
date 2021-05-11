@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = !process.env.DEVELOPMENT ? 'http://localhost:8000' : 'https://motion-search-backend.lb.djnd.si';
+const api = 'https://motion-search-backend.lb.djnd.si';
 
 export const state = () => ({
   client_id:"NMBhhYpE4hOCFTxsgdHhKN0smPraXfd1sxsgLB2t",
@@ -214,9 +214,7 @@ export const actions = {
     })
   },
   async getMotionAttributes (context, payload) {
-    console.log('payload.filters: ', payload.filters);
     const filters = mapFilters(payload.filters)
-    console.log('filters: ', filters);
     try {
       let next = `${api}/api/v1/motions/${payload.type}?page=1&${filters}`;
       let results = []; 
