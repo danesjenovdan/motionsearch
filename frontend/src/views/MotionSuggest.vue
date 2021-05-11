@@ -207,9 +207,6 @@
       },
       improPrepOptions() {
         return this.improPrepArray;
-      },
-      debateFormatOptions() {
-        return this.debateFormatArray;
       }
     },
     async created() {
