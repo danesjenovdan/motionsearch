@@ -8,29 +8,37 @@
 
 <script>
 export default {
+  props: ['votes', 'id'],
   data() {
     return{
       upSelected: false,
       downSelected: false,
-      number: Math.floor(Math.random() * 100),
+      number: this.votes,
     }
   }, 
   methods: {
-    toggleSelectedUp: function () {
+    toggleSelectedUp: async function () {
       this.upSelected = !this.upSelected;
       if(this.downSelected) { 
         this.downSelected = !this.downSelected;
         this.number += 1;  
       }
       this.number = this.upSelected ? this.number+1 : this.number-1
+      await this.$store.dispatch('upvote', {choice: this.upSelected ? 1 : 3, id: this.id})
     },
-    toggleSelectedDown: function () {
+    toggleSelectedDown: async function () {
       this.downSelected = !this.downSelected;
       if(this.upSelected) { 
         this.upSelected = !this.upSelected;
         this.number -= 1;
         }
       this.number = this.downSelected ? this.number-1 : this.number+1
+      await this.$store.dispatch('upvote', {choice: this.downSelected ? 2 : 3, id: this.id})
+    }
+  },
+  watch: { 
+    votes: function(newVal, oldVal) { // watch it
+      this.number = newVal
     }
   }
 }

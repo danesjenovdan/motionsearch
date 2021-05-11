@@ -20,7 +20,7 @@ class MultiValueKeyFilter(Filter):
     def filter(self, qs, value):
         if not value:
             return qs
-
+        
         self.lookup_expr = 'in'
         values = value.split(',')
         return super(MultiValueKeyFilter, self).filter(qs, values)
@@ -32,6 +32,38 @@ class MotionCategoryFilterSet(FilterSet):
         model = MotionCategory
         fields = ('value','id')
 
+class MotionLinkFilterSet(FilterSet):
+    value = MultiValueKeyFilter(field_name='value')
+    id = MultiValueKeyFilter(field_name='id')
+    class Meta:
+        model = MotionLink
+        fields = ('value','id')
+class MotionWhereUsedFilterSet(FilterSet):
+    value = MultiValueKeyFilter(field_name='value')
+    id = MultiValueKeyFilter(field_name='id')
+    class Meta:
+        model = MotionWhereUsed
+        fields = ('value','id')
+class MotionInfoTextFilterSet(FilterSet):
+    value = MultiValueKeyFilter(field_name='value')
+    id = MultiValueKeyFilter(field_name='id')
+    class Meta:
+        model = MotionInfoText
+        fields = ('value','id')
+
+class MotionFilterSet(FilterSet):
+    id = MultiValueKeyFilter(field_name='id')
+    age_range = MultiValueKeyFilter(field_name='age_range')
+    debate_formats = MultiValueKeyFilter(field_name='debate_formats')
+    type = MultiValueKeyFilter(field_name='type')
+    impro_prep = MultiValueKeyFilter(field_name='impro_prep')
+    training_focus = MultiValueKeyFilter(field_name='training_focus')
+    category = MultiValueKeyFilter(field_name='category')
+    difficulties = MultiValueKeyFilter(field_name='difficulties')
+
+    class Meta:
+        model = Motion
+        fields = ('id', 'difficulties', 'age_range', 'impro_prep', 'debate_formats', 'type', 'training_focus', 'category')
 
 class MotionCategoryViewSet(viewsets.ModelViewSet):
     queryset = MotionCategory.objects.all().order_by('value')
@@ -46,6 +78,7 @@ class MotionDifficultyViewSet(viewsets.ModelViewSet):
     queryset = MotionDifficulty.objects.all().order_by('value')
     serializer_class = MotionDifficultySerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+
 
 
 class DebateFormatViewSet(viewsets.ModelViewSet):
@@ -82,18 +115,27 @@ class MotionWhereUsedViewSet(viewsets.ModelViewSet):
     queryset = MotionWhereUsed.objects.all().order_by('value')
     serializer_class = MotionWhereUsedSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionWhereUsedFilterSet
+    filter_fields = ('value','id')
 
 
 class MotionInfoTextViewSet(viewsets.ModelViewSet):
     queryset = MotionInfoText.objects.all().order_by('value')
     serializer_class = MotionInfoTextSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionInfoTextFilterSet
+    filter_fields = ('value','id')
 
 
 class MotionLinkViewSet(viewsets.ModelViewSet):
     queryset = MotionLink.objects.all().order_by('value')
     serializer_class = MotionLinkSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionLinkFilterSet
+    filter_fields = ('value','id')
 
 class MotionCommentViewSet(viewsets.ModelViewSet):
     queryset = MotionComment.objects.all().order_by('-created_at')
@@ -123,13 +165,19 @@ class MotionVoteViewSet(viewsets.ModelViewSet):
         return Response(data=self.serializer_class(q, many=True).data)
     def create(self, request, *args, **kwargs):
         motion = get_object_or_404(Motion, pk=kwargs.get('motion_pk', None))
-        motionVote = get_object_or_404(MotionVote, motion = motion, user = request.user)
+        motionVote = MotionVote.objects.filter(motion = motion, user = request.user).first()
         CHOICES = (
             (1, 1),
             (2, -1),
             (3, 0)
         )
         vote = dict(CHOICES)[request.data.get('choices', 3)]
+        if(not motionVote):
+            serializer = MotionVoteSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=False):
+                serializer.save(user = request.user, motion = motion)
+                motion.votes += vote
+                return Response(serializer.data)
         previous_vote = dict(CHOICES)[motionVote.choices]
         if (motionVote.user == request.user):
             motion.votes += -previous_vote + vote
@@ -148,6 +196,9 @@ class MotionViewSet(viewsets.ModelViewSet):
     queryset = Motion.objects.all()
     serializer_class = MotionSerializer  # for basic info - topic and category
     serializer_detailed_class = MotionDetailedSerializer  # for detailed info - all Motion model fields
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionFilterSet
+    filter_fields = ('id', 'difficulties', 'age_range', 'impro_prep', 'debate_formats', 'type', 'training_focus', 'category')
 
     def get_serializer_class(self):
         if self.request.query_params.get('detailed', False):  # arg for detailed motion info

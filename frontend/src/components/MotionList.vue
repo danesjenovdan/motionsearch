@@ -1,28 +1,36 @@
 <template>
-    <div class="parent-container">
-        <div class="header"> 
-          <a href="/login"><button class="login" type="submit">LOG IN</button></a>
-          <button type="submit">SUGGEST A MOTION</button> 
+  <div class="parent-container">
+    <div class="header">
+      <div class="logo">
+        <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+      </div>
+      <div class="header-buttons">
+        <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
+        <router-link  v-show="!isAuth" to="/login" class="btn login">Log in</router-link>
+      </div>
+    </div>
+    <div class="line"/>
+    <div class="motions-container">
+      <div class="motions-title-bar">
+        <div>
+          <h3>Motions</h3>
+          <button class="btn" @click="toggleFilters">Filters</button>
         </div>
-        <div class="line"/>
-        <div class="motions-container">
-            <div class="motions-title-bar">
-              <h3>Motions </h3>
-              <div class="motions-sort">
-                <p>Sort by</p>
-                <div class="sort-button"><span class="sort-button-text"><b>Date Added</b></span></div>
-                <div class="sort-button"><span class="sort-button-text"><b>Quality</b></span></div>
-              </div>
-            </div>
-            <div class="motions-list" v-for="motion in motions" :key="motion.id">
-              <div class="motion-text-container">
-                <p class="motions-date">Added on {{motion.created_at}}</p>
-                <a :href="'/motion/'+motion.id"><p class="motions-title">{{motion.topic}}</p></a>
-              </div>
-              <div class="votes">
-                <voting/>
-              </div>
-          </div>
+        <div class="motions-sort">
+          <p>Sort by</p>
+          <div class="sort-button">Date Added</div>
+          <div class="sort-button">Quality</div>
+        </div>
+      </div>
+      <div class="motions-list" v-for="motion in motions" :key="motion.id">
+        <div class="motion-text-container">
+          <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
+          <a :href="'/motion/'+motion.id"><p class="motions-title">{{motion.topic}}</p></a>
+        </div>
+        <div class="votes">
+          <voting :votes="motion.votes" :id="motion.id"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -34,11 +42,13 @@
   let page = 1;
   let refresh = true;
   export default {
+    props: ['id'],
     data() {
       return {
         motions,
         page,
-        refresh
+        refresh,
+        isAuth: false
       }
     },
     components: {
@@ -48,26 +58,12 @@
       async loadNextPage() {
         try {
           this.page += 1;
-          const result = await this.getMotions(this.page)
+          const result = await this.$store.dispatch('getMotions', {page: this.page})
           if(result) this.motions = this.motions.concat(result)
           else this.page -= 1
           this.refresh = true
         } catch (error) {
           this.refresh = true
-        }
-      },
-      getMotions: async(page) => {
-        try {
-          const result = await fetch(`https://motion-search-backend.lb.djnd.si/api/v1/motions/?page=${page}`, {
-              method: 'get',
-              headers: {
-                'content-type': 'application/json'
-              }
-            })
-          const body = await result.json(); // .json() is asynchronous and therefore must be awaited
-          return body.results;
-        } catch (error) {
-          console.log(error);
         }
       },
       handleScroll(e) {
@@ -77,6 +73,14 @@
           this.loadNextPage()
           this.refresh = false
         }
+      },
+      toggleFilters() {
+        this.$emit('toggle-filters')
+      }
+    },
+    watch: {
+      '$store.state.motions.filterCount': async function() {
+        this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
       }
     },
     mounted() {
@@ -86,7 +90,8 @@
       window.removeEventListener("scroll", this.handleScroll)
     },
     async created() {
-      this.motions = await this.getMotions(1)
+      this.isAuth = await this.$store.dispatch('isAuth')
+      this.motions = await this.$store.dispatch('getMotions', {page: 1})
     }
   }
 
@@ -94,218 +99,213 @@
 
 <style scoped lang="scss">
 
-  .header {
-    margin-right: 40px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+
+  @media (min-width: 768px) {
+    justify-content: flex-end;
+    padding: 20px;
   }
+
+  @media (min-width: 1200px) {
+    padding: 30px;
+  }
+
+  .logo {
+    @media (min-width: 768px) {
+      display: none;
+    }
+
+    img {
+      height: 40px;
+    }
+  }
+}
+
+.motions-container {
+  display: flex;
+  flex-direction: column;
+  // overflow: hidden;
+  padding: 0 20px;
+  margin-bottom: 20px;
+
+  @media (min-width: 992px) {
+    padding: 0 40px;
+  }
+
   .motions-title-bar {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
     border-bottom: 1px solid black;
-  }
-  .motions-sort {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-    .share-bar {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    padding: 20px;
-    // background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
-    background-image: linear-gradient(-62deg, #cee7fd 0%, #f7fafd 100%);
-    z-index: 2;
-    .share-bar-split {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        display: flex;
-        flex-wrap: wrap;
-        align-content: center;
-        &.hidden {
-        display: none !important;
+
+    @media (min-width: 992px) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    div:nth-child(1) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+
+      @media (min-width: 992px) {
+        padding: 20px 0;
+      }
+    }
+
+    h3 {
+      font-size: 16px;
+      margin: 0;
+      color: #252525;
+      font-family: "Poppins";
+
+      @media (min-width: 768px) {
+        font-size: 30px;
+        line-height: 60px;
+      }
+    }
+
+    button {
+      font-size: 14px;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+
+      @media (min-width: 768px) {
+        display: none;
+      }
+    }
+
+    .motions-sort {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 10px;
+
+      @media (min-width: 992px) {
+        margin-bottom: 0;
+      }
+
+      .sort-button, p {
+        font-family: "IBM Plex Mono";
+        font-size: 12px;
+        line-height: 14px;
+
+        @media (min-width: 992px) {
+          font-size: 14px;
+          line-height: 18px;
         }
+      }
+
+      .sort-button {
+        border-radius: 20px;
+        background-color: rgb(48, 152, 243, 0.2);
+        padding: 5px 10px;
+        margin-left: 10px;
+        cursor: pointer;
+        color: #000000;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
     }
-    h1 {
-        margin-top: 0;
-        // width: 100%;
-    }
-    input {
-        margin-left: 20px;
-    }
-    }
-  h3 {
-    color: #252525;
-    font-family: "Poppins";
-    font-size: 30px;
-    font-weight: 700;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: 60px;
-    text-align: left;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: normal;
   }
-  .sort-button {
-    /* Style for "Rounded Re" */
-    border-radius: 20px;
-    background-color: rgb(48, 152, 243, 0.2);
-    padding: 10px;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-  .sort-button-text {
-    color: #000000;
-    font-family: "IBM Plex Mono";
-    opacity: 1;
-    font-size: 14px;
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: normal;
-    line-height: 18px;
-    text-align: center;
-    text-transform: uppercase;
-  }
+
   .motions-list {
     border-bottom: 1px solid black;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-  }
-  .motions-date {
-    color: #252525;
-    font-family: "IBM Plex Mono";
-    font-size: 14px;
-    font-style: italic;
-    letter-spacing: normal;
-    line-height: 18px;
-    text-align: left;
-  }
-  .motions-title {
-    color: #252525;
-    font-family: Poppins;
-    font-size: 24px;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: normal;
-    text-align: left;
-  }
-  .votes {
-    width: 78px;
-    height: 78px;
-    flex-shrink: 0;
-    margin-right: 20px;
-    margin-left:20px;
-    background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
-  }
-	.parent-container {
-		display:flex;
-    margin: 0 auto;
-    flex-direction: column;
-    justify-content: center;
-    align-items: initial;
-    overflow-x: auto;
-	}
-  .favourite{
-    background-image: '../assets/favourite.svg';
-  }
-  .background {
-    background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%), linear-gradient(to top, #000000 0%, #ffffff 100%);
-  }
+    // width: 100%;
 
-  .motions-container {
+    .motion-text-container {
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      padding: 0px 40px 0px 40px;
+      color: #252525;
+
+      .motions-date {
+        color: #252525;
+        font-family: "IBM Plex Mono";
+        font-size: 14px;
+        font-style: italic;
+        line-height: 18px;
+        text-align: left;
+      }
+
+      .motions-title {
+        color: #252525;
+        font-family: Poppins;
+        font-size: 24px;
+      }
+    }
+
+    .votes {
+      width: 78px;
+      height: 78px;
+      flex-shrink: 0;
+      margin-right: 20px;
+      margin-left: 20px;
+      background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
+    }
   }
-  .motionButtons {
-    display:flex;
-    justify-content: space-between;
+}
+
+.share-bar {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  // background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
+  background-image: linear-gradient(-62deg, #cee7fd 0%, #f7fafd 100%);
+  z-index: 2;
+
+  .share-bar-split {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    &.hidden {
+      display: none !important;
+    }
   }
 
-  .line {
-    margin-top: 26px;
-    margin-bottom: 30px;
-    border-top: 1px solid #3098f3;
-    margin-left: 0px;
-    margin-right: 0px;
+  h1 {
+      margin-top: 0;
+      // width: 100%;
   }
+
   input {
-    box-sizing: border-box;
+      margin-left: 20px;
   }
-  .motion-text-container {
-    display: flex;
-    flex-direction: column;
-  }
-  .motion-text {
-    /* Style for "EU member" */
-    color: #252525;
-    font-family: Poppins;
-    font-size: 48px;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: 60px;
-    text-align: left;;
-  }
-    .login {
-      border: 4px solid #ffcc00;
-      background-color: #ffffff;
-      color: #000000;
-    }
-  a {
-    /* Style for "Lorem Ipsu" */
-    color: #252525;
-    font-family: Poppins;
-    font-size: 18px;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: 40px;
-    text-align: left;
-    text-decoration: underline;
-    /* Text style for "Lorem Ipsu" */
-    font-style: normal;
-    letter-spacing: normal;
-    line-height: normal;
-  }
-  button {
-    box-shadow: none;
-    border: none;
-    max-width: 380px;
-    padding-left: 30px;
-    padding-right: 30px;
-    height: 60px;
-    border-radius: 30px;
-    background-color: #3098f3;
-    opacity: 0.7;
-    color: #ffffff;
-    font-family: "Poppins";
-    font-style: italic;
-    font-size: 30px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 2.16px;
-    display: block;
-    margin: auto;
-    margin-left: 25px;
-    margin-top: 26px;
-    cursor: pointer;
-    float: right;
-    white-space: nowrap;
-  }
-  button:disabled {
-    opacity: 0.1;
-  }
-  button:hover {
-    opacity: 1;
-  }
+}
+
+.parent-container {
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: initial;
+  overflow-x: auto;
+}
+
+.favourite{
+  background-image: '../assets/favourite.svg';
+}
+
+.motionButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.line {
+  margin: 0;
+  border-top: 1px solid #3098f3;
+}
 
 </style>
