@@ -11,7 +11,9 @@ export const state = () => ({
   refresh_token : "",
   motion_length: 0,
   filters: {},
-  filterCount: 0
+  filterCount: 0,
+  motion: {},
+  motionUpdate: 0
 })
 
 export const getters = {
@@ -61,15 +63,12 @@ const mapFilters = (filters) => {
     if (key === 'typeFilter') filterString += 'type='
     if (key === 'trainingFilter') filterString += 'training_focus='
     if (key === 'improPrepFilter') filterString += 'impro_prep='
+    if (key === 'id') filterString += 'id='
 
     filters[key].forEach((value, index) => {
-      console.log('(index-1): ', (index+1));
-      console.log('filters[key].length: ', filters[key].length);
-      console.log('(index-1) !== filters[key].length: ', (index-1) !== filters[key].length);
       filterString += (index+1) !== filters[key].length ? value + ',' : value  
     })
   })
-  console.log('filterString: ', filterString);
   return filterString
 }
 
@@ -108,7 +107,6 @@ export const actions = {
     try {
       // https://motion-search-backend.lb.djnd.si/api/v1/motions/
       const filters = mapFilters(getters.getFilters)
-      console.log('filters: ', filters);
       const result = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
           method: 'get',
           headers: {
@@ -216,8 +214,11 @@ export const actions = {
     })
   },
   async getMotionAttributes (context, payload) {
+    console.log('payload.filters: ', payload.filters);
+    const filters = mapFilters(payload.filters)
+    console.log('filters: ', filters);
     try {
-      let next = `${api}/api/v1/motions/${payload.type}?page=1`;
+      let next = `${api}/api/v1/motions/${payload.type}?page=1&${filters}`;
       let results = []; 
       while (next) {
         const result = await fetch(next, {

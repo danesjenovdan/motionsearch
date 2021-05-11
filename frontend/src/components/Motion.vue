@@ -36,6 +36,7 @@
     },
     async created() {
       this.motion = await this.$store.dispatch('getMotion', {id: this.id})
+      this.$store.state.motions.motion = this.motion
     }
   }
 
