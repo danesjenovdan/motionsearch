@@ -214,7 +214,8 @@ export const actions = {
     })
   },
   async getMotionAttributes (context, payload) {
-    const filters = mapFilters(payload.filters)
+    let filters = ''
+    if (payload.filters) filters = mapFilters(payload.filters)
     try {
       let next = `${api}/api/v1/motions/${payload.type}?page=1&${filters}`;
       let results = []; 
