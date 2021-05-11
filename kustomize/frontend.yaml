@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: motion-search-frontend
-          image: rg.fr-par.scw.cloud/djnd/motion-search-frontend:latest
+          image: motion-search-frontend
           ports:
             - containerPort: 80
 ---
