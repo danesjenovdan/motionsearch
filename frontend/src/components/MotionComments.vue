@@ -34,15 +34,11 @@
             <div class="right">
               <div class="links">
                 <h3>Where was it used</h3>
-                  <a href="http://google.com">googe</a><br/>
-                  <a href="http://google.com">google</a><br/>
-                  <a href="http://google.com">googe</a><br/>
+                  <p v-for="text in whereUsed" :key="text._id">{{text.value}}</p><br/>
                 </div>
               <div class="links">
                 <h3>Links</h3>
-                  <a href="http://google.com">googe</a><br/>
-                  <a href="http://google.com">google</a><br/>
-                  <a href="http://google.com">googe</a><br/>
+                  <a v-for="link in links" :key="link._id" :href="link.value">{{link.text}}</a><br/>
                 </div>
             </div>
     </div>
@@ -63,15 +59,15 @@
       return {
         comments,
         comment: '',
-        isAuth: false
+        isAuth: false,
+        links: [],
+        whereUsed: []
       }
     },
     methods: {
       async addUsedWhere(id) {
         try {
-          const response = await this.$store.dispatch('setComment', {text: comment.value, id})
-          console.log('response: ', response);
-          
+          const response = await this.$store.dispatch('setComment', {text: comment.value, id})          
         } catch (error) {
           console.log('error: ', error);
           
@@ -86,6 +82,11 @@
     async created() {
       this.isAuth = await this.$store.dispatch('isAuth')
       this.comments = await this.$store.dispatch('getComments', {id: this.id})
+    }, 
+    async mounted() {
+      const { where_used, links } = this.$store.state.motions.motion
+      this.links = await this.$store.dispatch('getMotionAttributes', {type: 'links', filters: { id: links}})
+      this.whereUsed = await this.$store.dispatch('getMotionAttributes', {type: 'where-used', filters: { id: where_used}})
     }
   }
 

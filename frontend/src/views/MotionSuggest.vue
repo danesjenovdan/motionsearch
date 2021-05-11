@@ -84,7 +84,7 @@
             </div>
             <div class="arrayContainer">
               <div v-for="(element, index) in usedWhere" :element="element" :key="element" :vid-id="index">
-                  <button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element}}
+                  <button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element.value}}
               </div>
               <input type="text" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
             </div>
@@ -96,7 +96,7 @@
             </div>
             <div class="arrayContainer">
               <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                <button v-on:click="removeLink(index)" class="btn">x</button> <a target="_blank" :href="link.url">{{link.title}}</a>
+                <button v-on:click="removeLink(index)" class="btn">x</button> <a target="_blank" :href="link.value">{{link.text}}</a>
               </div>
               <input type="text" id="link" key="links.title" placeholder="Type here..." />
               <input type="text" id="url" key="links.url" placeholder="Type here..."/>
@@ -114,12 +114,6 @@
 </template>
 
 <script>
-const usedWhere = []
-const links = [{
-  title: "yeet",
-  url:"www.yeet.com"
-}]
-
   export default {
     data() {
       return {
@@ -140,22 +134,25 @@ const links = [{
         debateFormat: 0,
         type: 0,
         trainingFocus: 0,
-        improPrep: 0
+        improPrep: 0,
+        isAuth: false
       }
     },
     methods: {
       addUsedWhere(event) {
         event.preventDefault()
-        this.usedWhere.push(event.target.value)
+        this.usedWhere.push({value: event.target.value})
       },
       removeUsedWhere: (index) => {
+        console.log('index: ', index);
+        event.preventDefault()
         this.usedWhere.splice(index, 1)
       },
       addLink(event) {
         event.preventDefault()
         this.links.push({
-          title: link.value,
-          url: url.value
+          text: link.value,
+          value: url.value
         })
         link.value = ''
         url.value = ''
@@ -216,6 +213,7 @@ const links = [{
       }
     },
     async created() {
+      this.isAuth = await this.$store.dispatch('isAuth')
       this.categoryArray = await this.$store.dispatch('getMotionAttributes', {type: 'categories'})
       this.difficultiesArray = await this.$store.dispatch('getMotionAttributes', {type: 'difficulties'})
       this.ageArray = await this.$store.dispatch('getMotionAttributes', {type: 'age-ranges'})
