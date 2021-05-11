@@ -73,7 +73,7 @@ class MotionInfoTextSerializer(serializers.ModelSerializer):
 class MotionLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = MotionLink
-        fields = ['id', 'value']
+        fields = ['id', 'value', 'text']
 
 
 class MotionCommentSerializer(serializers.ModelSerializer):

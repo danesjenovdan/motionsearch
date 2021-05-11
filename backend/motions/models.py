@@ -62,6 +62,7 @@ class MotionInfoText(BaseModel):
 
 
 class MotionLink(BaseModel):
+    text = models.TextField( null=True, blank=True)
     value = models.URLField(null=True, blank=True)
 
 
@@ -72,12 +73,15 @@ class MotionComment(BaseModel):
     created_at = AutoDateTimeField(auto_now=True)
 
 class MotionVote(BaseModel):
-    user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.CASCADE,  unique=True)
+    user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.CASCADE)
     choices = models.PositiveSmallIntegerField(
        choices=VoteValue.CHOICES,
        default=3,
    )
     motion = models.ForeignKey('motions.Motion', null=False, blank=False,on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ('user', 'motion',)
 
 class Motion(BaseModel):
     topic = models.TextField(blank=True, null=True)

@@ -32,6 +32,25 @@ class MotionCategoryFilterSet(FilterSet):
         model = MotionCategory
         fields = ('value','id')
 
+class MotionLinkFilterSet(FilterSet):
+    value = MultiValueKeyFilter(field_name='value')
+    id = MultiValueKeyFilter(field_name='id')
+    class Meta:
+        model = MotionLink
+        fields = ('value','id')
+class MotionWhereUsedFilterSet(FilterSet):
+    value = MultiValueKeyFilter(field_name='value')
+    id = MultiValueKeyFilter(field_name='id')
+    class Meta:
+        model = MotionWhereUsed
+        fields = ('value','id')
+class MotionInfoTextFilterSet(FilterSet):
+    value = MultiValueKeyFilter(field_name='value')
+    id = MultiValueKeyFilter(field_name='id')
+    class Meta:
+        model = MotionInfoText
+        fields = ('value','id')
+
 class MotionFilterSet(FilterSet):
     id = MultiValueKeyFilter(field_name='id')
     age_range = MultiValueKeyFilter(field_name='age_range')
@@ -96,18 +115,27 @@ class MotionWhereUsedViewSet(viewsets.ModelViewSet):
     queryset = MotionWhereUsed.objects.all().order_by('value')
     serializer_class = MotionWhereUsedSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionWhereUsedFilterSet
+    filter_fields = ('value','id')
 
 
 class MotionInfoTextViewSet(viewsets.ModelViewSet):
     queryset = MotionInfoText.objects.all().order_by('value')
     serializer_class = MotionInfoTextSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionInfoTextFilterSet
+    filter_fields = ('value','id')
 
 
 class MotionLinkViewSet(viewsets.ModelViewSet):
     queryset = MotionLink.objects.all().order_by('value')
     serializer_class = MotionLinkSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionLinkFilterSet
+    filter_fields = ('value','id')
 
 class MotionCommentViewSet(viewsets.ModelViewSet):
     queryset = MotionComment.objects.all().order_by('-created_at')
@@ -137,15 +165,19 @@ class MotionVoteViewSet(viewsets.ModelViewSet):
         return Response(data=self.serializer_class(q, many=True).data)
     def create(self, request, *args, **kwargs):
         motion = get_object_or_404(Motion, pk=kwargs.get('motion_pk', None))
-        motionVote = get_object_or_404(MotionVote, motion = motion, user = request.user)
-        if(not motionVote):
-            motionVote = {}
+        motionVote = MotionVote.objects.filter(motion = motion, user = request.user).first()
         CHOICES = (
             (1, 1),
             (2, -1),
             (3, 0)
         )
         vote = dict(CHOICES)[request.data.get('choices', 3)]
+        if(not motionVote):
+            serializer = MotionVoteSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=False):
+                serializer.save(user = request.user, motion = motion)
+                motion.votes += vote
+                return Response(serializer.data)
         previous_vote = dict(CHOICES)[motionVote.choices]
         if (motionVote.user == request.user):
             motion.votes += -previous_vote + vote
