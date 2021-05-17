@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  props: ['votes', 'id'],
+  props: ['votes', 'id', 'choice'],
   data() {
     return{
       upSelected: false,
@@ -39,8 +39,16 @@ export default {
   watch: { 
     votes: function(newVal, oldVal) { // watch it
       this.number = newVal
+    },
+    choice: function(newVal, oldVal) { // watch it
+      if (newVal === 1) this.upSelected = true;
+      if (newVal === 2) this.downSelected = true;
     }
-  }
+  },
+    async created() {
+      if (this.choice === 1) this.upSelected = true;
+      if (this.choice === 2) this.downSelected = true;
+    }
 }
 </script>
 

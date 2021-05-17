@@ -144,7 +144,41 @@ export const actions = {
       body: JSON.stringify(payload) // body data type must match "Content-Type" header
     });
     const body = await response.json()
-    console.log('body: ', body);
+    return body
+  },
+  async getFavorites ({ getters }, payload) {
+    const response = await fetch(`${api}/api/v1/users/me/favorites`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getters.access_token}`
+      },
+    });
+    const body = await response.json()
+    return body
+  },
+  async postFavorite ({ getters }, payload) {
+    const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getters.access_token}`
+      },
+      body: JSON.stringify(payload) // body data type must match "Content-Type" header
+    });
+    const body = await response.json()
+    return body
+  },
+  async deleteFavorite ({ getters }, payload) {
+    const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getters.access_token}`
+      },
+      body: JSON.stringify(payload) // body data type must match "Content-Type" header
+    });
+    const body = await response.json()
     return body
   },
   async getComments (context, payload) {
@@ -162,7 +196,6 @@ export const actions = {
     }
   },
   async setComment ({ getters }, payload) {
-    console.log('payload: ', payload);
     const response = await fetch(`${api}/api/v1/motions/${payload.id}/comments/`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -188,7 +221,17 @@ export const actions = {
       }) // body data type must match "Content-Type" header
     });
     const body = await response.json()
-    console.log('body: ', body);
+    return body
+  },
+  async getUpvotes ({ getters }, payload) {
+    const response = await fetch(`${api}/api/v1/users/me/votes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getters.access_token}`
+      },
+    });
+    const body = await response.json()
     return body
   },
   async register (context, payload) {
