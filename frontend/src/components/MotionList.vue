@@ -25,11 +25,37 @@
       <div class="motions-list" v-for="motion in motions" :key="motion.id">
         <div class="motion-text-container">
           <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
-          <a :href="'/motion/'+motion.id"><p class="motions-title">{{motion.topic}}</p></a>
+          <a :href="'/motion/'+motion.id" class="motions-title">{{motion.topic}}</a>
         </div>
         <div class="votes">
           <voting :votes="motion.votes" :id="motion.id"/>
         </div>
+      </div>
+    </div>
+    <div class="pagination">
+      <div>
+        <button @click="changeSite(1)">
+          <svg id="SVGDoc" width="15" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 15 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286633 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAABRUlEQVQ4T33TzyunURQG8I8Vq7GympHZkJoampSmNNhY2TELKavRZCFZSBYaRbLAQrJhh1kwO6vJhomSEjaT0dTkR03zN0yiq/Pq7dv7dVe3c5/nnOc859wK5U8TDvEZmznYGGbQXlGG24Bf8daCk7j34SvO0FNEfo0/uEMt/gaxB9+wj44UKyW/xG2AU5KruHdjB8dozdTmyTW4QSXq8TtAXfiOczTn28zI1bjGC7zBzwC1Yw+XaMR9KbkOu1HtHU6jnQ9BvMBb/C81N1VOriZ33+MoAK+ihSJfnnIkci+2Y6adUaEK45jCEkaKRpr1nCSmEZT2lhLMYQ2DRbKzWDlXv4SCZQwXuZ3FCueJWUxgHmk9H0/RhmUe/Ej7m6u0iNHY68nnnOzHBg7C0H+RZAVDWMB0uY+RsJ+wigGs5xRs4SPaHgAT/z+0+ejOmgAAAABJRU5ErkJggg==" width="15" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
+        <button @click="changeSite(page - 1)">
+          <svg id="SVGDoc" width="9" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 9 16"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAQCAYAAADESFVDAAAAbElEQVQoU53SwQmAMAyF4b8buIxHBxCcwJObOYWu4EVwpRIhIDFJxZ6/9iVNCvmZga4kZgR24IqQggMYPKTgBHpJsugFLHLBE4VA0QKswAZMXrdS0yckl5txmtAsPIW/PtO+GI7FwnDACu9VqZ6vHIcNAterAAAAAElFTkSuQmCC" width="9" height="16" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
+        <ul>
+          <li v-for="p in pagesNo" key="p" :class="{'active-page': p === page}" @click="changeSite(p)">{{p}}</li>
+          <!--
+          <li class="active-page">1</li>
+          <li>2</li>
+          <li>3</li>
+          <li class="disabled">...</li>
+          <li>9</li>
+          -->
+        </ul>
+        <button @click="changeSite(page + 1)">
+          <svg id="SVGDoc" width="8" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 8 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAPCAYAAADZCo4zAAAAs0lEQVQoU3XRIWuCURTG8Z9p4AfR4ldYM70Y1lbWDAoaDLIos24YBsoWrJY1gxisxsGCZfsgwzg54IWXy91p9/I//wfO08AZL5gpTAM/aOEBm5wJIOaALu6wrUMJiL8TOrjHR4LqQBNf17gK+4DqQLxv8Hk13eKYA8n8jTaq/4CI+y1FJMM7BnguGZYYYYpFDqzRxxxPeUTSvmKS3yF6iK3o5DG/5BuGWGFc6uIPO/RKbV4A0xUb4dD0ryEAAAAASUVORK5CYII=" width="8" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
+        <button @click="changeSite(pagesNo)">
+          <svg id="SVGDoc" width="15" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 15 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286633</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAA+ElEQVQ4T5XTvyuHQRwH8Ne3TFabxB+gKDEpk0UMfvwJJoxSBiYMpJTJ4E/wYxDFioXFbCKDRUaLkq7uct+ne756brque70/93meuxaGcIAlPPsbK5jEXLbWNm1hGE/4QR/e445FHOMWE6WAgMPox2shYBbndQEJdwoIxz4rBeS4cUAVNwoo4RAwgBd8YARv8dvM4xTXmKrDYW8XviPqwWecz+AC953wGvZwhFV8RXyCBSzX4f0ItrGZ/eNHjGIaVyWc4A42MviAsQTDehX/B0O/lykwx41gqtyNQ4S7nPfYixsMoq1iXnkcd9jFetZj6Hcr77H6OH4BUthBPqob+J4AAAAASUVORK5CYII=" width="15" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -38,23 +64,40 @@
 <script>
   import Voting from './Voting.vue'
 
-  let motions = [];
-  let page = 1;
-  let refresh = true;
   export default {
     props: ['id'],
     data() {
       return {
-        motions,
-        page,
-        refresh,
-        isAuth: false
+        motions: [],
+        page: 1,
+        refresh: true,
+        isAuth: false,
+        motionsNo: 0
+      }
+    },
+    computed: {
+      pagesNo: function() {
+        return Math.ceil(this.motionsNo/10)
       }
     },
     components: {
       Voting
     },
     methods: {
+      async changeSite (p) {
+        if (p > 0 && p <= this.pagesNo) {
+          try {
+            const result = await this.$store.dispatch('getMotions', {page: p})
+            if (result) {
+              this.motions = result
+              this.page = p
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      },
+      /*
       async loadNextPage() {
         try {
           this.page += 1;
@@ -74,6 +117,7 @@
           this.refresh = false
         }
       },
+      */
       toggleFilters() {
         this.$emit('toggle-filters')
       }
@@ -83,15 +127,19 @@
         this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
       }
     },
+    /*
     mounted() {
       window.addEventListener("scroll", this.handleScroll)
     },
     unmounted() {
       window.removeEventListener("scroll", this.handleScroll)
     },
+    */
     async created() {
       this.isAuth = await this.$store.dispatch('isAuth')
       this.motions = await this.$store.dispatch('getMotions', {page: 1})
+      this.motionsNo = await this.$store.dispatch('getMotionLength')
+      console.log(this.motionsNo)
     }
   }
 
@@ -215,6 +263,7 @@
 
   .motions-list {
     border-bottom: 1px solid black;
+    padding: 0.5rem 0;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -225,20 +274,21 @@
       display: flex;
       flex-direction: column;
       color: #252525;
+      margin: 1rem 0;
 
       .motions-date {
-        color: #252525;
         font-family: "IBM Plex Mono";
         font-size: 14px;
         font-style: italic;
         line-height: 18px;
-        text-align: left;
+        margin: 0 0 0.25rem;
       }
 
       .motions-title {
         color: #252525;
         font-family: Poppins;
         font-size: 24px;
+        text-decoration: none;
       }
     }
 
@@ -246,7 +296,7 @@
       width: 78px;
       height: 78px;
       flex-shrink: 0;
-      margin-right: 20px;
+      // margin-right: 20px;
       margin-left: 20px;
       background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
     }
