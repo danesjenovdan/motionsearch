@@ -7,7 +7,8 @@
     </div>
     <div class="header-buttons">
       <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-      <router-link to="/login" v-show="!isAuth" class="btn login">Log in</router-link>
+      <router-link to="/login" v-if="!isAuth" class="btn login">Log in</router-link>
+      <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
     </div>
   </div>
   <div class="wrapper">
@@ -18,43 +19,43 @@
             <label>Topic</label><br>
             <textarea rows="3" cols="20" name="topic" ref="topic"></textarea>
             </div><br>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label >Category</label>
             <select v-model="categories" name="Category" id="categories">
               <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
             </select>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Dificulty</label>
             <select v-model="difficulty" name="Dificulty" id="difficulty">
               <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
             </select>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Debate format</label>
             <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
               <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
             </select>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label >Age</label>
             <select v-model="age" name="Age" id="age">
               <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
             </select>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Motion type</label>
             <select v-model="type" name="Type" id="type">
               <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
             </select>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Training focus</label>
             <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
                 <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
             </select>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Impro or prep</label>
           <div class="setting-container teams">
               <div class="radio-container">
@@ -77,7 +78,7 @@
               </div>
             </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <div class="subtitleContainer">
               <label>Add is used where</label><br/>
               <label class="subtitle"> Press Enter after each input</label>
@@ -89,7 +90,7 @@
               <input type="text" id="used" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
             </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <div class="subtitleContainer">
               <label>Add links</label><br/>
               <label class="subtitle"> Press Enter after each input</label>
@@ -101,7 +102,7 @@
               <input type="text" id="link" key="links.title" placeholder="Type name here..." />
               <input type="text" id="url" key="links.url" placeholder="Type url here..."/>
               <div class="buttonContainer">
-                <p>Add another link</p> 
+                <p>Add another link</p>
                 <button class="addLink" v-on:click="addLink"></button>
               </div>
             </div>
@@ -262,7 +263,7 @@
         }
 
         @media (min-width: 768px) {
-          height: 80px;
+          height: 74px;
         }
 
         @media (min-width: 1200px) {
@@ -275,7 +276,7 @@
       margin: 20px 10px 20px 0;
 
       @media (min-width: 1200px) {
-        margin: 20px 60px 20px 0;
+        margin: 20px 30px 20px 0;
       }
     }
   }
@@ -313,7 +314,7 @@
   .addLink {
       background-image: url("../assets/plus.png");
       background-repeat: no-repeat;
-      background-position: center; 
+      background-position: center;
       width: 42px;
       height: 42px;
       border-radius: 21px;
