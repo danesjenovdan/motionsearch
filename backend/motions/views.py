@@ -222,8 +222,8 @@ class MotionViewSet(viewsets.ModelViewSet):
         return super(MotionViewSet, self).get_serializer_class()
 
     def create(self, request, *args, **kwargs):
-        categories_data = request.data.get('categories', [])
         where_used_data = request.data.get('where_used', [])
+        category_data = request.data.get('category', [])
         info_text_data = request.data.get('info_text', [])
         links_data = request.data.get('links', [])
 
@@ -237,6 +237,8 @@ class MotionViewSet(viewsets.ModelViewSet):
                 **where_used
             )
             instance.where_used.add(response)
+        for category in category_data:
+            instance.category.add(category)
         for info_text in info_text_data: 
             response, created = MotionInfoText.objects.get_or_create(
                 **info_text
@@ -247,11 +249,6 @@ class MotionViewSet(viewsets.ModelViewSet):
                 **links
             )
             instance.links.add(response)
-        for category_data in categories_data: 
-            category, created = MotionCategory.objects.get_or_create(
-                **category_data
-            )
-            instance.category.add(category)
 
         headers = self.get_success_headers(serializer.data)
 
