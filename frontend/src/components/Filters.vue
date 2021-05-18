@@ -3,17 +3,17 @@
     <div class="filters-container">
       <div :class="['filterBox', { selected: true }]">
         <img src="../assets/topic.svg">
-        <span :onclick="togglePopup" data-type="category"><i>Category</i></span>
+        <span :onclick="togglePopup" data-type="categoryFilter"><i>Category</i></span>
         <div class="popup">
-          <div class="popup-container" id="category">
+          <div class="popup-container" id="categoryFilter">
             <div class="popup-box">
               <div class="checkmark-container">
-                <div v-for="category in categoryArray" :key="category">
-                  <input :id="'category-' + category.id" type='checkbox'/>
+                <div v-for="category in categoryArray" :key="category" >
+                  <input :id="'category-' + category.id" type='checkbox' :value="category.id" v-model="categoryFilter"/>
                   <label class="popup-text" :for="'category-' + category.id">{{category.value}}</label>
                 </div>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="category">Apply</div>
+              <div class="popup-apply" :onclick="toggleFilters"  data-type="categoryFilter">Apply</div>
             </div>
             <div class="popup-arrow">
             </div>
@@ -162,6 +162,7 @@
         trainingFocusArray: [],
         improPrepArray: [{id: 0, value: 'impro'}, { id: 1, value: 'prep' }], // we don't have it saved in database
         ageFilter: [],
+        categoryFilter: [],
         formatFilter: [],
         improPrepFilter: [],
         difficultyFilter: [],
@@ -314,11 +315,11 @@
 }
 
 .checkmark-container {
-  margin: 80px 0px 40px 0px;
+  margin: 20px 0px 10px 0px;
   display: grid;
   grid-template-columns: 45% 45%;
-  column-gap: 10%;
-  row-gap: 5%;
+  column-gap: 20px;
+  row-gap: 10px;
   width: 100%;
   align-items: start;
 }
@@ -414,7 +415,6 @@
   background-color: white;
   color: black;
   border: 4px solid #3098f3;
-  text-align: center;
   padding: 8px 0;
   position: absolute;
   z-index: 2;
