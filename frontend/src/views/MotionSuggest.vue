@@ -83,10 +83,10 @@
               <label class="subtitle"> Press Enter after each input</label>
             </div>
             <div class="arrayContainer">
-              <div v-for="(element, index) in usedWhere" :element="element" :key="element" :vid-id="index">
-                  <button v-on:click="removeUsedWhere(index)" class="btn">x</button> {{element.value}}
+              <div v-for="(element, index) in usedWhere" :element="element.value" :key="element.value" :vid-id="index">
+                  <span v-on:click="removeUsedWhere(index)">x</span> {{element.value}}
               </div>
-              <input type="text" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
+              <input type="text" id="used" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
             </div>
           </div>
           <div class="inputContainer"> 
@@ -96,17 +96,17 @@
             </div>
             <div class="arrayContainer">
               <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                <button v-on:click="removeLink(index)" class="btn">x</button> <a target="_blank" :href="link.value">{{link.text}}</a>
+                <span v-on:click="removeLink(index)" >x</span> <a target="_blank" :href="link.value">{{link.text}}</a>
               </div>
-              <input type="text" id="link" key="links.title" placeholder="Type here..." />
-              <input type="text" id="url" key="links.url" placeholder="Type here..."/>
+              <input type="text" id="link" key="links.title" placeholder="Type name here..." />
+              <input type="text" id="url" key="links.url" placeholder="Type url here..."/>
               <div class="buttonContainer">
                 <p>Add another link</p> 
                 <button class="addLink" v-on:click="addLink"></button>
               </div>
             </div>
           </div>
-          <button type="submit">Submit motion</button>
+          <button class="btn" type="submit">Submit motion</button>
         </form>
     </div>
   </div>
@@ -129,6 +129,7 @@
         categories: 0,
         link: '',
         url: '',
+        used: '',
         difficulty: 0,
         age: 0,
         debateFormat: 0,
@@ -142,10 +143,9 @@
       addUsedWhere(event) {
         event.preventDefault()
         this.usedWhere.push({value: event.target.value})
+        used.value = ''
       },
-      removeUsedWhere: (index) => {
-        console.log('index: ', index);
-        event.preventDefault()
+      removeUsedWhere(index) {
         this.usedWhere.splice(index, 1)
       },
       addLink(event) {
@@ -308,6 +308,7 @@
   .buttonContainer {
     display: flex;
       flex-direction: row;
+      align-self: end;
   }
   .addLink {
       background-image: url("../assets/plus.png");
