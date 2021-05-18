@@ -47,14 +47,7 @@
           <svg width="9" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 9 16"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAQCAYAAADESFVDAAAAbElEQVQoU53SwQmAMAyF4b8buIxHBxCcwJObOYWu4EVwpRIhIDFJxZ6/9iVNCvmZga4kZgR24IqQggMYPKTgBHpJsugFLHLBE4VA0QKswAZMXrdS0yckl5txmtAsPIW/PtO+GI7FwnDACu9VqZ6vHIcNAterAAAAAElFTkSuQmCC" width="9" height="16" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
         </button>
         <ul>
-          <li v-for="p in pagesNo" key="p" :class="{'active-page': p === page}" @click="changeSite(p)">{{p}}</li>
-          <!--
-          <li class="active-page">1</li>
-          <li>2</li>
-          <li>3</li>
-          <li class="disabled">...</li>
-          <li>9</li>
-          -->
+          <li v-for="p in pagesNo" :key="p" :class="{'active-page': p === page}" @click="changeSite(p)">{{p}}</li>
         </ul>
         <button @click="changeSite(page + 1)">
           <svg width="8" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 8 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAPCAYAAADZCo4zAAAAs0lEQVQoU3XRIWuCURTG8Z9p4AfR4ldYM70Y1lbWDAoaDLIos24YBsoWrJY1gxisxsGCZfsgwzg54IWXy91p9/I//wfO08AZL5gpTAM/aOEBm5wJIOaALu6wrUMJiL8TOrjHR4LqQBNf17gK+4DqQLxv8Hk13eKYA8n8jTaq/4CI+y1FJMM7BnguGZYYYYpFDqzRxxxPeUTSvmKS3yF6iK3o5DG/5BuGWGFc6uIPO/RKbV4A0xUb4dD0ryEAAAAASUVORK5CYII=" width="8" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
@@ -99,6 +92,8 @@
             const result = await this.$store.dispatch('getMotions', {page: p})
             if (result) {
               this.motions = result
+              this.motionsNo = await this.$store.dispatch('getMotionLength')
+              await this.getUserVotes()
               this.page = p
             }
           } catch (error) {
@@ -106,60 +101,39 @@
           }
         }
       },
-      /*
-      async loadNextPage() {
-        try {
-          this.page += 1;
-          const result = await this.$store.dispatch('getMotions', {page: this.page})
-          if(result) this.motions = this.motions.concat(result)
-          else this.page -= 1
-          this.refresh = true
-        } catch (error) {
-          this.refresh = true
-        }
+      async getUserVotes() {
+        this.votes = await this.$store.dispatch('getUpvotes')
+        this.motions.forEach(motion => {
+          const choice = this.votes.find(vote => vote.motion === motion.id)
+          if (choice) motion.choice = choice.choices;
+       });
       },
-      handleScroll(e) {
-        // compare height of motions-container to window height to enable next scrolling
-        let element = document.querySelector('.motions-container')
-        if ( element.getBoundingClientRect().bottom < window.innerHeight && this.refresh) {
-          this.loadNextPage()
-          this.refresh = false
-        }
-      },
-      */
       toggleFilters() {
         this.$emit('toggle-filters')
       },
       toggleDateSort() {
         this.dateSortAscend = !this.dateSortAscend
+        this.$store.state.motions.filters['ordering'] = [this.dateSortAscend ? 'created_at' : '-created_at']
+        this.$store.state.motions.filterCount += 1
       },
       toggleQualitySort() {
         this.qualitySortAscend = !this.qualitySortAscend
+        this.$store.state.motions.filters['ordering'] = [this.qualitySortAscend ? 'votes' : '-votes']
+        this.$store.state.motions.filterCount += 1
       }
     },
     watch: {
       '$store.state.motions.filterCount': async function() {
         this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
+        this.motionsNo = await this.$store.dispatch('getMotionLength')
       }
     },
-    /*
-    mounted() {
-      window.addEventListener("scroll", this.handleScroll)
-    },
-    unmounted() {
-      window.removeEventListener("scroll", this.handleScroll)
-    },
-    */
     async created() {
       this.isAuth = await this.$store.dispatch('isAuth')
       this.motions = await this.$store.dispatch('getMotions', {page: 1})
       this.motionsNo = await this.$store.dispatch('getMotionLength')
       console.log(this.motionsNo)
-      this.votes = await this.$store.dispatch('getUpvotes')
-      this.motions.forEach(motion => {
-        const choice = this.votes.find(vote => vote.motion === motion.id)
-        if (choice) motion.choice = choice.choices;
-      });
+      await this.getUserVotes()
     }
   }
 

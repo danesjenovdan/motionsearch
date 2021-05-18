@@ -64,6 +64,7 @@ const mapFilters = (filters) => {
     if (key === 'trainingFilter') filterString += 'training_focus='
     if (key === 'improPrepFilter') filterString += 'impro_prep='
     if (key === 'id') filterString += 'id='
+    if (key === 'ordering') filterString += 'ordering='
 
     filters[key].forEach((value, index) => {
       filterString += (index+1) !== filters[key].length ? value + ',' : value  
@@ -105,7 +106,6 @@ export const actions = {
 
   async getMotions ({ getters, commit }, payload) {
     try {
-      // https://motion-search-backend.lb.djnd.si/api/v1/motions/
       const filters = mapFilters(getters.getFilters)
       const result = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
           method: 'get',
