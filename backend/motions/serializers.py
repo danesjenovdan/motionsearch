@@ -83,7 +83,7 @@ class MotionCommentSerializer(serializers.ModelSerializer):
 class MotionVoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = MotionVote
-        fields = ['id', 'user', 'choices']
+        fields = ['id', 'user', 'choices', 'motion']
 
 
 class MotionSerializer(serializers.ModelSerializer):

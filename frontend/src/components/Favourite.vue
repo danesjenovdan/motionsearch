@@ -11,11 +11,17 @@ export default {
       favSelected: false,
     }
   }, 
+  props: ['motion'],
   methods: {
-    toggleFavourite: function () {
+    toggleFavourite: async function () {
       this.favSelected = !this.favSelected;
+      this.favSelected ? await this.$store.dispatch('postFavorite', { motion: this.motion }) : await this.$store.dispatch('deleteFavorite', { motion: this.motion })
     }
-  }
+  },
+  async created() {
+    const userFavorites = (await this.$store.dispatch('getFavorites', {}))
+    this.favSelected = userFavorites.filter(favorite => favorite.motion == this.motion).length > 0 ? true : false
+  } 
 }
 </script>
 

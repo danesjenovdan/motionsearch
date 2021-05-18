@@ -34,7 +34,7 @@
           <a :href="'/motion/'+motion.id" class="motions-title">{{motion.topic}}</a>
         </div>
         <div class="votes">
-          <voting :votes="motion.votes" :id="motion.id"/>
+          <voting :votes="motion.votes" :id="motion.id" :choice="motion.choice"/>
         </div>
       </div>
     </div>
@@ -80,7 +80,8 @@
         isAuth: false,
         motionsNo: 0,
         dateSortAscend: false,
-        qualitySortAscend: false
+        qualitySortAscend: false,
+        votes: []
       }
     },
     computed: {
@@ -154,6 +155,11 @@
       this.motions = await this.$store.dispatch('getMotions', {page: 1})
       this.motionsNo = await this.$store.dispatch('getMotionLength')
       console.log(this.motionsNo)
+      this.votes = await this.$store.dispatch('getUpvotes')
+      this.motions.forEach(motion => {
+        const choice = this.votes.find(vote => vote.motion === motion.id)
+        if (choice) motion.choice = choice.choices;
+      });
     }
   }
 

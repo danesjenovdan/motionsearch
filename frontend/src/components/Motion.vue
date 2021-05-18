@@ -1,8 +1,8 @@
 <template>
 <div class="parentContainer">
   <div class="motionButtons">
-    <voting :votes="motion.votes" :id="id"/>
-    <favourite/>
+    <voting :choice="motion.choice" :votes="motion.votes" :id="id"/>
+    <favourite :motion="id"/>
   </div>
   <p>Added on {{motion.created_at?.split('T')[0]}}</p>
   <span class="motion-text">{{motion.topic}}</span>
@@ -37,6 +37,9 @@
     async created() {
       this.motion = await this.$store.dispatch('getMotion', {id: this.id})
       this.$store.state.motions.motion = this.motion
+      this.votes = await this.$store.dispatch('getUpvotes')
+      const choice = this.votes.find(vote => vote.motion === this.motion.id)
+      if (choice) this.motion.choice = choice.choices;
     }
   }
 

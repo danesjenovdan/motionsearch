@@ -182,7 +182,7 @@
         popup.classList.toggle("show");
       },
       randomMotion() {
-        window.location.href = '/motion/' + Math.floor(Math.random() * this.motion_length+1);
+        window.location.href = '/motion/' + (Math.floor((Math.random() * this.motion_length))+1);
       }
     },
     async created() {
