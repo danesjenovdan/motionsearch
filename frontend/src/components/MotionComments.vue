@@ -32,11 +32,11 @@
             </div>
           </div>
             <div class="right">
-              <div class="links">
+              <div v-show="whereUsed" class="links">
                 <h3>Where was it used</h3>
                   <p v-for="text in whereUsed" :key="text._id">{{text.value}}</p><br/>
                 </div>
-              <div class="links">
+              <div v-show="links" class="links">
                 <h3>Links</h3>
                   <a v-for="link in links" :key="link._id" :href="link.value">{{link.text}}</a><br/>
                 </div>
@@ -52,16 +52,14 @@
   export default {
     components: [
     ],
-    props: [
-       'id',
-       ],
+    props: [ 'id', 'motion'],
     data() {
       return {
         comments,
         comment: '',
         isAuth: false,
-        links: [],
-        whereUsed: []
+        links: false,
+        whereUsed: false
       }
     },
     methods: {
@@ -83,10 +81,12 @@
       this.isAuth = await this.$store.dispatch('isAuth')
       this.comments = await this.$store.dispatch('getComments', {id: this.id})
     }, 
-    async mounted() {
-      const { where_used, links } = this.$store.state.motions.motion
-      this.links = await this.$store.dispatch('getMotionAttributes', {type: 'links', filters: { id: links}})
-      this.whereUsed = await this.$store.dispatch('getMotionAttributes', {type: 'where-used', filters: { id: where_used}})
+    watch: {
+      motion: async function(newVal, oldVal) {
+        const {links, where_used} = newVal
+        if(links?.length > 0) this.links = await this.$store.dispatch('getMotionAttributes', {type: 'links', filters: { id: links}})
+        if(where_used?.length > 0) this.whereUsed = await this.$store.dispatch('getMotionAttributes', {type: 'where-used', filters: { id: where_used}})
+      }
     }
   }
 

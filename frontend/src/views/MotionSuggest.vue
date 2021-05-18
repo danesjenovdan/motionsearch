@@ -172,7 +172,7 @@
             topic: this.$refs.topic.value,
             where_used: JSON.parse(JSON.stringify(this.usedWhere)),
             links: JSON.parse(JSON.stringify(this.links)),
-            category: this.categories,
+            category: [this.categories],
             difficulties: this.difficulty,
             age_range: this.age,
             debate_formats: this.debateFormat,

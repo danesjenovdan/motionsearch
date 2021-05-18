@@ -57,6 +57,7 @@ const mapFilters = (filters) => {
   let filterString = ''
   Object.keys(filters).forEach((key, index) => {
     if(index !== 0) filterString += '&'
+    if (key === 'categoryFilter') filterString += 'category='
     if (key === 'ageFilter') filterString += 'age_range='
     if (key === 'formatFilter') filterString += 'debate_formats='
     if (key === 'difficultyFilter') filterString += 'difficulties='

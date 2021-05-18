@@ -18,28 +18,13 @@
 <script>
   import Favourite from './Favourite.vue'
   import Voting from './Voting.vue'
-  let motion = {}
   export default {
-    data() {
-      return {
-        motion,
-      }
-    },
     components: {
       Voting,
       Favourite
     },
-     props: [
-       'id',
-       ],
+     props: ['id', 'motion'],
     methods: {
-    },
-    async created() {
-      this.motion = await this.$store.dispatch('getMotion', {id: this.id})
-      this.$store.state.motions.motion = this.motion
-      this.votes = await this.$store.dispatch('getUpvotes')
-      const choice = this.votes.find(vote => vote.motion === this.motion.id)
-      if (choice) this.motion.choice = choice.choices;
     }
   }
 
