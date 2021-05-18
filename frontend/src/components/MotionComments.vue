@@ -12,7 +12,7 @@
         <div class="share-bar">
           <div class="share-bar-split">
             <h1>Share this motion!</h1>
-            <input type="url" class="share-input" :value="`https://djnd.si/sideflip/#`">
+            <input type="url" class="share-input" :value="`https://motion-search-backend.lb.djnd.si/motion/${id}`">
           </div>
         </div>
         <div class="parentContainer">
