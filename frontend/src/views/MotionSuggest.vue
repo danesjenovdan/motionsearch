@@ -13,12 +13,12 @@
   </div>
   <div class="wrapper">
     <div class="motionSuggestContainer">
-      <h1>Suggest a motion</h1><br>
+      <h1>Suggest a motion</h1>
         <form @submit="postMotion">
           <div class="textAreaContainer">
             <label>Topic</label><br>
             <textarea rows="3" cols="20" name="topic" ref="topic"></textarea>
-            </div><br>
+          </div>
           <div class="inputContainer">
             <label >Category</label>
             <select v-model="categories" name="Category" id="categories">
@@ -103,11 +103,11 @@
               <input type="text" id="url" key="links.url" placeholder="Type url here..."/>
               <div class="buttonContainer">
                 <p>Add another link</p>
-                <button class="addLink" v-on:click="addLink"></button>
+                <button class="addLink btn" v-on:click="addLink"></button>
               </div>
             </div>
           </div>
-          <button class="btn" type="submit">Submit motion</button>
+          <button class="btn" type="submit">SUGGEST A MOTION</button>
         </form>
     </div>
   </div>
@@ -303,23 +303,14 @@
         margin: 60px 10px 40px;
         padding: 20px 40px;
       }
+
+      button[type="submit"] {
+        margin-bottom: 20px;
+      }
     }
   }
 }
-  .buttonContainer {
-    display: flex;
-      flex-direction: row;
-      align-self: end;
-  }
-  .addLink {
-      background-image: url("../assets/plus.png");
-      background-repeat: no-repeat;
-      background-position: center;
-      width: 42px;
-      height: 42px;
-      border-radius: 21px;
-      background-color: #3098f3;
-  }
+
 .textAreaContainer {
   position: relative;
   margin-bottom: 30px;
@@ -337,13 +328,33 @@
   display: flex;
   border-top: 1px solid black;
   padding: 10px;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+
+  @media (min-width: 576px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  & > label {
+    @media (min-width: 576px) {
+      line-height: 60px; //  must be same as input height
+    }
+  }
+
+  select {
+    width: 100%;
+
+    @media (min-width: 576px) {
+      width: 50%;
+    }
+  }
 
   .arrayContainer {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    @media (min-width: 576px) {
+      width: 50%;
+    }
 
     span {
       padding: 14px 28px 14px 0;
@@ -359,6 +370,26 @@
 
   &:last-child {
     align-items: start;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    p {
+      font-family: "IBM Plex Mono";
+    }
+
+    .addLink {
+      background-image: url("../assets/plus.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 42px;
+      height: 42px;
+      // border-radius: 21px;
+      // background-color: #3098f3;
+    }
   }
 }
 
@@ -378,6 +409,7 @@
 
   @media (min-width: 768px) {
     font-size: 14px;
+    line-height: 16px;
   }
 }
 

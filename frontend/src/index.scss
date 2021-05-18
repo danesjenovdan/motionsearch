@@ -324,9 +324,9 @@ label {
 .btn {
   text-decoration: none;
   margin-left: 6px;
-  padding: 5px 9px;
+  padding: 10px 15px;
   border-radius: 30px;
-  font-size: 12px;
+  font-size: 14px;
   border: 2px solid #3098f3;
   background-color: #3098f3;
   color: #ffffff;
@@ -335,6 +335,7 @@ label {
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;
+  letter-spacing: 1px;
 
   &:disabled {
     opacity: 0.1;
@@ -350,9 +351,6 @@ label {
   }
 
   @media (min-width: 768px) {
-    font-size: 16px;
-    letter-spacing: 1px;
-    padding: 10px 15px;
     margin-left: 10px;
     border-width: 4px;
   }
