@@ -134,13 +134,29 @@
           </div>
         </div>
       </div>
-      <div class="filterBox">
+      <div :class="['filterBox', { selected: true }]">
         <img src="../assets/keyword.svg">
-        <span><i>Keyword</i></span>
+        <span :onclick="togglePopup" data-type="keywordFilter"><i>Keyword</i></span>
+        <div class="popup">
+          <div class="popup-container" id="keywordFilter">
+            <div class="popup-box">
+              <span class="keyword-text"> Enter key words, separated by comma.</span>
+              <div class="keyword-container">
+                  <input class="" v-model="keywordFilter"/>
+              </div>
+              <div class="keyword-apply">
+                <span :onclick="clearKeywords">Clear all</span>
+                <div class="popup-apply" :onclick="toggleFilters"  data-type="keywordFilter">Apply</div>
+              </div>
+            </div>
+            <div class="popup-arrow">
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="filterBox">
+      <div @click="randomMotion" class="filterBox">
         <img src="../assets/random.svg">
-        <span @click="randomMotion"><i>Show me a random motion</i></span>
+        <span ><i>Show me a random motion</i></span>
       </div>
     </div>
     <div class="apply-button">
@@ -168,6 +184,7 @@
         difficultyFilter: [],
         typeFilter: [],
         trainingFilter: [],
+        keywordFilter: ''
       }
     },
     methods: {
@@ -181,6 +198,9 @@
         this.$store.state.motions.filters[event.target.getAttribute('data-type')] = this[event.target.getAttribute('data-type')]
         this.$store.state.motions.filterCount += 1
         popup.classList.toggle("show");
+      },
+      clearKeywords(event){
+        this.keywordFilter = ''
       },
       randomMotion() {
         window.location.href = '/motion/' + (Math.floor((Math.random() * this.motion_length))+1);
@@ -323,6 +343,13 @@
   width: 100%;
   align-items: start;
 }
+.keyword-container {
+  input {
+    height: auto !important;
+    border: 1px solid black;
+    margin-top: 5px;
+  } 
+}
 .selected {
   border: 4px solid #3098f3;
 }
@@ -333,6 +360,7 @@
   background-color: white;
   align-items: center;
   padding: 20px 10px;
+  cursor: 'pointer';
 
   @media (min-width: 768px) {
     padding: 40px 10px;
@@ -379,7 +407,7 @@
   text-align: left;
 }
 .popup-apply {
-  color: #3098f3;
+  color: #3098f3 !important;
   font-family: Poppins;
   font-size: 18px;
   font-weight: 700;
@@ -389,6 +417,28 @@
   text-align: right;
   text-decoration: underline;
   border-top: 1px solid black;
+}
+.keyword-apply {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 47px;
+  text-align: right;
+  border-top: 1px solid black;
+  span {
+    text-decoration: underline;
+  }
+}
+.keyword-text {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 47px;
+  text-align: right;
 }
 .popup-box {
   margin: 10px;
