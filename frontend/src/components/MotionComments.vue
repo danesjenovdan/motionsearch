@@ -18,7 +18,7 @@
         <div class="parentContainer">
           <div class="left">
             <h3>Comments</h3>
-              <div class="textAreaContainer">
+              <div v-show="isAuth" class="textAreaContainer">
                 <textarea rows="3" cols="20" name="comment" id="comment" form="usrform"> Write your comment here!
                 </textarea>
                   <button class="textAreaButton" v-on:click="addUsedWhere(id)">Submit</button>
