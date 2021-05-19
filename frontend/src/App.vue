@@ -61,12 +61,9 @@ footer {
       margin: 0;
     }
 
-    @media (min-width: 768px) {
-      max-height: 60px;
-    }
-
     @media (min-width: 992px) {
       margin-left: 40px;
+      max-height: 60px;
     }
   }
 

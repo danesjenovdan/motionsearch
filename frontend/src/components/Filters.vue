@@ -9,7 +9,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="category in categoryArray" :key="category" >
-                  <input :id="'category-' + category.id" type='checkbox' :value="category.id" v-model="categoryFilter"/>
+                  <input :id="'category-' + category.id" type='checkbox' :value="{id: category.id, value: category.value}" v-model="categoryFilter"/>
                   <label class="popup-text" :for="'category-' + category.id">{{category.value}}</label>
                 </div>
               </div>
@@ -28,7 +28,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="difficulty in difficultiesArray" :key="difficulty">
-                  <input :id="'difficulty-' + difficulty.id" :value="difficulty.id" type='checkbox' v-model="difficultyFilter"/>
+                  <input :id="'difficulty-' + difficulty.id" :value="{id: difficulty.id, value: difficulty.value}" type='checkbox' v-model="difficultyFilter"/>
                   <label class="popup-text" :for="'difficulty-' + difficulty.id">{{difficulty.value}}</label>
                 </div>
               </div>
@@ -47,7 +47,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="format in formatArray" :key="format">
-                  <input :id="'format-' + format.id" :value="format.id" type='checkbox' v-model="formatFilter"/>
+                  <input :id="'format-' + format.id" :value="{id: format.id, value: format.value}" type='checkbox' v-model="formatFilter"/>
                   <label class="popup-text" :for="'format-' + format.id">{{format.value}}</label>
                 </div>
               </div>
@@ -66,7 +66,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="age in ageArray" :key="age">
-                  <input :id="'age-' + age.id" :value="age.id" type='checkbox' v-model="ageFilter"/>
+                  <input :id="'age-' + age.id" :value="{id: age.id, value: age.value}" type='checkbox' v-model="ageFilter"/>
                   <label class="popup-text" :for="'age-' + age.id">{{age.value}}</label>
                 </div>
               </div>
@@ -85,7 +85,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="type in typeArray" :key="type">
-                  <input :id="'type-' + type.id" :value="type.id" type='checkbox' v-model="typeFilter"/>
+                  <input :id="'type-' + type.id" :value="{id: type.id, value: type.value}" type='checkbox' v-model="typeFilter"/>
                   <label class="popup-text" :for="'type-' + type.id">{{type.value}}</label>
                 </div>
               </div>
@@ -104,7 +104,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="training in trainingFocusArray" :key="training">
-                  <input :id="'training-' + training.id" :value="training.id" type='checkbox' v-model="trainingFilter"/>
+                  <input :id="'training-' + training.id" :value="{id: training.id, value: training.value}" type='checkbox' v-model="trainingFilter"/>
                   <label class="popup-text" :for="'training-' + training.id">{{training.value}}</label>
                 </div>
               </div>
@@ -123,7 +123,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="impro in improPrepArray" :key="impro">
-                  <input :id="'impro-' + impro.id" :value="impro.id" type='checkbox' v-model="improPrepFilter"/>
+                  <input :id="'impro-' + impro.id" :value="{id: impro.id, value: impro.value}" type='checkbox' v-model="improPrepFilter"/>
                   <label class="popup-text" :for="'impro-' + impro.id">{{impro.value}}</label>
                 </div>
               </div>
@@ -154,7 +154,7 @@
           </div>
         </div>
       </div>
-      <div @click="randomMotion" class="filterBox">
+      <div @click="randomMotion" :class="['filterBox', 'randomFilterBox']">
         <img src="../assets/random.svg">
         <span ><i>Show me a random motion</i></span>
       </div>
@@ -369,7 +369,9 @@
   img {
     max-width: 60%;
   }
-
+  &:hover {
+    cursor: pointer;
+  }
   span {
     color: #252525;
     font-family: "IBM Plex Mono";
@@ -387,6 +389,15 @@
       font-size: 24px;
       line-height: 26px;
     }
+  }
+}
+
+.randomFilterBox {
+  background-color: transparent;
+  border: 4px solid white;
+
+  img {
+    max-width: 30%;
   }
 }
 
