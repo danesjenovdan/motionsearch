@@ -6,7 +6,8 @@
         </div>
         <div class="header-buttons">
           <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-          <router-link to="/login" v-show="!isAuth" class="btn login">Log in</router-link>
+          <router-link to="/login" v-if="!isAuth" class="btn login">Log in</router-link>
+          <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
         </div>
       </div>
         <div class="share-bar">
@@ -48,7 +49,7 @@
 <script>
   const comments = [
       ]
-  
+
   export default {
     components: [
     ],
@@ -65,10 +66,10 @@
     methods: {
       async addUsedWhere(id) {
         try {
-          const response = await this.$store.dispatch('setComment', {text: comment.value, id})          
+          const response = await this.$store.dispatch('setComment', {text: comment.value, id})
         } catch (error) {
           console.log('error: ', error);
-          
+
         }
         this.comments = await this.$store.dispatch('getComments', {id: id})
 
@@ -80,7 +81,7 @@
     async created() {
       this.isAuth = await this.$store.dispatch('isAuth')
       this.comments = await this.$store.dispatch('getComments', {id: this.id})
-    }, 
+    },
     watch: {
       motion: async function(newVal, oldVal) {
         const {links, where_used} = newVal
