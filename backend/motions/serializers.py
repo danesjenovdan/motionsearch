@@ -92,7 +92,7 @@ class MotionSerializer(serializers.ModelSerializer):
         #fields = ['id', 'topic', 'category', 'created_at', 'debate_formats', 'age_range', 
         #'type', 'training_focus', 'impro_prep', 'where_used', 'info_text', 'links']
         fields = ['id', 'topic', 'category', 'created_at', 'difficulties', 'age_range', 
-        'impro_prep', 'debate_formats', 'type', 'training_focus',  'where_used', 'info_text', 'links', 'votes']
+        'impro_prep', 'debate_formats', 'type', 'training_focus',  'where_used', 'info_text', 'links', 'votes', 'user']
         read_only_fields = ['category', "info_text", "where_used", "links"]
 
 
