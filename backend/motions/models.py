@@ -96,6 +96,7 @@ class Motion(BaseModel):
     info_text = models.ManyToManyField(MotionInfoText, blank=True)
     links = models.ManyToManyField(MotionLink, blank=True)
     votes = models.IntegerField(default=0, blank=True, db_index=True)
+    user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.CASCADE)
 
     @property
     def quality_score(self):
