@@ -25,7 +25,7 @@ from motions.serializers import MotionVoteSerializer, MotionSerializer
 class TokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return (
-            six.text_type(user.pk) + six.text_type(timestamp) +
+            six.text_type(user.pk) + six.text_type(user.last_login) +
             six.text_type(user.is_active)
         )
 account_activation_token = TokenGenerator()
@@ -92,11 +92,10 @@ class UserViewSet(viewsets.ModelViewSet):
         user = serializer.instance
         user.is_active = False
         user.save()
-        current_site = get_current_site(request)
         mail_subject = 'Activate your account.'
         message = render_to_string('acc_active_email.html', {
             'user': user,
-            'domain': current_site.domain,
+            'domain': 'motion-search-frontend-lb.djnd.si',
             'uid':urlsafe_base64_encode(force_bytes(user.pk)),
             'token':account_activation_token.make_token(user),
         })
@@ -124,11 +123,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def forgot(self, request, *args, **kwargs):
         user = User.objects.get(email=request.data.get('email', ''))
-        current_site = get_current_site(request)
         mail_subject = 'Reset your account.'
         message = render_to_string('acc_reset_password.html', {
             'email': user,
-            'domain': current_site.domain,
+            'domain': 'motion-search-frontend-lb.djnd.si',
             'uid':urlsafe_base64_encode(force_bytes(user.pk)),
             'token':account_activation_token.make_token(user),
         })
@@ -148,11 +146,9 @@ class UserViewSet(viewsets.ModelViewSet):
         if user is not None and account_activation_token.check_token(user, kwargs['token']):
             user.password = make_password(request.data.get('password', ''))
             user.save()
-            login(request, user)
-            # return redirect('home')
-            return HttpResponse('Your password was updated succesfully, you can now login.')
+            return Response('Your password was updated succesfully, you can now login.')
         else:
-            return HttpResponse('Password reset link is invalid!')
+            return Response('Password reset link is invalid!')
     
 
 class UserFavoriteMotionsViewSet(viewsets.ModelViewSet):
