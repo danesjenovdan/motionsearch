@@ -21,39 +21,51 @@
           </div>
           <div class="inputContainer">
             <label >Category</label>
-            <select v-model="categories" name="Category" id="categories">
-              <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="categories" name="Category" id="categories">
+                <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
+              </select>
+            </div>
           </div>
           <div class="inputContainer">
             <label>Dificulty</label>
-            <select v-model="difficulty" name="Dificulty" id="difficulty">
-              <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="difficulty" name="Dificulty" id="difficulty">
+                <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
+              </select>
+            </div>
           </div>
           <div class="inputContainer">
             <label>Debate format</label>
-            <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
-              <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
+                <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
+              </select>
+            </div>
           </div>
           <div class="inputContainer">
             <label >Age</label>
-            <select v-model="age" name="Age" id="age">
-              <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="age" name="Age" id="age">
+                <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
+              </select>
+            </div>
           </div>
           <div class="inputContainer">
             <label>Motion type</label>
-            <select v-model="type" name="Type" id="type">
-              <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="type" name="Type" id="type">
+                <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
+              </select>
+            </div>
           </div>
           <div class="inputContainer">
             <label>Training focus</label>
-            <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
-                <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
+                  <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
+              </select>
+            </div>
           </div>
           <div class="inputContainer">
             <label>Impro or prep</label>
@@ -93,11 +105,11 @@
           <div class="inputContainer">
             <div class="subtitleContainer">
               <label>Add links</label><br/>
-              <label class="subtitle"> Press Enter after each input</label>
+              <label class="subtitle">Press Enter after each input</label>
             </div>
             <div class="arrayContainer">
               <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                <span v-on:click="removeLink(index)" >x</span> <a target="_blank" :href="link.value">{{link.text}}</a>
+                <span v-on:click="removeLink(index)">x</span> <a target="_blank" :href="link.value">{{link.text}}</a>
               </div>
               <input type="text" id="link" key="links.title" placeholder="Type name here..." />
               <input type="text" id="url" key="links.url" placeholder="Type url here..."/>
@@ -341,11 +353,40 @@
     }
   }
 
-  select {
+  .select-wrapper {
     width: 100%;
+    cursor: pointer;
+    position: relative;
 
     @media (min-width: 576px) {
       width: 50%;
+    }
+
+    select {
+      width: 100%;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 50px;
+      cursor: pointer;
+    }
+
+    &:after {
+      content: "";
+      width: 25px;
+      height: 25px;
+      top: 10px;
+      right: 10px;
+      background-image: url("../assets/dropdown.svg");
+      background-size: contain;
+      position: absolute;
+
+      @media (min-width: 768px) {
+        width: 30px;
+        height: 30px;
+        top: 15px;
+        right: 15px;
+      }
     }
   }
 
