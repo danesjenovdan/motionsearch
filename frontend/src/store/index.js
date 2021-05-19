@@ -66,10 +66,16 @@ const mapFilters = (filters) => {
     if (key === 'improPrepFilter') filterString += 'impro_prep='
     if (key === 'id') filterString += 'id='
     if (key === 'ordering') filterString += 'ordering='
+    if (key === 'keywordFilter') filterString += 'topic='
 
-    filters[key].forEach((value, index) => {
-      filterString += (index+1) !== filters[key].length ? value + ',' : value  
-    })
+    if(Array.isArray(filters[key])) {
+      filters[key].forEach((value, index) => {
+        filterString += (index+1) !== filters[key].length ? value.id + ',' : value.id
+      })
+    } else {
+      filterString += filters[key]
+    }
+
   })
   return filterString
 }

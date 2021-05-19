@@ -28,6 +28,11 @@
           </div>
         </div>
       </div>
+      <ul class="tags">
+        <li class="tag" v-for="tag in tags" :key="tag.id">
+          <span class="tag-text">{{ tag.value }}</span>
+        </li>
+      </ul>
       <div class="motions-list" v-for="motion in motions" :key="motion.id">
         <div class="motion-text-container">
           <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
@@ -74,7 +79,8 @@
         motionsNo: 0,
         dateSortAscend: false,
         qualitySortAscend: false,
-        votes: []
+        votes: [],
+        tags: []
       }
     },
     computed: {
@@ -120,19 +126,28 @@
         this.qualitySortAscend = !this.qualitySortAscend
         this.$store.state.motions.filters['ordering'] = [this.qualitySortAscend ? 'votes' : '-votes']
         this.$store.state.motions.filterCount += 1
+      }, mapFiltersToTags() {
+        this.tags = []
+        Object.keys(this.$store.state.motions.filters).forEach(filter => {
+          if(filter !== 'keywordFitler') this.$store.state.motions.filters[filter].forEach((filterValue) => {
+            this.tags.push(filterValue)
+          })
+        })
       }
     },
     watch: {
       '$store.state.motions.filterCount': async function() {
+        await this.mapFiltersToTags()
         this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
         this.motionsNo = await this.$store.dispatch('getMotionLength')
       }
     },
     async created() {
+      this.$store.state.motions.filters = {} // clean filter if we have bad state
       this.isAuth = await this.$store.dispatch('isAuth')
       this.motions = await this.$store.dispatch('getMotions', {page: 1})
       this.motionsNo = await this.$store.dispatch('getMotionLength')
-      console.log(this.motionsNo)
+      await this.mapFiltersToTags()
       await this.getUserVotes()
     }
   }
