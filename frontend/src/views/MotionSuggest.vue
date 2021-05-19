@@ -7,54 +7,67 @@
     </div>
     <div class="header-buttons">
       <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
-      <router-link to="/login" v-show="!isAuth" class="btn login">Log in</router-link>
+      <router-link to="/login" v-if="!isAuth" class="btn login">Log in</router-link>
+      <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
     </div>
   </div>
   <div class="wrapper">
     <div class="motionSuggestContainer">
-      <h1>Suggest a motion</h1><br>
+      <h1>Suggest a motion</h1>
         <form @submit="postMotion">
           <div class="textAreaContainer">
             <label>Topic</label><br>
             <textarea rows="3" cols="20" name="topic" ref="topic"></textarea>
-            </div><br>
-          <div class="inputContainer"> 
+          </div>
+          <div class="inputContainer">
             <label >Category</label>
-            <select v-model="categories" name="Category" id="categories">
-              <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="categories" name="Category" id="categories">
+                <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
+              </select>
+            </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Dificulty</label>
-            <select v-model="difficulty" name="Dificulty" id="difficulty">
-              <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="difficulty" name="Dificulty" id="difficulty">
+                <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
+              </select>
+            </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Debate format</label>
-            <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
-              <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
+                <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
+              </select>
+            </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label >Age</label>
-            <select v-model="age" name="Age" id="age">
-              <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="age" name="Age" id="age">
+                <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
+              </select>
+            </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Motion type</label>
-            <select v-model="type" name="Type" id="type">
-              <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="type" name="Type" id="type">
+                <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
+              </select>
+            </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Training focus</label>
-            <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
-                <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
+                  <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
+              </select>
+            </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <label>Impro or prep</label>
           <div class="setting-container teams">
               <div class="radio-container">
@@ -77,7 +90,7 @@
               </div>
             </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <div class="subtitleContainer">
               <label>Add is used where</label><br/>
               <label class="subtitle"> Press Enter after each input</label>
@@ -89,24 +102,24 @@
               <input type="text" id="used" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
             </div>
           </div>
-          <div class="inputContainer"> 
+          <div class="inputContainer">
             <div class="subtitleContainer">
               <label>Add links</label><br/>
-              <label class="subtitle"> Press Enter after each input</label>
+              <label class="subtitle">Press Enter after each input</label>
             </div>
             <div class="arrayContainer">
               <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                <span v-on:click="removeLink(index)" >x</span> <a target="_blank" :href="link.value">{{link.text}}</a>
+                <span v-on:click="removeLink(index)">x</span> <a target="_blank" :href="link.value">{{link.text}}</a>
               </div>
               <input type="text" id="link" key="links.title" placeholder="Type name here..." />
               <input type="text" id="url" key="links.url" placeholder="Type url here..."/>
               <div class="buttonContainer">
-                <p>Add another link</p> 
-                <button class="addLink" v-on:click="addLink"></button>
+                <p>Add another link</p>
+                <button class="addLink btn" v-on:click="addLink"></button>
               </div>
             </div>
           </div>
-          <button class="btn" type="submit">Submit motion</button>
+          <button class="btn" type="submit">SUGGEST A MOTION</button>
         </form>
     </div>
   </div>
@@ -262,7 +275,7 @@
         }
 
         @media (min-width: 768px) {
-          height: 80px;
+          height: 74px;
         }
 
         @media (min-width: 1200px) {
@@ -275,7 +288,7 @@
       margin: 20px 10px 20px 0;
 
       @media (min-width: 1200px) {
-        margin: 20px 60px 20px 0;
+        margin: 20px 30px 20px 0;
       }
     }
   }
@@ -302,23 +315,14 @@
         margin: 60px 10px 40px;
         padding: 20px 40px;
       }
+
+      button[type="submit"] {
+        margin-bottom: 20px;
+      }
     }
   }
 }
-  .buttonContainer {
-    display: flex;
-      flex-direction: row;
-      align-self: end;
-  }
-  .addLink {
-      background-image: url("../assets/plus.png");
-      background-repeat: no-repeat;
-      background-position: center; 
-      width: 42px;
-      height: 42px;
-      border-radius: 21px;
-      background-color: #3098f3;
-  }
+
 .textAreaContainer {
   position: relative;
   margin-bottom: 30px;
@@ -336,13 +340,62 @@
   display: flex;
   border-top: 1px solid black;
   padding: 10px;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+
+  @media (min-width: 576px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  & > label {
+    @media (min-width: 576px) {
+      line-height: 60px; //  must be same as input height
+    }
+  }
+
+  .select-wrapper {
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+
+    @media (min-width: 576px) {
+      width: 50%;
+    }
+
+    select {
+      width: 100%;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 50px;
+      cursor: pointer;
+    }
+
+    &:after {
+      content: "";
+      width: 25px;
+      height: 25px;
+      top: 10px;
+      right: 10px;
+      background-image: url("../assets/dropdown.svg");
+      background-size: contain;
+      position: absolute;
+
+      @media (min-width: 768px) {
+        width: 30px;
+        height: 30px;
+        top: 15px;
+        right: 15px;
+      }
+    }
+  }
 
   .arrayContainer {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    @media (min-width: 576px) {
+      width: 50%;
+    }
 
     span {
       padding: 14px 28px 14px 0;
@@ -358,6 +411,26 @@
 
   &:last-child {
     align-items: start;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    p {
+      font-family: "IBM Plex Mono";
+    }
+
+    .addLink {
+      background-image: url("../assets/plus.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 42px;
+      height: 42px;
+      // border-radius: 21px;
+      // background-color: #3098f3;
+    }
   }
 }
 
@@ -377,6 +450,7 @@
 
   @media (min-width: 768px) {
     font-size: 14px;
+    line-height: 16px;
   }
 }
 
