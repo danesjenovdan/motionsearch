@@ -2,14 +2,14 @@
 <div class="parentContainer">
   <div class="motionButtons">
     <voting :choice="motion.choice" :votes="motion.votes" :id="id"/>
-    <favourite :motion="id"/>
+    <favourite v-show="isAuth" :motion="id"/>
   </div>
   <p>Added on {{motion.created_at?.split('T')[0]}}</p>
   <span class="motion-text">{{motion.topic}}</span>
   <div class="line"></div>
   <ul class="tags">
-    <li class="tag" v-for="tag in motion.categories" :key="tag">
-      <span class="tag-text">{{ tag }}</span>
+    <li class="tag" v-for="category in motion.category" :key="category">
+      <span class="tag-text">{{ categoriesDictionary[category] }}</span>
     </li>
   </ul>
 </div>
@@ -19,12 +19,28 @@
   import Favourite from './Favourite.vue'
   import Voting from './Voting.vue'
   export default {
+    data() {
+      return {
+        isAuth: false,
+        categoriesDictionary: {}
+      }
+    },
     components: {
       Voting,
       Favourite
     },
      props: ['id', 'motion'],
     methods: {
+    },
+    async created() {
+      this.isAuth = await this.$store.dispatch('isAuth')
+      const categoryArray = await this.$store.dispatch('getMotionAttributes', {type: 'categories'})
+      categoryArray.forEach(category => {
+        console.log('category.id: ', category.id);
+        this.categoriesDictionary[category.id] = category.value
+        console.log('this.categoriesDictionary[category.id]: ', this.categoriesDictionary[category.id]);
+      });
+
     }
   }
 

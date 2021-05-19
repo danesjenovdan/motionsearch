@@ -9,7 +9,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="category in categoryArray" :key="category" >
-                  <input :id="'category-' + category.id" type='checkbox' :value="category.id" v-model="categoryFilter"/>
+                  <input :id="'category-' + category.id" type='checkbox' :value="{id: category.id, value: category.value}" v-model="categoryFilter"/>
                   <label class="popup-text" :for="'category-' + category.id">{{category.value}}</label>
                 </div>
               </div>
@@ -28,7 +28,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="difficulty in difficultiesArray" :key="difficulty">
-                  <input :id="'difficulty-' + difficulty.id" :value="difficulty.id" type='checkbox' v-model="difficultyFilter"/>
+                  <input :id="'difficulty-' + difficulty.id" :value="{id: difficulty.id, value: difficulty.value}" type='checkbox' v-model="difficultyFilter"/>
                   <label class="popup-text" :for="'difficulty-' + difficulty.id">{{difficulty.value}}</label>
                 </div>
               </div>
@@ -47,7 +47,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="format in formatArray" :key="format">
-                  <input :id="'format-' + format.id" :value="format.id" type='checkbox' v-model="formatFilter"/>
+                  <input :id="'format-' + format.id" :value="{id: format.id, value: format.value}" type='checkbox' v-model="formatFilter"/>
                   <label class="popup-text" :for="'format-' + format.id">{{format.value}}</label>
                 </div>
               </div>
@@ -66,7 +66,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="age in ageArray" :key="age">
-                  <input :id="'age-' + age.id" :value="age.id" type='checkbox' v-model="ageFilter"/>
+                  <input :id="'age-' + age.id" :value="{id: age.id, value: age.value}" type='checkbox' v-model="ageFilter"/>
                   <label class="popup-text" :for="'age-' + age.id">{{age.value}}</label>
                 </div>
               </div>
@@ -85,7 +85,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="type in typeArray" :key="type">
-                  <input :id="'type-' + type.id" :value="type.id" type='checkbox' v-model="typeFilter"/>
+                  <input :id="'type-' + type.id" :value="{id: type.id, value: type.value}" type='checkbox' v-model="typeFilter"/>
                   <label class="popup-text" :for="'type-' + type.id">{{type.value}}</label>
                 </div>
               </div>
@@ -104,7 +104,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="training in trainingFocusArray" :key="training">
-                  <input :id="'training-' + training.id" :value="training.id" type='checkbox' v-model="trainingFilter"/>
+                  <input :id="'training-' + training.id" :value="{id: training.id, value: training.value}" type='checkbox' v-model="trainingFilter"/>
                   <label class="popup-text" :for="'training-' + training.id">{{training.value}}</label>
                 </div>
               </div>
@@ -123,7 +123,7 @@
             <div class="popup-box">
               <div class="checkmark-container">
                 <div v-for="impro in improPrepArray" :key="impro">
-                  <input :id="'impro-' + impro.id" :value="impro.id" type='checkbox' v-model="improPrepFilter"/>
+                  <input :id="'impro-' + impro.id" :value="{id: impro.id, value: impro.value}" type='checkbox' v-model="improPrepFilter"/>
                   <label class="popup-text" :for="'impro-' + impro.id">{{impro.value}}</label>
                 </div>
               </div>
@@ -134,13 +134,29 @@
           </div>
         </div>
       </div>
-      <div class="filterBox">
+      <div :class="['filterBox', { selected: true }]">
         <img src="../assets/keyword.svg">
-        <span><i>Keyword</i></span>
+        <span :onclick="togglePopup" data-type="keywordFilter"><i>Keyword</i></span>
+        <div class="popup">
+          <div class="popup-container" id="keywordFilter">
+            <div class="popup-box">
+              <span class="keyword-text"> Enter key words, separated by comma.</span>
+              <div class="keyword-container">
+                  <input class="" v-model="keywordFilter"/>
+              </div>
+              <div class="keyword-apply">
+                <span :onclick="clearKeywords">Clear all</span>
+                <div class="popup-apply" :onclick="toggleFilters"  data-type="keywordFilter">Apply</div>
+              </div>
+            </div>
+            <div class="popup-arrow">
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="filterBox">
+      <div @click="randomMotion" :class="['filterBox', 'randomFilterBox']">
         <img src="../assets/random.svg">
-        <span @click="randomMotion"><i>Show me a random motion</i></span>
+        <span ><i>Show me a random motion</i></span>
       </div>
     </div>
     <div class="apply-button">
@@ -168,6 +184,7 @@
         difficultyFilter: [],
         typeFilter: [],
         trainingFilter: [],
+        keywordFilter: ''
       }
     },
     methods: {
@@ -181,6 +198,9 @@
         this.$store.state.motions.filters[event.target.getAttribute('data-type')] = this[event.target.getAttribute('data-type')]
         this.$store.state.motions.filterCount += 1
         popup.classList.toggle("show");
+      },
+      clearKeywords(event){
+        this.keywordFilter = ''
       },
       randomMotion() {
         window.location.href = '/motion/' + (Math.floor((Math.random() * this.motion_length))+1);
@@ -323,6 +343,13 @@
   width: 100%;
   align-items: start;
 }
+.keyword-container {
+  input {
+    height: auto !important;
+    border: 1px solid black;
+    margin-top: 5px;
+  } 
+}
 .selected {
   border: 4px solid #3098f3;
 }
@@ -333,6 +360,7 @@
   background-color: white;
   align-items: center;
   padding: 20px 10px;
+  cursor: 'pointer';
 
   @media (min-width: 768px) {
     padding: 40px 10px;
@@ -341,7 +369,9 @@
   img {
     max-width: 60%;
   }
-
+  &:hover {
+    cursor: pointer;
+  }
   span {
     color: #252525;
     font-family: "IBM Plex Mono";
@@ -362,6 +392,15 @@
   }
 }
 
+.randomFilterBox {
+  background-color: transparent;
+  border: 4px solid white;
+
+  img {
+    max-width: 30%;
+  }
+}
+
  /* Popup container */
 .popup {
   position: relative;
@@ -379,7 +418,7 @@
   text-align: left;
 }
 .popup-apply {
-  color: #3098f3;
+  color: #3098f3 !important;
   font-family: Poppins;
   font-size: 18px;
   font-weight: 700;
@@ -389,6 +428,28 @@
   text-align: right;
   text-decoration: underline;
   border-top: 1px solid black;
+}
+.keyword-apply {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 47px;
+  text-align: right;
+  border-top: 1px solid black;
+  span {
+    text-decoration: underline;
+  }
+}
+.keyword-text {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 47px;
+  text-align: right;
 }
 .popup-box {
   margin: 10px;
