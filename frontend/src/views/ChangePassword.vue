@@ -6,11 +6,11 @@
         <span>Easiest way to find a motion for debating</span>
       </div>
       <div class="registration-form-container">
-        <form @submit="reset">
-          <h1>Enter the email address associated with your account, and we’ll email you a link to reset your password.</h1>
-          <label for="email">Email address</label>
-          <input type="email" id="email" name="email">
-          <button type="submit">SEND RESET LINK</button>
+        <form @submit="change">
+          <h1>Enter new password</h1>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password">
+          <button type="submit">Change password</button>
         </form>
         <hr class="line"/>
         <div class="login-text">
@@ -24,15 +24,18 @@
   export default {
     data() {
       return {
-        email: '',
+        password: '',
         favorites: []
       }
     },
+    props: ['uid', 'token'],
     methods : {
-      reset: async function(e){
+      change: async function(e){
         e.preventDefault()
-        const response = await this.$store.dispatch('reset', {
-            email: email.value,
+        const response = await this.$store.dispatch('change', {
+            password: password.value,
+            token: this.$route.params.token, 
+            uid: this.$route.params.uid
           })
         if (response) window.location.href = '/login'
       }

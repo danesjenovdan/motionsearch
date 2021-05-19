@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Register from './views/Register.vue'
 import Login from './views/Login.vue'
 import ResetPassword from './views/ResetPassword.vue'
+import ChangePassword from './views/ChangePassword.vue'
 import MotionView from './views/MotionView.vue'
 import MotionSuggest from './views/MotionSuggest.vue'
 import store from './store/store'
@@ -30,6 +31,11 @@ const routes = [
       path: '/reset',
       name: 'ResetPassword',
       component: ResetPassword
+    },
+    {
+      path: '/change/:uid/:token',
+      name: 'ChangePassword',
+      component: ChangePassword
     },
     {
       path: '/motion/:id',
