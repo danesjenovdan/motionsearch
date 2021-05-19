@@ -1,15 +1,34 @@
 from django.shortcuts import render, get_object_or_404
-
-from rest_framework import viewsets, status, permissions, authentication
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth.hashers import make_password
+from django.utils import six
+from rest_framework import viewsets, status, permissions, authentication, views
 from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend, Filter, FilterSet
+
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 
 from users.models import User, FavoriteMotion
 from users.serializers import UserSerializer, UserFavoriteMotionSerializer
 from motions.models import Motion, MotionVote
 from motions.serializers import MotionVoteSerializer, MotionSerializer
 
+class TokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return (
+            six.text_type(user.pk) + six.text_type(timestamp) +
+            six.text_type(user.is_active)
+        )
+account_activation_token = TokenGenerator()
 class MultiValueKeyFilter(Filter):
     def filter(self, qs, value):
         if not value:
@@ -66,6 +85,75 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('first_name', 'last_name')
     serializer_class = UserSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user = serializer.instance
+        user.is_active = False
+        user.save()
+        current_site = get_current_site(request)
+        mail_subject = 'Activate your account.'
+        message = render_to_string('acc_active_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token':account_activation_token.make_token(user),
+        })
+        to_email = request.data.get('email', [])
+        email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+        )
+        email.send()
+        return HttpResponse('Please confirm your email address to complete the registration')
+
+    def activate(self, request, *args, **kwargs):
+        try:
+            uid = force_text(urlsafe_base64_decode(kwargs['uidb64']))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, kwargs['token']):
+            user.is_active = True
+            user.save()
+            login(request, user)
+            # return redirect('home')
+            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        else:
+            return HttpResponse('Activation link is invalid!')
+
+    def forgot(self, request, *args, **kwargs):
+        user = User.objects.get(email=request.data.get('email', ''))
+        current_site = get_current_site(request)
+        mail_subject = 'Reset your account.'
+        message = render_to_string('acc_reset_password.html', {
+            'email': user,
+            'domain': current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token':account_activation_token.make_token(user),
+        })
+        to_email = request.data.get('email', [])
+        email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+        )
+        email.send()
+        return HttpResponse('Check your email account for password change link')
+    
+    def changePassword(self, request, *args, **kwargs):
+        try:
+            uid = force_text(urlsafe_base64_decode(kwargs['uidb64']))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, kwargs['token']):
+            user.password = make_password(request.data.get('password', ''))
+            user.save()
+            login(request, user)
+            # return redirect('home')
+            return HttpResponse('Your password was updated succesfully, you can now login.')
+        else:
+            return HttpResponse('Password reset link is invalid!')
+    
 
 class UserFavoriteMotionsViewSet(viewsets.ModelViewSet):
     queryset = FavoriteMotion.objects.all().order_by('-created_at')
@@ -91,3 +179,4 @@ class UserFavoriteMotionsViewSet(viewsets.ModelViewSet):
         motion = get_object_or_404(Motion, pk=request.data.get('motion', None))
         favorite = FavoriteMotion.objects.get(user = request.user, motion = motion).delete()
         return Response(favorite)
+
