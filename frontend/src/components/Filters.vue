@@ -154,7 +154,7 @@
           </div>
         </div>
       </div>
-      <div @click="randomMotion" class="filterBox">
+      <div @click="randomMotion" :class="['filterBox', 'randomFilterBox']">
         <img src="../assets/random.svg">
         <span ><i>Show me a random motion</i></span>
       </div>
@@ -369,7 +369,9 @@
   img {
     max-width: 60%;
   }
-
+  &:hover {
+    cursor: pointer;
+  }
   span {
     color: #252525;
     font-family: "IBM Plex Mono";
@@ -387,6 +389,15 @@
       font-size: 24px;
       line-height: 26px;
     }
+  }
+}
+
+.randomFilterBox {
+  background-color: transparent;
+  border: 4px solid white;
+
+  img {
+    max-width: 30%;
   }
 }
 

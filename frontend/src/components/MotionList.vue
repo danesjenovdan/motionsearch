@@ -119,17 +119,17 @@
       },
       toggleDateSort() {
         this.dateSortAscend = !this.dateSortAscend
-        this.$store.state.motions.filters['ordering'] = [this.dateSortAscend ? 'created_at' : '-created_at']
+        this.$store.state.motions.filters['ordering'] = this.dateSortAscend ? 'created_at' : '-created_at'
         this.$store.state.motions.filterCount += 1
       },
       toggleQualitySort() {
         this.qualitySortAscend = !this.qualitySortAscend
-        this.$store.state.motions.filters['ordering'] = [this.qualitySortAscend ? 'votes' : '-votes']
+        this.$store.state.motions.filters['ordering'] = this.qualitySortAscend ? 'votes' : '-votes'
         this.$store.state.motions.filterCount += 1
       }, mapFiltersToTags() {
         this.tags = []
         Object.keys(this.$store.state.motions.filters).forEach(filter => {
-          if(filter !== 'keywordFitler') this.$store.state.motions.filters[filter].forEach((filterValue) => {
+          if(filter !== 'keywordFitler' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
             this.tags.push(filterValue)
           })
         })
@@ -140,6 +140,7 @@
         await this.mapFiltersToTags()
         this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
         this.motionsNo = await this.$store.dispatch('getMotionLength')
+        await this.getUserVotes()
       }
     },
     async created() {
