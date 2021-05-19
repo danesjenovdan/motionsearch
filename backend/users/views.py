@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend, Filter, FilterSet
 from users.models import User, FavoriteMotion
 from users.serializers import UserSerializer, UserFavoriteMotionSerializer
 from motions.models import Motion, MotionVote
-from motions.serializers import MotionVoteSerializer
+from motions.serializers import MotionVoteSerializer, MotionSerializer
 
 class MultiValueKeyFilter(Filter):
     def filter(self, qs, value):
@@ -45,6 +45,14 @@ class MyFavorites(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         user = User.objects.get(pk=request.user.id)
         q = self.queryset.filter(user=user)
+        return Response(data=self.serializer_class(q, many=True).data)
+
+class MyMotions(viewsets.ModelViewSet):
+    queryset = Motion.objects.all().order_by('-created_at')
+    serializer_class = MotionSerializer
+    permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    def retrieve(self, request, *args, **kwargs):
+        q = self.queryset.filter(user=request.user.id)
         return Response(data=self.serializer_class(q, many=True).data)
 
 class MyVotes(viewsets.ModelViewSet):
