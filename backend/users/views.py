@@ -29,8 +29,11 @@ class FavoritesFilterSet(FilterSet):
 
 
 class Me(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('-created_at')
+    serializer_class = UserSerializer
     def retrieve(self, request, *args, **kwargs):
-        return Response(request.user.id)
+        q = self.queryset.filter(pk=request.user.id)
+        return Response(data=self.serializer_class(q, many=True).data)
 class MyFavorites(viewsets.ModelViewSet):
     queryset = FavoriteMotion.objects.all().order_by('-created_at')
     serializer_class = UserFavoriteMotionSerializer
