@@ -257,6 +257,33 @@ export const actions = {
     const body = await response.json()
     return body
   },
+  async reset (context, payload) {
+    const response = await fetch(`${api}/api/v1/users/forgot-password/`, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: payload.email,
+      })
+    });
+    const body = await response.json()
+    return body
+  },
+
+  async change (context, payload) {
+    const response = await fetch(`${api}/api/v1/users/change-password/${payload.uid}/${payload.token}/`, {
+      method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        password: payload.password,
+      })
+    });
+    const body = await response.json()
+    return body
+  },
 
   async resetPassword (context, payload) {
     await axios.post('v1/restore-password/', {
