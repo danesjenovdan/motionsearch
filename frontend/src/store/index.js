@@ -171,17 +171,24 @@ export const actions = {
   },
   async getMyMotions ({ getters, commit }, payload) {
     try {
-      const filters = mapFilters(getters.getFilters)
-      const result = await fetch(`${api}/api/v1/users/me/motions?page=${payload.page}&${filters}`, {
+      let response = await fetch(`${api}/api/v1/users/me/motions?page=${payload.page}`, {
           method: 'get',
           headers: {
             'content-type': 'application/json',
             'Authorization': `Bearer ${getters.access_token}`
           }
         })
-      const body = await result.json(); // .json() is asynchronous and therefore must be awaited
-      commit('motion_length', body.length);
-      return body;
+      response = await response.json();
+      const idArray = response.map(motion => motion.id)
+      console.log('idArray: ', idArray);
+      const filters = mapFilters({id:idArray, ...payload.filters})
+      response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
+        method: 'get',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      return await response.json();
     } catch (error) {
       console.log(error);
     }
@@ -215,6 +222,7 @@ export const actions = {
     }
   },
   async postMotion ({ getters, commit }, payload) {
+    payload.user = 0
     await actions.checkAndRefreshToken({ getters, commit })
     const response = await fetch(`${api}/api/v1/motions/`, {
       method: 'POST',

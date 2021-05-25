@@ -226,10 +226,9 @@ class MotionViewSet(viewsets.ModelViewSet):
         category_data = request.data.get('category', [])
         info_text_data = request.data.get('info_text', [])
         links_data = request.data.get('links', [])
-
+        request.data.update({ "user": request.user.id})
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         serializer.save()
         instance = serializer.instance
         for where_used in where_used_data: 

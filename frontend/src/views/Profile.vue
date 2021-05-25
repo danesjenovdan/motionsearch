@@ -18,7 +18,7 @@
   <div class="wrapper">
     <div class="motionSuggestContainer">
           <h1>Username</h1>
-          <!---<motion-list type="getMyMotions"/>-->
+          <motion-list type="getMyMotions" :headers="false" title="Submited Motions"/>
           <motion-list type="getFavoritesMotions" :headers="false" title="Favourited Motions" />
     </div>
   </div>
@@ -34,6 +34,7 @@ import MotionList from '../components/MotionList.vue'
       return {
         username: '',
         password: '',
+        isAuth: '',
       }
     },
     components: {
@@ -49,6 +50,9 @@ import MotionList from '../components/MotionList.vue'
           console.log('error: ', error);
         }
       }
+    },
+    async created() {
+      this.isAuth = await this.$store.dispatch('isAuth')
     }
   }
 </script>
