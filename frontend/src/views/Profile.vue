@@ -1,3 +1,7 @@
+
+
+
+
 <template>
 <div class="background container">
   <div class="header">
@@ -13,247 +17,42 @@
   </div>
   <div class="wrapper">
     <div class="motionSuggestContainer">
-      <h1>Suggest a motion</h1>
-        <form @submit="postMotion">
-          <div class="textAreaContainer">
-            <label>Topic</label><br>
-            <textarea rows="3" cols="20" name="topic" ref="topic"></textarea>
-          </div>
-          <div class="inputContainer">
-            <label >Category</label>
-              <div class="arrayContainer">
-                <div v-for="(element, index) in chosenCategory" :element="element" :key="element" :vid-id="index">
-                    <span v-on:click="removeCategory(index)">x</span> {{categoryOptions[element-1].value}}
-                </div>
-              <div class="select-wrapper-full">
-                <select v-model="categories" name="Category" id="categories">
-                  <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
-                </select>
-              </div>
-              </div>
-          </div>
-          <div class="inputContainer">
-            <label>Dificulty</label>
-            <div class="select-wrapper">
-              <select v-model="difficulty" name="Dificulty" id="difficulty">
-                <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="inputContainer">
-            <label>Debate format</label>
-            <div class="select-wrapper">
-              <select v-model="debateFormat" name="DebateFormat" id="debateFormat">
-                <option v-for="debateFormat in debateFormatOptions" v-bind:key="debateFormat" :value="debateFormat.id">{{debateFormat.value}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="inputContainer">
-            <label >Age</label>
-            <div class="select-wrapper">
-              <select v-model="age" name="Age" id="age">
-                <option v-for="age in ageOptions" v-bind:key="age" :value="age.id">{{age.value}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="inputContainer">
-            <label>Motion type</label>
-            <div class="select-wrapper">
-              <select v-model="type" name="Type" id="type">
-                <option v-for="type in typeOptions" v-bind:key="type" :value="type.id">{{type.value}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="inputContainer">
-            <label>Training focus</label>
-            <div class="select-wrapper">
-              <select v-model="trainingFocus" name="trainingFocus" id="trainingFocus">
-                  <option v-for="training in trainingOptions" v-bind:key="training" :value="training.id">{{training.value}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="inputContainer">
-            <label>Impro or prep</label>
-          <div class="setting-container teams">
-              <div class="radio-container">
-                <span class="label">impro</span>
-                <input
-                  type="radio"
-                  name="impro/prep"
-                  v-model="improPrep"
-                  :value="1"
-                  >
-              </div>
-              <div class="radio-container">
-                <span class="label">prep</span>
-                <input
-                  type="radio"
-                  name="impro/prep"
-                  v-model="improPrep"
-                  :value="2"
-                  >
-              </div>
-            </div>
-          </div>
-          <div class="inputContainer">
-            <div class="subtitleContainer">
-              <label>Add is used where</label><br/>
-              <label class="subtitle"> Press Enter after each input</label>
-            </div>
-            <div class="arrayContainer">
-              <div v-for="(element, index) in usedWhere" :element="element.value" :key="element.value" :vid-id="index">
-                  <span v-on:click="removeUsedWhere(index)">x</span> {{element.value}}
-              </div>
-              <input type="text" id="used" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
-            </div>
-          </div>
-          <div class="inputContainer">
-            <div class="subtitleContainer">
-              <label>Add links</label><br/>
-              <label class="subtitle">Press Enter after each input</label>
-            </div>
-            <div class="arrayContainer">
-              <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                <span v-on:click="removeLink(index)">x</span> <a target="_blank" :href="link.value">{{link.text}}</a>
-              </div>
-              <input type="text" id="link" key="links.title" placeholder="Type name here..." />
-              <input type="text" id="url" key="links.url" placeholder="Type url here..."/>
-              <div class="buttonContainer">
-                <p>Add another link</p>
-                <button class="addLink btn" v-on:click="addLink"></button>
-              </div>
-            </div>
-          </div>
-          <button class="btn" type="submit">SUGGEST A MOTION</button>
-        </form>
+          <h1>Username</h1>
+          <!---<motion-list type="getMyMotions"/>-->
+          <motion-list type="getFavoritesMotions" :headers="false" title="Favourited Motions" />
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import MotionList from '../components/MotionList.vue'
+
+
   export default {
     data() {
       return {
-        categoryArray: [],
-        chosenCategory: [],
-        difficultiesArray: [],
-        ageArray: [],
-        debateFormatArray: [],
-        typeArray: [],
-        trainingFocusArray: [],
-        improPrepArray: [],
-        usedWhere: [],
-        links: [],
-        categories: 0,
-        link: '',
-        url: '',
-        used: '',
-        difficulty: 0,
-        age: 0,
-        debateFormat: 0,
-        type: 0,
-        trainingFocus: 0,
-        improPrep: 0,
-        isAuth: false
+        username: '',
+        password: '',
       }
     },
-    methods: {
-      addUsedWhere(event) {
-        event.preventDefault()
-        this.usedWhere.push({value: event.target.value})
-        used.value = ''
-      },
-      removeUsedWhere(index) {
-        this.usedWhere.splice(index, 1)
-      },
-      addCategory(event) {
-        console.log('event: ', event);
-        event.preventDefault()
-        this.chosenCategory.push({value: event.target.value})
-        used.value = ''
-      },
-      removeCategory(index) {
-        this.chosenCategory.splice(index, 1)
-      },
-      addLink(event) {
-        event.preventDefault()
-        this.links.push({
-          text: link.value,
-          value: url.value
-        })
-        link.value = ''
-        url.value = ''
-      },
-      removeLink(index) {
-        this.links.splice(index, 1)
-      },
-      getOptions: (array) => {
-        return Object.keys(array).map(key => {
-          return array[key]
-        })
-      },
-      postMotion: async function(e){
+    components: {
+      MotionList,
+    },
+    methods : {
+      login: async function(e){
         e.preventDefault()
         try {
-          await this.$store.dispatch('postMotion', {
-            topic: this.$refs.topic.value,
-            where_used: JSON.parse(JSON.stringify(this.usedWhere)),
-            links: JSON.parse(JSON.stringify(this.links)),
-            category: this.chosenCategory,
-            difficulties: this.difficulty,
-            age_range: this.age,
-            debate_formats: this.debateFormat,
-            type: this.type,
-            training_focus: this.trainingFocus,
-            impro_prep: this.improPrep
-          })
+          await this.$store.dispatch('login', {username: username.value, password: password.value})
           window.location.href = '/';
         } catch (error) {
           console.log('error: ', error);
         }
       }
-    },
-    computed:{
-      categoryOptions() {
-        return this.categoryArray;
-      },
-      difficultiesOptions() {
-        return this.difficultiesArray;
-      },
-      ageOptions() {
-        return this.ageArray;
-      },
-      debateFormatOptions() {
-        return this.debateFormatArray;
-      },
-      typeOptions() {
-        return this.typeArray;
-      },
-      trainingOptions() {
-        return this.trainingFocusArray;
-      },
-      improPrepOptions() {
-        return this.improPrepArray;
-      }
-    },
-      watch: {
-      // whenever question changes, this function will run
-      categories: function (newValue, oldValue) {
-          if (!this.chosenCategory.includes(newValue)) this.chosenCategory.push(newValue);
-      }
-    },
-    async created() {
-      this.isAuth = await this.$store.dispatch('isAuth')
-      this.categoryArray = await this.$store.dispatch('getMotionAttributes', {type: 'categories'})
-      this.difficultiesArray = await this.$store.dispatch('getMotionAttributes', {type: 'difficulties'})
-      this.ageArray = await this.$store.dispatch('getMotionAttributes', {type: 'age-ranges'})
-      this.debateFormatArray = await this.$store.dispatch('getMotionAttributes', {type: 'debate-formats'})
-      this.typeArray = await this.$store.dispatch('getMotionAttributes', {type: 'types'})
-      this.trainingFocusArray = await this.$store.dispatch('getMotionAttributes', {type: 'training-focuses'})
     }
   }
 </script>
+
 
 <style scoped lang="scss">
 
@@ -322,7 +121,7 @@
     }
 
     @media (min-width: 1200px) {
-      width: 50%
+      width: 75%
     }
 
     .motionSuggestContainer {

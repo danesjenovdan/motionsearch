@@ -36,9 +36,7 @@
       this.isAuth = await this.$store.dispatch('isAuth')
       const categoryArray = await this.$store.dispatch('getMotionAttributes', {type: 'categories'})
       categoryArray.forEach(category => {
-        console.log('category.id: ', category.id);
         this.categoriesDictionary[category.id] = category.value
-        console.log('this.categoriesDictionary[category.id]: ', this.categoriesDictionary[category.id]);
       });
 
     }

@@ -8,6 +8,7 @@ import ChangePassword from './views/ChangePassword.vue'
 import MotionView from './views/MotionView.vue'
 import MotionSuggest from './views/MotionSuggest.vue'
 import store from './store/store'
+import Profile from './views/Profile.vue'
 
 import App from './App.vue'
 
@@ -47,6 +48,11 @@ const routes = [
       path: '/motionSuggest',
       name: 'MotionSuggest',
       component: MotionSuggest
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile
     }
   ];
 

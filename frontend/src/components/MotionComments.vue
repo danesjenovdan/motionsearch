@@ -85,8 +85,8 @@
     watch: {
       motion: async function(newVal, oldVal) {
         const {links, where_used} = newVal
-        if(links?.length > 0) this.links = await this.$store.dispatch('getMotionAttributes', {type: 'links', filters: { id: links}})
-        if(where_used?.length > 0) this.whereUsed = await this.$store.dispatch('getMotionAttributes', {type: 'where-used', filters: { id: where_used}})
+        if(links?.length > 0) this.links = await this.$store.dispatch('getMotionAttributes', {type: 'links', filters: { id: [ links]}})
+        if(where_used?.length > 0) this.whereUsed = await this.$store.dispatch('getMotionAttributes', {type: 'where-used', filters: { id: [ where_used]} })
       }
     }
   }

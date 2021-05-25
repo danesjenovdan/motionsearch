@@ -9,6 +9,7 @@ export const state = () => ({
   user: null,
   access_token: "",
   refresh_token : "",
+  token_expiration: '',
   motion_length: 0,
   filters: {},
   filterCount: 0,
@@ -22,6 +23,9 @@ export const getters = {
   },
   refresh_token (state) {
     return state.refresh_token
+  },
+  token_expiration (state) {
+    return state.token_expiration
   },
   client_secret (state) {
     return state.client_secret
@@ -47,6 +51,9 @@ export const mutations = {
   access_token (state, token) {
     state.access_token = token
   },
+  token_expiration (state, token) {
+    state.token_expiration = token
+  },
   motion_length (state, count) {
     state.motion_length = count;
   }
@@ -70,14 +77,21 @@ const mapFilters = (filters) => {
 
     if(Array.isArray(filters[key])) {
       filters[key].forEach((value, index) => {
-        filterString += (index+1) !== filters[key].length ? value.id + ',' : value.id
+        if(!value.id) filterString += (index+1) !== filters[key].length ? value + ',' : value
+        else filterString += (index+1) !== filters[key].length ? value.id + ',' : value.id
       })
     } else {
       filterString += filters[key]
     }
 
   })
+  console.log('filterString: ', filterString);
   return filterString
+}
+
+Date.prototype.addHours = function(h) {
+  this.setTime(this.getTime() + (h*60*60*1000));
+  return this;
 }
 
 export const actions = {
@@ -98,8 +112,38 @@ export const actions = {
     const body = await response.json()
     commit('access_token', body.access_token);
     commit('refresh_token', body.refresh_token);
+    commit('token_expiration', new Date().addHours(10));
+
     return body
   },
+  async checkAndRefreshToken(context) {
+    if(new Date() > context.getters.token_expiration) {
+      return this.refreshToken(context)
+    } else return true;
+  },
+  async refreshToken ({getters, commit}) {
+    const response = await fetch(`${api}/auth/token/`, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token_type:"bearer",
+        access_token: getters.access_token,
+        refresh_token: getters.refresh_token,
+        client_id: getters.client_id,
+        client_secret: getters.client_secret,
+        grant_type: "refresh_token"
+      }) // body data type must match "Content-Type" header
+    });
+    const body = await response.json()
+    commit('access_token', body.access_token);
+    commit('refresh_token', body.refresh_token);
+    commit('token_expiration', new Date().addHours(10));
+
+    return body
+  },
+
   async isAuth ({ getters }) {
     return getters.access_token ? true : false
   },
@@ -120,9 +164,38 @@ export const actions = {
             'content-type': 'application/json'
           }
         })
+      return await result.json();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  async getMyMotions ({ getters, commit }, payload) {
+    try {
+      const filters = mapFilters(getters.getFilters)
+      const result = await fetch(`${api}/api/v1/users/me/motions?page=${payload.page}&${filters}`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${getters.access_token}`
+          }
+        })
       const body = await result.json(); // .json() is asynchronous and therefore must be awaited
-      commit('motion_length', body.count);
-      return body.results;
+      commit('motion_length', body.length);
+      return body;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  async getMyFavorites ({ getters, commit }, payload) {
+    try {
+      const filters = mapFilters(getters.getFilters)
+      const result = await fetch(`${api}/api/v1/users/me/favorites?page=${payload.page}&${filters}`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+      return await result.json();
     } catch (error) {
       console.log(error);
     }
@@ -141,7 +214,8 @@ export const actions = {
       console.log(error);
     }
   },
-  async postMotion ({ getters }, payload) {
+  async postMotion ({ getters, commit }, payload) {
+    await actions.checkAndRefreshToken({ getters, commit })
     const response = await fetch(`${api}/api/v1/motions/`, {
       method: 'POST',
       headers: {
@@ -162,9 +236,28 @@ export const actions = {
       },
     });
     const body = await response.json()
+    console.log('body: ', body);
     return body
   },
-  async postFavorite ({ getters }, payload) {
+  async getFavoritesMotions ({ getters, commit }, payload) {
+    try {
+      await actions.checkAndRefreshToken({ getters, commit })
+      let response =  await actions.getFavorites({ getters }, payload)
+      const idArray = response.map(favorite => favorite.id)
+      const filters = mapFilters({id:idArray, ...payload.filters})
+      response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  async postFavorite ({ getters, commit }, payload) {
+    await actions.checkAndRefreshToken({ getters, commit })
     const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
       method: 'POST',
       headers: {
@@ -176,7 +269,8 @@ export const actions = {
     const body = await response.json()
     return body
   },
-  async deleteFavorite ({ getters }, payload) {
+  async deleteFavorite ({ getters, commit }, payload) {
+    await actions.checkAndRefreshToken({ getters, commit })
     const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
       method: 'DELETE',
       headers: {
@@ -202,7 +296,8 @@ export const actions = {
       console.log(error);
     }
   },
-  async setComment ({ getters }, payload) {
+  async setComment ({ getters, commit }, payload) {
+    await actions.checkAndRefreshToken({ getters, commit })
     const response = await fetch(`${api}/api/v1/motions/${payload.id}/comments/`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -216,7 +311,8 @@ export const actions = {
     const body = await response.json()
     return body
   },
-  async upvote ({ getters }, payload) {
+  async upvote ({ getters, commit }, payload) {
+    await actions.checkAndRefreshToken({ getters, commit })
     const response = await fetch(`${api}/api/v1/motions/${payload.id}/votes/`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -294,6 +390,7 @@ export const actions = {
     let filters = ''
     if (payload.filters) filters = mapFilters(payload.filters)
     try {
+      console.log('`${api}/api/v1/motions/${payload.type}?page=1&${filters}`: ', `${api}/api/v1/motions/${payload.type}?page=1&${filters}`);
       let next = `${api}/api/v1/motions/${payload.type}?page=1&${filters}`;
       let results = []; 
       while (next) {
