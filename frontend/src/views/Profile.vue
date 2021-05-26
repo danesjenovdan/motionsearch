@@ -17,9 +17,15 @@
   </div>
   <div class="wrapper">
     <div class="motionSuggestContainer">
-          <h1>Username</h1>
-          <motion-list type="getMyMotions" :headers="false" title="Submited Motions"/>
-          <motion-list type="getFavoritesMotions" :headers="false" title="Favourited Motions" />
+        <div class='user-container'>
+          <h1>{{username}}</h1>
+          <p @click="reset"> Change your password </p>
+          <div/>
+          <p @click="logout"> Log out </p>
+          <div/>
+        </div>
+        <motion-list type="getMyMotions" :headers="false" title="Submited Motions"/>
+        <motion-list type="getFavoritesMotions" :headers="false" title="Favourited Motions" />
     </div>
   </div>
 </div>
@@ -33,7 +39,6 @@ import MotionList from '../components/MotionList.vue'
     data() {
       return {
         username: '',
-        password: '',
         isAuth: '',
       }
     },
@@ -41,18 +46,19 @@ import MotionList from '../components/MotionList.vue'
       MotionList,
     },
     methods : {
-      login: async function(e){
-        e.preventDefault()
-        try {
-          await this.$store.dispatch('login', {username: username.value, password: password.value})
-          window.location.href = '/';
-        } catch (error) {
-          console.log('error: ', error);
-        }
+      reset() {
+        window.location.href = '/reset'
+      },
+      logout() {
+        this.$store.state.motions.acces_token = null
+        this.$store.state.motions.refresh_token = null
+        window.location.href = '/login'
       }
     },
     async created() {
       this.isAuth = await this.$store.dispatch('isAuth')
+      const user = await this.$store.dispatch('getMe')
+      this.username = user[0].username
     }
   }
 </script>
@@ -157,6 +163,36 @@ import MotionList from '../components/MotionList.vue'
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+  }
+}
+
+.user-container {
+  padding: 0 40px;
+
+  p {
+    color: #252525;
+    font-family: Poppins;
+    font-size: 24px;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
+    
+  }
+  p:hover {
+    cursor: pointer;
+  }
+  h1 {
+      color: #252525;
+      font-family: "Poppins";
+      font-size: 30px;
+      font-weight: 700;
+      font-style: normal;
+      letter-spacing: normal;
+  }
+  div {
+    margin: 0;
+    border-top: 1px solid black;
+    width: 100%
   }
 }
 

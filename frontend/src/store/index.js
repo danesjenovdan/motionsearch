@@ -1,4 +1,7 @@
 import axios from 'axios'
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const api = 'https://motion-search-backend.lb.djnd.si';
 
@@ -85,7 +88,6 @@ const mapFilters = (filters) => {
     }
 
   })
-  console.log('filterString: ', filterString);
   return filterString
 }
 
@@ -96,25 +98,30 @@ Date.prototype.addHours = function(h) {
 
 export const actions = {
   async login ({ getters, commit }, payload) {
-    const response = await fetch(`${api}/auth/token/`, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: payload.username,
-        password: payload.password,
-        client_id: getters.client_id,
-        client_secret: getters.client_secret,
-        grant_type: getters.grant_type
-      }) // body data type must match "Content-Type" header
-    });
-    const body = await response.json()
-    commit('access_token', body.access_token);
-    commit('refresh_token', body.refresh_token);
-    commit('token_expiration', new Date().addHours(10));
-
-    return body
+    try {
+      const response = await fetch(`${api}/auth/token/`, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: payload.username,
+          password: payload.password,
+          client_id: getters.client_id,
+          client_secret: getters.client_secret,
+          grant_type: getters.grant_type
+        }) // body data type must match "Content-Type" header
+      });
+      const body = await response.json()
+      commit('access_token', body.access_token);
+      commit('refresh_token', body.refresh_token);
+      commit('token_expiration', new Date().addHours(10));
+      toast.success("Succesfully loged in.");
+      return body
+    } catch (error) {
+      toast.error("Could not log in. Please try again");
+      return error
+    }
   },
   async checkAndRefreshToken(context) {
     if(new Date() > context.getters.token_expiration) {
@@ -152,9 +159,29 @@ export const actions = {
   },
 
   async logout () {
-    await this.$auth.logout()
+    try {
+      await this.$auth.logout()
+      toast.success("Succesfully loged out.");
+    } catch (error) {
+      toast.error("There was a problem, with logging out.");
+      return error
+    }
   },
-
+  async getMe ({ getters, commit }, payload) {
+    try {
+      const filters = mapFilters(getters.getFilters)
+      const result = await fetch(`${api}/api/v1/users/me/`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${getters.access_token}`
+          }
+        })
+      return await result.json();
+    } catch (error) {
+      return error
+    }
+  },
   async getMotions ({ getters, commit }, payload) {
     try {
       const filters = mapFilters(getters.getFilters)
@@ -166,7 +193,7 @@ export const actions = {
         })
       return await result.json();
     } catch (error) {
-      console.log(error);
+      return error
     }
   },
   async getMyMotions ({ getters, commit }, payload) {
@@ -190,7 +217,7 @@ export const actions = {
       })
       return await response.json();
     } catch (error) {
-      console.log(error);
+      return error
     }
   },
   async getMyFavorites ({ getters, commit }, payload) {
@@ -204,7 +231,7 @@ export const actions = {
         })
       return await result.json();
     } catch (error) {
-      console.log(error);
+      return error
     }
   },
   async getMotion (context, payload) {
@@ -218,22 +245,28 @@ export const actions = {
       const body = await result.json(); // .json() is asynchronous and therefore must be awaited
       return body;
     } catch (error) {
-      console.log(error);
+      return error
     }
   },
   async postMotion ({ getters, commit }, payload) {
     payload.user = 0
     await actions.checkAndRefreshToken({ getters, commit })
-    const response = await fetch(`${api}/api/v1/motions/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getters.access_token}`
-      },
-      body: JSON.stringify(payload) // body data type must match "Content-Type" header
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/motions/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getters.access_token}`
+        },
+        body: JSON.stringify(payload) // body data type must match "Content-Type" header
+      });
+      const body = await response.json()
+      toast.success("Succesfully posted a motion.");
+      return body
+    } catch (error) {
+      toast.error("There was an error with posting motion.");
+      return error
+    }
   },
   async getFavorites ({ getters }, payload) {
     const response = await fetch(`${api}/api/v1/users/me/favorites`, {
@@ -266,29 +299,41 @@ export const actions = {
   },
   async postFavorite ({ getters, commit }, payload) {
     await actions.checkAndRefreshToken({ getters, commit })
-    const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getters.access_token}`
-      },
-      body: JSON.stringify(payload) // body data type must match "Content-Type" header
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getters.access_token}`
+        },
+        body: JSON.stringify(payload) // body data type must match "Content-Type" header
+      });
+      const body = await response.json()
+      toast.success("Motion was favorited successfully.");
+      return body      
+    } catch (error) {
+      toast.error("Could not save favorite motion.");
+      return error
+    }
   },
   async deleteFavorite ({ getters, commit }, payload) {
     await actions.checkAndRefreshToken({ getters, commit })
-    const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getters.access_token}`
-      },
-      body: JSON.stringify(payload) // body data type must match "Content-Type" header
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/users/1/favorites/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getters.access_token}`
+        },
+        body: JSON.stringify(payload) // body data type must match "Content-Type" header
+      });
+      const body = await response.json()
+      toast.success("Motion was unfavorited successfully");
+      return body
+    } catch (error) {
+      toast.error("Could not save favorite motion.");
+      return error
+    }
   },
   async getComments (context, payload) {
     try {
@@ -306,33 +351,47 @@ export const actions = {
   },
   async setComment ({ getters, commit }, payload) {
     await actions.checkAndRefreshToken({ getters, commit })
-    const response = await fetch(`${api}/api/v1/motions/${payload.id}/comments/`, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getters.access_token}`
-      },
-      body: JSON.stringify({
-        text: payload.text,
-      }) // body data type must match "Content-Type" header
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/motions/${payload.id}/comments/`, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getters.access_token}`
+        },
+        body: JSON.stringify({
+          text: payload.text,
+        }) // body data type must match "Content-Type" header
+      });
+      const body = await response.json()
+      console.log('body: ', body);
+      toast.success("Comment was submited successfully");
+      return body
+    } catch (error) {
+      console.log('error: ', error);
+      toast.error("Could not post comment");
+      return error
+    }
   },
   async upvote ({ getters, commit }, payload) {
     await actions.checkAndRefreshToken({ getters, commit })
-    const response = await fetch(`${api}/api/v1/motions/${payload.id}/votes/`, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getters.access_token}`
-      },
-      body: JSON.stringify({
-        choices: payload.choice,
-      }) // body data type must match "Content-Type" header
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/motions/${payload.id}/votes/`, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getters.access_token}`
+        },
+        body: JSON.stringify({
+          choices: payload.choice,
+        }) // body data type must match "Content-Type" header
+      });
+      toast.success('Succesfully voted on motion.')
+      const body = await response.json()
+      return body
+    } catch (error) {
+      toast.error('There was a problem with casting a vote.')
+      return error
+    }
   },
   async getUpvotes ({ getters }, payload) {
     const response = await fetch(`${api}/api/v1/users/me/votes`, {
@@ -346,53 +405,78 @@ export const actions = {
     return body
   },
   async register (context, payload) {
-    const response = await fetch(`${api}/api/v1/users/`, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: payload.username,
-        email: payload.email,
-        password: payload.password,
-        phone_number: payload.phone
-      }) // body data type must match "Content-Type" header
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/users/`, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: payload.username,
+          email: payload.email,
+          password: payload.password,
+          phone_number: payload.phone
+        }) // body data type must match "Content-Type" header
+      });
+      toast.success("Registration completed successfully. Check email to confirm address.");
+      const body = await response.json()
+      return body
+      
+    } catch (error) {
+      toast.success("Registration could not be completed");
+      return error
+    }
   },
   async reset (context, payload) {
-    const response = await fetch(`${api}/api/v1/users/forgot-password/`, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: payload.email,
-      })
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/users/forgot-password/`, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: payload.email,
+        })
+      });
+      const body = await response.json()
+      toast.info("Password reset link, was sent to your email account.");
+      return body
+    } catch (error) {
+      toast.error("Password change was not possible");
+      return error
+    }
   },
 
   async change (context, payload) {
-    const response = await fetch(`${api}/api/v1/users/change-password/${payload.uid}/${payload.token}/`, {
-      method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        password: payload.password,
-      })
-    });
-    const body = await response.json()
-    return body
+    try {
+      const response = await fetch(`${api}/api/v1/users/change-password/${payload.uid}/${payload.token}/`, {
+        method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          password: payload.password,
+        })
+      });
+      const body = await response.json()
+      toast.success("Password was successfully changed.");
+      return body
+    } catch (error) {
+      toast.error("Password change was not possible");
+      return error
+    }
   },
 
   async resetPassword (context, payload) {
-    await axios.post('v1/restore-password/', {
-      email: payload.email
-    })
+    try {
+      await axios.post('v1/restore-password/', {
+        email: payload.email
+      })
+      toast.info("Password reset link, was sent to your email account.");
+    } catch (error) {
+      toast.error("Password change was not possible");
+      return error
+    }
   },
   async getMotionAttributes (context, payload) {
     let filters = ''
