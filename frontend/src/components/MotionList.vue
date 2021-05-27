@@ -160,11 +160,16 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 10px 20px;
+  margin: 10px 0;
 
-  @media (min-width: 768px) {
+  @media (min-width: 576px) {
+    justify-content: space-between;
+  }
+
+  @media (min-width: 992px) {
     justify-content: flex-end;
     padding: 20px;
   }
@@ -174,8 +179,10 @@
   }
 
   .logo {
-    @media (min-width: 768px) {
-      display: none;
+    display: none;
+
+    @media (min-width: 576px) and (max-width: 992px) {
+      display: block;
     }
 
     img {
@@ -233,7 +240,7 @@
       letter-spacing: 1px;
       padding: 5px 12px;
 
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         display: none;
       }
     }

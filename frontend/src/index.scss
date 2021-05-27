@@ -60,14 +60,14 @@ body {
   display: flex;
   flex-wrap: wrap;
 
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     flex-wrap: nowrap;
   }
 
   .container-child {
     flex: 1 0 100%;
 
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       flex: 1 0 50%;
     }
 
@@ -81,8 +81,7 @@ body {
       justify-content: center;
       flex-direction: column;
 
-
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         padding: 20px 20px 60px;
       }
 
