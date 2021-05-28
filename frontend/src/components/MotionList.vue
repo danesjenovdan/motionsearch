@@ -130,7 +130,7 @@
       }, mapFiltersToTags() {
         this.tags = []
         Object.keys(this.$store.state.motions.filters).forEach(filter => {
-          if(filter !== 'keywordFitler' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
+          if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
             this.tags.push(filterValue)
           })
         })

@@ -1,172 +1,204 @@
 <template>
   <div>
     <div class="filters-container">
-      <div class="filter-box bottom-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box bottom-popup"
+          :class="{ 'filters-selected': chosenCategoryFilters.length }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/topic.svg">
           <span data-type="categoryFilter"><i>Category</i></span>
+          <!--<span v-if="chosenCategoryFilters.length === 1">{{chosenCategoryFilters[0].value}}</span>
+          <span v-if="chosenCategoryFilters.length > 1">{{chosenCategoryFilters[0].value}} + 1 more category</span>-->
         </div>
-        <div class="popup">
-          <div class="popup-container" id="categoryFilter" @click.stop>
-            <div class="popup-box">
-              <div class="checkmark-container">
-                <div v-for="category in categoryArray" :key="category" >
-                  <input :id="'category-' + category.id" type='checkbox' :value="{id: category.id, value: category.value}" v-model="categoryFilter"/>
-                  <label class="popup-text" :for="'category-' + category.id">{{category.value}}</label>
-                </div>
+        <div class="popup-container" id="categoryFilter" @click.stop>
+          <div class="popup-box">
+            <div class="checkmark-container">
+              <div v-for="category in categoryArray" :key="category" >
+                <input :id="'category-' + category.id" type='checkbox' :value="{id: category.id, value: category.value}" v-model="categoryFilter"/>
+                <label class="popup-text" :for="'category-' + category.id">{{category.value}}</label>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters" data-type="categoryFilter">Apply</div>
             </div>
-            <div class="popup-arrow">
-            </div>
+            <div class="popup-apply" :onclick="toggleFilters" data-type="categoryFilter">Apply</div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
-      <div class="filter-box bottom-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box bottom-popup"
+          :class="{ 'filters-selected': chosenDifficultyFilters.length }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/difficulty.svg">
-          <span data-type="difficultyFilter"><i>Difficulty</i></span>
+          <span v-if="chosenDifficultyFilters.length === 0" data-type="difficultyFilter"><i>Difficulty</i></span>
+          <span v-if="chosenDifficultyFilters.length > 0">{{ chosenFiltersText(chosenDifficultyFilters) }}</span>
         </div>
-        <div class="popup">
-          <div class="popup-container" id="difficultyFilter" @click.stop>
-            <div class="popup-box">
-              <div class="checkmark-container">
-                <div v-for="difficulty in difficultiesArray" :key="difficulty">
-                  <input :id="'difficulty-' + difficulty.id" :value="{id: difficulty.id, value: difficulty.value}" type='checkbox' v-model="difficultyFilter"/>
-                  <label class="popup-text" :for="'difficulty-' + difficulty.id">{{difficulty.value}}</label>
-                </div>
+        <div class="popup-container" id="difficultyFilter" @click.stop>
+          <div class="popup-box">
+            <div class="checkmark-container">
+              <div v-for="difficulty in difficultiesArray" :key="difficulty">
+                <input :id="'difficulty-' + difficulty.id" :value="{id: difficulty.id, value: difficulty.value}" type='checkbox' v-model="difficultyFilter"/>
+                <label class="popup-text" :for="'difficulty-' + difficulty.id">{{difficulty.value}}</label>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters" data-type="difficultyFilter">Apply</div>
             </div>
-            <div class="popup-arrow">
-            </div>
+            <div class="popup-apply" :onclick="toggleFilters" data-type="difficultyFilter">Apply</div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
-      <div class="filter-box bottom-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box bottom-popup"
+          :class="{ 'filters-selected': chosenFormatFilters.length }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/format.svg">
-          <span data-type="formatFilter"><i>Format</i></span>
+          <span v-if="chosenFormatFilters.length === 0" data-type="formatFilter"><i>Format</i></span>
+          <span v-if="chosenFormatFilters.length > 0">{{ chosenFiltersText(chosenFormatFilters) }}</span>
         </div>
-        <div class="popup">
-          <div class="popup-container" id="formatFilter" @click.stop>
-            <div class="popup-box">
-              <div class="checkmark-container">
-                <div v-for="format in formatArray" :key="format">
-                  <input :id="'format-' + format.id" :value="{id: format.id, value: format.value}" type='checkbox' v-model="formatFilter"/>
-                  <label class="popup-text" :for="'format-' + format.id">{{format.value}}</label>
-                </div>
+        <div class="popup-container" id="formatFilter" @click.stop>
+          <div class="popup-box">
+            <div class="checkmark-container">
+              <div v-for="format in formatArray" :key="format">
+                <input :id="'format-' + format.id" :value="{id: format.id, value: format.value}" type='checkbox' v-model="formatFilter"/>
+                <label class="popup-text" :for="'format-' + format.id">{{format.value}}</label>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="formatFilter">Apply</div>
             </div>
-            <div class="popup-arrow">
-            </div>
+            <div class="popup-apply" :onclick="toggleFilters"  data-type="formatFilter">Apply</div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
-      <div class="filter-box bottom-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box bottom-popup"
+          :class="{ 'filters-selected': chosenAgeFilters.length }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/age.svg">
-          <span data-type="ageFilter"><i>Age</i></span>
+          <span v-if="chosenAgeFilters.length === 0" data-type="ageFilter"><i>Age</i></span>
+          <span v-if="chosenAgeFilters.length > 0">{{ chosenFiltersText(chosenAgeFilters) }}</span>
         </div>
-        <div class="popup">
-          <div class="popup-container" id="ageFilter" @click.stop>
-            <div class="popup-box">
-              <div class="checkmark-container">
-                <div v-for="age in ageArray" :key="age">
-                  <input :id="'age-' + age.id" :value="{id: age.id, value: age.value}" type='checkbox' v-model="ageFilter"/>
-                  <label class="popup-text" :for="'age-' + age.id">{{age.value}}</label>
-                </div>
+        <div class="popup-container" id="ageFilter" @click.stop>
+          <div class="popup-box">
+            <div class="checkmark-container">
+              <div v-for="age in ageArray" :key="age">
+                <input :id="'age-' + age.id" :value="{id: age.id, value: age.value}" type='checkbox' v-model="ageFilter"/>
+                <label class="popup-text" :for="'age-' + age.id">{{age.value}}</label>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="ageFilter">Apply</div>
             </div>
-            <div class="popup-arrow">
-            </div>
+            <div class="popup-apply" :onclick="toggleFilters"  data-type="ageFilter">Apply</div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
-      <div class="filter-box bottom-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box bottom-popup"
+          :class="{ 'filters-selected': chosenTypeFilters.length }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/type.svg">
-          <span data-type="typeFilter"><i>Motion type</i></span>
+          <span v-if="chosenTypeFilters.length === 0" data-type="typeFilter"><i>Motion type</i></span>
+          <span v-if="chosenTypeFilters.length > 0">{{ chosenFiltersText(chosenTypeFilters) }}</span>
         </div>
-        <div class="popup">
-          <div class="popup-container" id="typeFilter" @click.stop>
-            <div class="popup-box">
-              <div class="checkmark-container">
-                <div v-for="type in typeArray" :key="type">
-                  <input :id="'type-' + type.id" :value="{id: type.id, value: type.value}" type='checkbox' v-model="typeFilter"/>
-                  <label class="popup-text" :for="'type-' + type.id">{{type.value}}</label>
-                </div>
+        <div class="popup-container" id="typeFilter" @click.stop>
+          <div class="popup-box">
+            <div class="checkmark-container">
+              <div v-for="type in typeArray" :key="type">
+                <input :id="'type-' + type.id" :value="{id: type.id, value: type.value}" type='checkbox' v-model="typeFilter"/>
+                <label class="popup-text" :for="'type-' + type.id">{{type.value}}</label>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="typeFilter">Apply</div>
             </div>
-            <div class="popup-arrow">
-            </div>
+            <div class="popup-apply" :onclick="toggleFilters"  data-type="typeFilter">Apply</div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
-      <div class="filter-box bottom-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box bottom-popup"
+          :class="{ 'filters-selected': chosenTrainingFilters.length }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/focus.svg">
-          <span data-training="trainingFilter"><i>Training focus</i></span>
+          <span v-if="chosenTrainingFilters.length === 0" data-training="trainingFilter"><i>Training focus</i></span>
+          <span v-if="chosenTrainingFilters.length > 0">{{ chosenFiltersText(chosenTrainingFilters) }}</span>
         </div>
-        <div class="popup">
-          <div class="popup-container" id="trainingFilter" @click.stop>
-            <div class="popup-box">
-              <div class="checkmark-container">
-                <div v-for="training in trainingFocusArray" :key="training">
-                  <input :id="'training-' + training.id" :value="{id: training.id, value: training.value}" type='checkbox' v-model="trainingFilter"/>
-                  <label class="popup-text" :for="'training-' + training.id">{{training.value}}</label>
-                </div>
+        <div class="popup-container" id="trainingFilter" @click.stop>
+          <div class="popup-box">
+            <div class="checkmark-container">
+              <div v-for="training in trainingFocusArray" :key="training">
+                <input :id="'training-' + training.id" :value="{id: training.id, value: training.value}" type='checkbox' v-model="trainingFilter"/>
+                <label class="popup-text" :for="'training-' + training.id">{{training.value}}</label>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="trainingFilter">Apply</div>
             </div>
-            <div class="popup-arrow">
-            </div>
+            <div class="popup-apply" :onclick="toggleFilters"  data-type="trainingFilter">Apply</div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
-      <div class="filter-box top-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box top-popup"
+          :class="{ 'filters-selected': chosenImproPrepFilters.length }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/impro.svg">
-          <span data-type="improPrepFilter"><i>Either impro or prep</i></span>
+          <span v-if="chosenImproPrepFilters.length === 0" data-type="improPrepFilter"><i>Either impro or prep</i></span>
+          <span v-if="chosenImproPrepFilters.length > 0">{{ chosenFiltersText(chosenImproPrepFilters) }}</span>
         </div>
-        <div class="popup">
-          <div class="popup-container" id="improPrepFilter" @click.stop>
-            <div class="popup-box">
-              <div class="checkmark-container">
-                <div v-for="impro in improPrepArray" :key="impro">
-                  <input :id="'impro-' + impro.id" :value="{id: impro.id, value: impro.value}" type='checkbox' v-model="improPrepFilter"/>
-                  <label class="popup-text" :for="'impro-' + impro.id">{{impro.value}}</label>
-                </div>
+        <div class="popup-container" id="improPrepFilter" @click.stop>
+          <div class="popup-box">
+            <div class="checkmark-container">
+              <div v-for="impro in improPrepArray" :key="impro">
+                <input :id="'impro-' + impro.id" :value="{id: impro.id, value: impro.value}" type='checkbox' v-model="improPrepFilter"/>
+                <label class="popup-text" :for="'impro-' + impro.id">{{impro.value}}</label>
               </div>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="improPrepFilter">Apply</div>
             </div>
-            <div class="popup-arrow">
-            </div>
+            <div class="popup-apply" :onclick="toggleFilters"  data-type="improPrepFilter">Apply</div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
-      <div class="filter-box top-popup" @click="toggleSelected" v-outside="hideSelected">
+      <div
+          class="filter-box top-popup"
+          :class="{ 'filters-selected': chosenKeywordFilters }"
+          @click="toggleSelected"
+          v-outside="hideSelected"
+      >
         <div class="content">
           <img src="../assets/keyword.svg">
           <span data-type="keywordFilter"><i>Keyword</i></span>
         </div>
-        <div class="popup">
-          <div class="popup-container" id="keywordFilter" @click.stop>
-            <div class="popup-box">
-              <span class="keyword-text"> Enter key words, separated by comma.</span>
-              <div class="keyword-container">
-                <input class="" v-model="keywordFilter"/>
-              </div>
-              <div class="keyword-apply">
-                <span :onclick="clearKeywords">Clear all</span>
-                <div class="popup-apply" :onclick="toggleFilters"  data-type="keywordFilter">Apply</div>
-              </div>
+        <div class="popup-container" id="keywordFilter" @click.stop>
+          <div class="popup-box">
+            <span class="keyword-text">Enter key words, separated by comma.</span>
+            <div class="keyword-container">
+              <input class="" v-model="keywordFilter"/>
             </div>
-            <div class="popup-arrow">
+            <div class="keyword-apply">
+              <span :onclick="clearKeywords">Clear all</span>
+              <div class="popup-apply" :onclick="toggleFilters"  data-type="keywordFilter">Apply</div>
             </div>
+          </div>
+          <div class="popup-arrow">
           </div>
         </div>
       </div>
@@ -178,7 +210,7 @@
       </div>
     </div>
     <div class="apply-button">
-      <button class="btn" @click="toggleFilters">Apply</button>
+      <button class="btn" @click="closeFilters">Close</button>
     </div>
   </div>
 </template>
@@ -203,6 +235,32 @@ export default {
       typeFilter: [],
       trainingFilter: [],
       keywordFilter: ''
+    }
+  },
+  computed: {
+    chosenCategoryFilters () {
+      return this.$store.getters.getFilters.categoryFilter || [];
+    },
+    chosenDifficultyFilters () {
+      return this.$store.getters.getFilters.difficultyFilter || [];
+    },
+    chosenFormatFilters () {
+      return this.$store.getters.getFilters.formatFilter || [];
+    },
+    chosenAgeFilters () {
+      return this.$store.getters.getFilters.ageFilter || [];
+    },
+    chosenTypeFilters () {
+      return this.$store.getters.getFilters.typeFilter || [];
+    },
+    chosenTrainingFilters () {
+      return this.$store.getters.getFilters.trainingFilter || [];
+    },
+    chosenImproPrepFilters () {
+      return this.$store.getters.getFilters.improPrepFilter || [];
+    },
+    chosenKeywordFilters () {
+      return this.$store.getters.getFilters.keywordFilter;
     }
   },
   directives: {
@@ -232,18 +290,28 @@ export default {
         this.toggleSelected(e);
       }
     },
+    closeFilters() {
+      this.$emit('toggle-filters');
+    },
     toggleFilters(event) {
       const popup = document.getElementById(event.target.getAttribute('data-type'));
       this.$store.state.motions.filters[event.target.getAttribute('data-type')] = {} // clean filter if we have bad state
       this.$store.state.motions.filters[event.target.getAttribute('data-type')] = this[event.target.getAttribute('data-type')]
       this.$store.state.motions.filterCount += 1
-      popup.parentElement.parentElement.classList.toggle('selected');
+      popup.parentElement.classList.toggle('selected');
     },
     clearKeywords(event){
       this.keywordFilter = ''
     },
     randomMotion() {
       window.location.href = '/motion/' + (Math.floor((Math.random() * this.motion_length))+1);
+    },
+    chosenFiltersText (array) {
+      if (array.length === 1) {
+        return array[0].value;
+      } else {
+        return `${array[0].value} + ${array.length - 1} more`;
+      }
     }
   },
   async created() {
@@ -264,6 +332,7 @@ export default {
   margin: 40px auto;
   width: 100%;
   display: grid;
+  position: relative;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   column-gap: 3%;
   row-gap: 3%;
@@ -283,18 +352,35 @@ export default {
     background-color: white;
     cursor: pointer;
     border: 4px solid white;
-    position: relative;
-    display: flex;
-    //align-items: center;
+    height: 150px;
+
+    @media (min-width: 576px) {
+      position: relative;
+      height: initial;
+    }
 
     &:after {
       content: "";
       display: block;
-      padding-bottom: 90%;
+      padding-bottom: 25%;
+
+      @media (min-width: 576px) {
+        padding-bottom: 90%;
+        position: relative;
+      }
+    }
+
+    &.selected {
+      border: 4px solid #3098f3;
+
+      /* Toggle this class when clicking on the popup container (hide and show the popup) */
+      .popup-container {
+        opacity: 1;
+        z-index: 2;
+      }
     }
 
     .content {
-      position: absolute;
       width: 100%;
       height: 100%;
       display: flex;
@@ -302,29 +388,176 @@ export default {
       align-items: center;
       justify-content: center;
       pointer-events: none;
-    }
 
-    img {
-      width: 50%;
-      pointer-events: none;
+      @media (min-width: 576px) {
+        position: absolute;
+      }
 
-      @media (min-width: 1400px) {
-        width: 40%;
+      img {
+        width: 50%;
+        pointer-events: none;
+
+        @media (min-width: 1400px) {
+          width: 40%;
+        }
+      }
+
+      span {
+        color: #252525;
+        font-family: "IBM Plex Mono";
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+        padding: 10px;
+        pointer-events: none;
+
+        @media (min-width: 576px) {
+          font-size: 18px;
+        }
       }
     }
 
-    span {
-      color: #252525;
-      font-family: "IBM Plex Mono";
-      font-size: 18px;
-      line-height: 20px;
-      text-align: center;
-      padding: 10px;
-      pointer-events: none;
+    &.filters-selected {
+      background-color: #d6eafd;
+      border-color: #d6eafd;
+      span {
+        // font-size: 14px;
+      }
+      img {
+        width: 25%;
+      }
     }
 
-    &.selected {
+    .popup-container {
+      opacity: 0;
+      transition: opacity 0.2s;
+      background-color: white;
+      color: black;
       border: 4px solid #3098f3;
+      padding: 8px;
+      position: absolute;
+      z-index: -1;
+      box-shadow: 0 0 27px 3px rgba(48, 152, 243, 0.5);
+
+      &#keywordFilter {
+        min-width: 300px;
+      }
+
+      .popup-box {
+        margin: 10px;
+
+        .keyword-container {
+          input {
+            height: auto !important;
+            border: 1px solid black;
+            margin: 10px 0;
+            width: 100%;
+
+            @media (min-width: 576px) {
+              width: 100%;
+            }
+          }
+        }
+
+        .keyword-apply {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          span {
+            text-decoration: underline;
+          }
+        }
+
+        .keyword-text {
+          font-family: "IBM Plex Mono";
+          font-size: 14px;
+        }
+
+        .checkmark-container {
+          margin: 20px 0 10px 0;
+          display: grid;
+          grid-template-columns: 100%;
+          column-gap: 20px;
+          row-gap: 10px;
+          width: 100%;
+          align-items: start;
+          border-bottom: 1px solid black;
+          padding-bottom: 15px;
+
+          @media (min-width: 992px) {
+            grid-template-columns: 45% 45%;
+          }
+        }
+
+        .popup-apply {
+          color: #3098f3 !important;
+          font-family: Poppins;
+          font-size: 18px;
+          font-weight: 700;
+          text-align: right;
+          text-decoration: underline;
+        }
+      }
+
+      .popup-arrow {
+        content: "";
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        border-left: 4px solid #3098f3;
+        border-bottom: 4px solid #3098f3;
+        left: 20px;
+      }
+    }
+
+    &.bottom-popup {
+      .popup-container {
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        @media (min-width: 576px) {
+          left: -4px;
+          right: initial;
+          top: calc(100% + 28px);
+          transform: none;
+        }
+      }
+
+      .popup-arrow {
+        transform: rotate(135deg);
+        top: -14px;
+        display: none;
+        @media (min-width: 576px) {
+          display: block;
+        }
+      }
+    }
+
+    &.top-popup {
+      .popup-container {
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        @media (min-width: 576px) {
+          left: -4px;
+          right: initial;
+          top: initial;
+          bottom: calc(100% + 28px);
+          transform: none;
+        }
+      }
+
+      .popup-arrow {
+        transform: rotate(-45deg);
+        display: none;
+        @media (min-width: 576px) {
+          display: block;
+        }
+      }
     }
   }
 
@@ -356,7 +589,6 @@ export default {
   @media (min-width: 992px) {
     display: none;
   }
-
 }
 
 /* the actual input checkbox */
@@ -391,177 +623,16 @@ export default {
   height: 1.4em;
   border: 1px solid rgb(0, 0, 0);
   background: #FFF;
-  -webkit-transition: all .275s;
-      transition: all .275s;
-}
-  [type="checkbox"]:checked + label:before {
-    background: #3098f3;
-  }
-
-/* checked mark aspect */
-[type="checkbox"]:not(:checked) + label:after,
-[type="checkbox"]:checked + label:after {
-  content: '✓';
-  position: absolute;
-  top: .525em;
-  left: .18em;
-  font-size: 1.375em;
-  color: #ffffff;
-  line-height: 0;
-  -webkit-transition: all .2s;
-      transition: all .2s;
 }
 
-/* checked mark aspect changes */
-[type="checkbox"]:not(:checked) + label:after {
-  opacity: 0;
-  -webkit-transform: scale(0) rotate(45deg);
-      transform: scale(0) rotate(45deg);
-}
-
-[type="checkbox"]:checked + label:after {
-  opacity: 1;
-  -webkit-transform: scale(1) rotate(0);
-      transform: scale(1) rotate(0);
+[type="checkbox"]:checked + label:before {
+  background-image: url("../assets/checkbox.png");
+  background-size: contain;
 }
 
 /* Accessibility */
 [type="checkbox"]:checked:focus + label:before,
 [type="checkbox"]:not(:checked):focus + label:before {
-}
-
-.checkmark-container {
-  margin: 20px 0px 10px 0px;
-  display: grid;
-  grid-template-columns: 100%;
-  column-gap: 20px;
-  row-gap: 10px;
-  width: 100%;
-  align-items: start;
-
-  @media (min-width: 992px) {
-    grid-template-columns: 45% 45%;
-  }
-}
-.keyword-container {
-  input {
-    height: auto !important;
-    border: 1px solid black;
-    margin-top: 5px;
-  }
-}
-
- /* Popup container */
-.popup {
-  position: relative;
-}
-
-.popup-apply {
-  color: #3098f3 !important;
-  font-family: Poppins;
-  font-size: 18px;
-  font-weight: 700;
-  font-style: normal;
-  letter-spacing: normal;
-  line-height: 47px;
-  text-align: right;
-  text-decoration: underline;
-  border-top: 1px solid black;
-}
-.keyword-apply {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 700;
-  font-style: normal;
-  letter-spacing: normal;
-  line-height: 47px;
-  text-align: right;
-  border-top: 1px solid black;
-  span {
-    text-decoration: underline;
-  }
-}
-.keyword-text {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 700;
-  font-style: normal;
-  letter-spacing: normal;
-  line-height: 47px;
-  text-align: right;
-}
-.popup-box {
-  margin: 10px;
-}
-
-.popup-arrow {
-  content: "";
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  position: absolute;
-  z-index: 1;
-  border-left: 4px solid #3098f3;
-  border-bottom: 4px solid #3098f3;
-  left: 20px;
-}
-
-.filter-box.bottom-popup {
-  flex-direction: column-reverse;
-
-  .popup-container {
-    top: 28px;
-  }
-
-  .popup-arrow {
-    transform: rotate(135deg);
-    top: -14px;
-  }
-}
-
-.filter-box.top-popup {
-  flex-direction: column;
-
-  .popup-container {
-    bottom: 28px;
-  }
-
-  .popup-arrow {
-    transform: rotate(-45deg);
-  }
-}
-
-/* The actual popup (appears on top) */
-.popup .popup-container {
-  opacity: 0;
-  transition: opacity 0.2s;
-  background-color: white;
-  color: black;
-  border: 4px solid #3098f3;
-  padding: 8px;
-  position: absolute;
-  left: -4px;
-  z-index: -1;
-  box-shadow: 0 0 27px 3px rgba(48, 152, 243, 0.5);
-}
-
-/* Popup arrow */
-.popup .popuptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  z-index: -1;
-  border-color: #555 transparent transparent transparent;
-}
-
-/* Toggle this class when clicking on the popup container (hide and show the popup) */
-.selected .popup .popup-container {
-  opacity: 1;
-  z-index: 2;
 }
 
 </style>
