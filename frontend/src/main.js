@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import { createWebHistory , createRouter } from "vue-router";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 import Home from './views/Home.vue'
 import Register from './views/Register.vue'
 import Login from './views/Login.vue'
@@ -8,7 +10,7 @@ import ChangePassword from './views/ChangePassword.vue'
 import MotionView from './views/MotionView.vue'
 import MotionSuggest from './views/MotionSuggest.vue'
 import store from './store/store'
-
+import Profile from './views/Profile.vue'
 import App from './App.vue'
 
 const routes = [
@@ -47,6 +49,11 @@ const routes = [
       path: '/motionSuggest',
       name: 'MotionSuggest',
       component: MotionSuggest
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile
     }
   ];
 
@@ -55,5 +62,5 @@ const router = createRouter({
   routes,
 })
 
-createApp(App).use(store).use(router).mount('#app')
+createApp(App).use(store).use(router).use(Toast, {}).mount('#app')
 

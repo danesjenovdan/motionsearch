@@ -10,7 +10,7 @@
      </div>
    </div>
    <div class="container-child">
-     <motion-list @toggle-filters="toggleFilters"/>
+     <motion-list type="getMotions" :headers="true" title="Motions" @toggle-filters="toggleFilters"/>
    </div>
  </div>
 </template>
@@ -53,9 +53,10 @@ export default {
   &.opened {
     opacity: 1;
     z-index: 1;
+    width: 100%;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     position: static;
     opacity: 1;
     z-index: 1;

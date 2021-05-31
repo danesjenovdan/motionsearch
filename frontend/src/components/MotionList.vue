@@ -1,6 +1,6 @@
 <template>
   <div class="parent-container">
-    <div class="header">
+    <div v-if="headers" class="header">
       <div class="logo">
         <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
       </div>
@@ -10,11 +10,11 @@
         <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
       </div>
     </div>
-    <div class="line"/>
+    <div  v-if="headers" class="line"/>
     <div class="motions-container">
       <div class="motions-title-bar">
         <div>
-          <h3>Motions</h3>
+          <h3>{{title}}</h3>
           <button class="btn" @click="toggleFilters">Filters</button>
         </div>
         <div class="motions-sort">
@@ -70,7 +70,7 @@
   import Voting from './Voting.vue'
 
   export default {
-    props: ['id'],
+    props: ['id', 'type', 'title', 'headers'],
     data() {
       return {
         motions: [],
@@ -96,10 +96,10 @@
       async changeSite (p) {
         if (p > 0 && p <= this.pagesNo) {
           try {
-            const result = await this.$store.dispatch('getMotions', {page: p})
-            if (result) {
-              this.motions = result
-              this.motionsNo = await this.$store.dispatch('getMotionLength')
+            const response = await this.$store.dispatch(this.type, {page: p})
+            if (response) {
+              this.motions = response.results
+              this.motionsNo = response.count
               await this.getUserVotes()
               this.page = p
             }
@@ -130,7 +130,7 @@
       }, mapFiltersToTags() {
         this.tags = []
         Object.keys(this.$store.state.motions.filters).forEach(filter => {
-          if(filter !== 'keywordFitler' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
+          if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
             this.tags.push(filterValue)
           })
         })
@@ -139,16 +139,18 @@
     watch: {
       '$store.state.motions.filterCount': async function() {
         await this.mapFiltersToTags()
-        this.motions = await this.$store.dispatch('getMotions', {page: 1, filters: this.$store.state.motions.filters})
-        this.motionsNo = await this.$store.dispatch('getMotionLength')
+        const response = await this.$store.dispatch(this.type, {page: 1, filters: this.$store.state.motions.filters})
+        this.motions = response.results
+        this.motionsNo = response.count
         await this.getUserVotes()
       }
     },
     async created() {
       this.$store.state.motions.filters = {} // clean filter if we have bad state
       this.isAuth = await this.$store.dispatch('isAuth')
-      this.motions = await this.$store.dispatch('getMotions', {page: 1})
-      this.motionsNo = await this.$store.dispatch('getMotionLength')
+      const response = await this.$store.dispatch(this.type, {page: 1})
+      this.motions = response.results
+      this.motionsNo = response.count
       await this.mapFiltersToTags()
       await this.getUserVotes()
     }
@@ -160,11 +162,16 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 10px 20px;
+  margin: 10px 0;
 
-  @media (min-width: 768px) {
+  @media (min-width: 576px) {
+    justify-content: space-between;
+  }
+
+  @media (min-width: 992px) {
     justify-content: flex-end;
     padding: 20px;
   }
@@ -174,8 +181,10 @@
   }
 
   .logo {
-    @media (min-width: 768px) {
-      display: none;
+    display: none;
+
+    @media (min-width: 576px) and (max-width: 992px) {
+      display: block;
     }
 
     img {
@@ -233,7 +242,7 @@
       letter-spacing: 1px;
       padding: 5px 12px;
 
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         display: none;
       }
     }
@@ -359,6 +368,7 @@
 
 .parent-container {
   display: flex;
+  width: 100%;
   margin: 0 auto;
   flex-direction: column;
   justify-content: center;

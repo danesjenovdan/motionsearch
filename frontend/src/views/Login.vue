@@ -28,6 +28,9 @@
 
 
 <script>
+  import { useToast } from "vue-toastification";
+
+  const toast = useToast();
   export default {
     data() {
       return {
@@ -40,7 +43,7 @@
         e.preventDefault()
         try {
           await this.$store.dispatch('login', {username: username.value, password: password.value})
-          window.location.href = '/';
+          this.$router.push('/')
         } catch (error) {
           console.log('error: ', error);
         }
