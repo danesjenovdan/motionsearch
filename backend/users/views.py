@@ -2,7 +2,7 @@ from django.core import paginator
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.hashers import make_password
-from django.utils import six
+import six
 from rest_framework import viewsets, status, permissions, authentication, views
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
