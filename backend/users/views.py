@@ -1,9 +1,11 @@
+from django.core import paginator
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.hashers import make_password
 from django.utils import six
 from rest_framework import viewsets, status, permissions, authentication, views
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend, Filter, FilterSet
 
@@ -17,6 +19,8 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
+from django.core.paginator import Paginator
+
 from users.models import User, FavoriteMotion
 from users.serializers import UserSerializer, UserFavoriteMotionSerializer
 from motions.models import Motion, MotionVote
@@ -29,6 +33,7 @@ class TokenGenerator(PasswordResetTokenGenerator):
             six.text_type(user.is_active)
         )
 account_activation_token = TokenGenerator()
+
 class MultiValueKeyFilter(Filter):
     def filter(self, qs, value):
         if not value:
@@ -70,6 +75,8 @@ class MyMotions(viewsets.ModelViewSet):
     queryset = Motion.objects.all().order_by('-created_at')
     serializer_class = MotionSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    filter_backends = (DjangoFilterBackend, OrderingFilter, )
+
     def retrieve(self, request, *args, **kwargs):
         q = self.queryset.filter(user=request.user.id)
         return Response(data=self.serializer_class(q, many=True).data)

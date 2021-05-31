@@ -24,7 +24,6 @@ class MultiValueKeyFilter(Filter):
             return qs
         
         self.lookup_expr = 'in'
-        print("neki")
         values = value.split(',')
         return super(MultiValueKeyFilter, self).filter(qs, values)
 class KeywordFilter(Filter): 
