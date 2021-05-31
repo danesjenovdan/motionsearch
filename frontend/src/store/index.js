@@ -113,6 +113,14 @@ export const actions = {
         }) // body data type must match "Content-Type" header
       });
       const body = await response.json()
+      console.log('body: ', body);
+      if(body.error) {
+        commit('access_token', null);
+        commit('refresh_token', null);
+        commit('token_expiration', null);
+        toast.error(`Could not login: ${body.error_description}`);
+        return false
+      }
       commit('access_token', body.access_token);
       commit('refresh_token', body.refresh_token);
       commit('token_expiration', new Date().addHours(10));
@@ -495,6 +503,8 @@ export const actions = {
         
         const body = await result.json();
         next = body.next;
+        next = next?.includes('http://') ? next.replace('http://', 'https://') : next
+        console.log('next: ', next);
         results = [...results, ...body.results];
       }
       return results;
