@@ -191,6 +191,7 @@ class MotionVoteViewSet(viewsets.ModelViewSet):
             if serializer.is_valid(raise_exception=False):
                 serializer.save(user = request.user, motion = motion)
                 motion.votes += vote
+                motion.save()
                 return Response(serializer.data)
         previous_vote = dict(CHOICES)[motionVote.choices]
         if (motionVote.user == request.user):
