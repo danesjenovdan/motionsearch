@@ -42,8 +42,8 @@
       login: async function(e){
         e.preventDefault()
         try {
-          await this.$store.dispatch('login', {username: username.value, password: password.value})
-          this.$router.push('/')
+          const response = await this.$store.dispatch('login', {username: username.value, password: password.value})
+          if (response) this.$router.push('/')
         } catch (error) {
           console.log('error: ', error);
         }

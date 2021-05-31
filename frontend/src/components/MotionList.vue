@@ -5,7 +5,7 @@
         <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
       </div>
       <div class="header-buttons">
-        <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
+        <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>
         <router-link to="/login" v-if="!isAuth"  class="btn login">Log in</router-link>
         <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
       </div>

@@ -10,7 +10,7 @@
       <span>Easiest way to find a motion for debating</span>
     </div>
     <div class="header-buttons">
-      <router-link to="/motionSuggest" class="btn">Suggest a motion</router-link>
+      <router-link to="/motionSuggest" class="btn"><span>Suggest a motion </span></router-link>
       <router-link to="/login" v-if="!isAuth" class="btn login">Log in</router-link>
       <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
     </div>
@@ -111,14 +111,6 @@ import MotionList from '../components/MotionList.vue'
         @media (min-width: 1200px) {
           margin: 10px 10px 10px 100px;
         }
-      }
-    }
-
-    .header-buttons {
-      margin: 20px 10px 20px 0;
-
-      @media (min-width: 1200px) {
-        margin: 20px 30px 20px 0;
       }
     }
   }

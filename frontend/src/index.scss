@@ -55,6 +55,20 @@ body {
   }
 }
 
+.header-buttons {
+  margin: 20px 10px 20px 0;
+  router-link {
+    color:#fff !important;
+  }
+
+  span {
+    color:white
+  }
+  @media (min-width: 1200px) {
+    margin: 20px 30px 20px 0;
+  }
+}
+
 .split-container {
   height: 100%;
   display: flex;
@@ -370,12 +384,17 @@ label {
   cursor: pointer;
   letter-spacing: 1px;
 
+  a {
+    color:white
+  }
+
   &:disabled {
     opacity: 0.1;
   }
   &:hover {
     opacity: 1;
   }
+
 
   &.login {
     border-color: #ffcc00;
