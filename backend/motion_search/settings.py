@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'users',
     'oauth2_provider',
     'django_filters',
-    'behaviors.apps.BehaviorsConfig'
 ]
 
 MIDDLEWARE = [
