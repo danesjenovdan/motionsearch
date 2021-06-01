@@ -20,13 +20,12 @@
           <div class="left">
             <h3>Comments</h3>
               <div v-show="isAuth" class="textAreaContainer">
-                <textarea rows="3" cols="20" name="comment" id="comment" form="usrform"> Write your comment here!
-                </textarea>
+                <textarea rows="3" cols="20" name="comment" id="comment"  placeholder="Write your comment here!" form="usrform"/>
                   <button class="textAreaButton" v-on:click="addUsedWhere(id)">Submit</button>
               </div>
               <p v-for="el in usedWhere" :key="el">{{el}}</p>
               <div class="commentContainer" v-for="comment in comments" :key="comment._id">
-                <i><p>{{comment.username}} | {{comment.created_at?.split('T')[0]}}</p></i>
+                <i><p>{{comment.user.username}} {{comment.created_at?.split('T')[0]}}</p></i>
                 <p>{{comment.text}}</p>
                 <div>
               </div>
@@ -68,8 +67,6 @@
         try {
           const response = await this.$store.dispatch('setComment', {text: comment.value, id})
         } catch (error) {
-          console.log('error: ', error);
-
         }
         this.comments = await this.$store.dispatch('getComments', {id: id})
 
@@ -166,6 +163,7 @@
     min-width:0; /* Remove the automatic minimum size set so the element can shrink*/
     width: 100%; /* Set any value of width here as reference*/
     flex: 1; /* make the item grow to fill the remaining space */
+    font-size: 14px;
   }
 
   .commentContainer {

@@ -55,6 +55,19 @@ body {
   }
 }
 
+.toast-custom-background {
+  background-color: #ffcc00;
+}
+
+.toast-black-font-stlye {
+  color: black;
+}
+.checkmark-icon {
+  background-image: './tick.png'
+}
+.toast-button-class {
+ color: black
+}
 .header-buttons {
   margin: 20px 10px 20px 0;
   router-link {

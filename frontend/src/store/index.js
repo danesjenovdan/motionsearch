@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useToast } from "vue-toastification";
+import IconComponent from "../components/IconComponent.vue"
 
 const toast = useToast();
 
@@ -62,6 +63,13 @@ export const mutations = {
   }
 }
 
+const mapUsersToComments = async(context, comments, userIDs) => {
+  const filterString = `id=${Array.from(userIDs).join(',')}`
+  console.log('filterString: ', filterString);
+  const users = await actions.getUsers(context, {filterString})
+  comments.map((comment) => comment.user = users.results.find((user) => user.id === comment.user))
+  return comments
+}
 
 const mapFilters = (filters) => {
   let filterString = ''
@@ -190,6 +198,20 @@ export const actions = {
       return error
     }
   },
+  async getUsers ({ getters, commit }, payload) {
+    try {
+      const result = await fetch(`${api}/api/v1/users?${payload.filterString}`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${getters.access_token}`
+          }
+        })
+      return await result.json();
+    } catch (error) {
+      return error
+    }
+  },
   async getMotions ({ getters, commit }, payload) {
     try {
       const filters = mapFilters(getters.getFilters)
@@ -215,7 +237,6 @@ export const actions = {
         })
       response = await response.json();
       const idArray = response.map(motion => motion.id)
-      console.log('idArray: ', idArray);
       const filters = mapFilters({id:idArray, ...payload.filters})
       response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
         method: 'get',
@@ -257,7 +278,7 @@ export const actions = {
     }
   },
   async postMotion ({ getters, commit }, payload) {
-    payload.user = 0
+    //payload.user = 0
     await actions.checkAndRefreshToken({ getters, commit })
     try {
       const response = await fetch(`${api}/api/v1/motions/`, {
@@ -285,7 +306,6 @@ export const actions = {
       },
     });
     const body = await response.json()
-    console.log('body: ', body);
     return body
   },
   async getFavoritesMotions ({ getters, commit }, payload) {
@@ -352,7 +372,12 @@ export const actions = {
           }
         })
       const body = await result.json(); // .json() is asynchronous and therefore must be awaited
-      return body;
+      let uniqueUsers = new Set()
+      body.forEach((obj) => {
+        uniqueUsers.add(obj.user)
+      })
+      const comments = mapUsersToComments(context, body, uniqueUsers);
+      return comments;
     } catch (error) {
       console.log(error);
     }
