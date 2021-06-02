@@ -442,7 +442,6 @@ export default {
       background-color: white;
       color: black;
       border: 4px solid #3098f3;
-      padding: 8px;
       position: absolute;
       box-shadow: 0 0 27px 3px rgba(48, 152, 243, 0.5);
       cursor: default;
@@ -452,7 +451,9 @@ export default {
       }
 
       .popup-box {
-        margin: 10px;
+        padding: 20px;
+        max-height: 300px;
+        overflow-y: auto;
 
         .keyword-container {
           input {
@@ -482,7 +483,6 @@ export default {
         }
 
         .checkmark-container {
-          margin: 20px 0 10px 0;
           display: grid;
           grid-template-columns: 100%;
           column-gap: 20px;
@@ -564,6 +564,7 @@ export default {
       }
 
       .popup-arrow {
+        bottom: -14px;
         transform: rotate(-45deg);
         display: none;
         @media (min-width: 576px) {
