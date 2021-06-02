@@ -6,7 +6,16 @@ from django.contrib import admin
 from motions.models import Motion, MotionCategory, MotionDifficulty, DebateFormat, MotionAgeRange, MotionImproPrep, \
     MotionTrainingFocus, MotionType, MotionInfoText, MotionWhereUsed, MotionLink, MotionComment
 
-admin.site.register(Motion)
+
+class MotionsAdmin(admin.ModelAdmin):
+    model = Motion
+    list_display = [
+        'id',
+        'topic',
+        'user',
+        'created_at'
+    ]
+admin.site.register(Motion, MotionsAdmin)
 admin.site.register(MotionCategory)
 admin.site.register(MotionDifficulty)
 admin.site.register(DebateFormat)
