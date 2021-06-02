@@ -6,7 +6,7 @@
 <div class="background container">
   <div class="header">
     <div class="logo">
-      <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+      <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
       <span>Easiest way to find a motion for debating</span>
     </div>
     <div class="header-buttons">
@@ -24,7 +24,8 @@
           <p @click="logout"> Log out </p>
           <div/>
         </div>
-        <motion-list type="getMyMotions" :headers="false" title="Submited Motions"/>
+        <motion-list type="getMyMotions" :headers="false" title="My submitted motions"/>
+        <router-link to="/motionSuggest" class="btn suggest"><span>Suggest a motion </span></router-link>
         <motion-list type="getFavoritesMotions" :headers="false" title="Favourited Motions" />
     </div>
   </div>
@@ -117,6 +118,7 @@ import MotionList from '../components/MotionList.vue'
 
   .wrapper {
     width: 100%;
+    max-width: 900px;
 
     @media (min-width: 768px) {
       width: 75%
@@ -160,6 +162,7 @@ import MotionList from '../components/MotionList.vue'
 
 .user-container {
   padding: 0 40px;
+  margin-bottom: 50px;
 
   p {
     color: #252525;

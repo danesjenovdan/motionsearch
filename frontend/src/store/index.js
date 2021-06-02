@@ -65,7 +65,6 @@ export const mutations = {
 
 const mapUsersToComments = async(context, comments, userIDs) => {
   const filterString = `id=${Array.from(userIDs).join(',')}`
-  console.log('filterString: ', filterString);
   const users = await actions.getUsers(context, {filterString})
   comments.map((comment) => comment.user = users.results.find((user) => user.id === comment.user))
   return comments
@@ -121,7 +120,6 @@ export const actions = {
         }) // body data type must match "Content-Type" header
       });
       const body = await response.json()
-      console.log('body: ', body);
       if(body.error) {
         commit('access_token', null);
         commit('refresh_token', null);
@@ -312,7 +310,7 @@ export const actions = {
     try {
       await actions.checkAndRefreshToken({ getters, commit })
       let response =  await actions.getFavorites({ getters }, payload)
-      const idArray = response.map(favorite => favorite.id)
+      const idArray = response.map(favorite => favorite.motion)
       const filters = mapFilters({id:idArray, ...payload.filters})
       response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
           method: 'get',
@@ -396,7 +394,6 @@ export const actions = {
         }) // body data type must match "Content-Type" header
       });
       const body = await response.json()
-      console.log('body: ', body);
       toast.success("Comment was submited successfully");
       return body
     } catch (error) {
@@ -529,7 +526,6 @@ export const actions = {
         const body = await result.json();
         next = body.next;
         next = next?.includes('http://') ? next.replace('http://', 'https://') : next
-        console.log('next: ', next);
         results = [...results, ...body.results];
       }
       return results;

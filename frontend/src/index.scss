@@ -415,6 +415,12 @@ label {
     color: #000000;
   }
 
+  &.suggest {
+    width: max-content;
+    margin: 0 40px;
+    margin-bottom: 50px;
+  }
+
   @media (min-width: 768px) {
     margin-left: 10px;
     border-width: 4px;
