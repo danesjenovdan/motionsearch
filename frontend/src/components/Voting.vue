@@ -69,6 +69,9 @@ export default {
     background-repeat: no-repeat;
     cursor:pointer;
   }
+  .upvote-button-unselected:hover {
+    background-image: url('../assets/up-selected.png');
+  }
   .downvote-button {
     background-image: url('../assets/down-selected.png');
     width: 100px;
@@ -84,6 +87,9 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     cursor:pointer;
+  }
+  .downvote-button-unselected:hover {
+    background-image: url('../assets/down-selected.png');
   }
 
   .container {

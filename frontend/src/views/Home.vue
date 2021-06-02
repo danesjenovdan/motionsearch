@@ -3,7 +3,7 @@
    <div class="container-child" :class="{ 'opened': filtersOpened }">
      <div class="wrapper">
        <div class="debate-logo">
-         <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+         <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
          <span>Easiest way to find a motion for debating</span>
        </div>
        <filters @toggle-filters="toggleFilters"/>

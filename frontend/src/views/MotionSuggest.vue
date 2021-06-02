@@ -2,7 +2,7 @@
 <div class="background container">
   <div class="header">
     <div class="logo">
-      <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+      <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
       <span>Easiest way to find a motion for debating</span>
     </div>
     <div class="header-buttons">
@@ -23,11 +23,11 @@
             <label >Category</label>
               <div class="arrayContainer">
                 <div v-for="(element, index) in chosenCategory" :element="element" :key="element" :vid-id="index">
-                    <span v-on:click="removeCategory(index)">x</span> {{categoryOptions[element-1].value}}
+                    <span v-on:click="removeCategory(index)"><img src="/x.svg"/></span>{{categoryOptions[element]}}
                 </div>
               <div class="select-wrapper-full">
                 <select v-model="categories" name="Category" id="categories">
-                  <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
+                  <option v-for="(value, id) in categoryOptions" v-bind:key="id" :value="id">{{value}}</option>
                 </select>
               </div>
               </div>
@@ -167,12 +167,6 @@
       removeUsedWhere(index) {
         this.usedWhere.splice(index, 1)
       },
-      addCategory(event) {
-        console.log('event: ', event);
-        event.preventDefault()
-        this.chosenCategory.push({value: event.target.value})
-        used.value = ''
-      },
       removeCategory(index) {
         this.chosenCategory.splice(index, 1)
       },
@@ -216,7 +210,11 @@
     },
     computed:{
       categoryOptions() {
-        return this.categoryArray;
+        const options = this.categoryArray.reduce((result, object) => {
+            result[object.id] = object.value;
+            return result;
+        },{});
+        return options;
       },
       difficultiesOptions() {
         return this.difficultiesArray;
@@ -393,7 +391,7 @@
       background-image: url("../assets/dropdown.svg");
       background-size: contain;
       position: absolute;
-
+      
       @media (min-width: 768px) {
         width: 30px;
         height: 30px;
@@ -406,16 +404,20 @@
   .arrayContainer {
     display: flex;
     flex-direction: column;
+    font-family: Poppins;
     @media (min-width: 576px) {
       width: 50%;
     }
+    img {
+      width: 14px;
+    }
 
-        .select-wrapper-full {
-          width: 100%;
-          @media (min-width: 576px) {
-            width: 100%;
-          }
-        }
+    .select-wrapper-full {
+      width: 100%;
+      @media (min-width: 576px) {
+        width: 100%;
+      }
+    }
  
 
 

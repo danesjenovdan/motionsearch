@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <div class="pagination">
+    <div v-if="pagesNo > 1" class="pagination">
       <div>
         <button @click="changeSite(1)">
           <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 15 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286633 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAABRUlEQVQ4T33TzyunURQG8I8Vq7GympHZkJoampSmNNhY2TELKavRZCFZSBYaRbLAQrJhh1kwO6vJhomSEjaT0dTkR03zN0yiq/Pq7dv7dVe3c5/nnOc859wK5U8TDvEZmznYGGbQXlGG24Bf8daCk7j34SvO0FNEfo0/uEMt/gaxB9+wj44UKyW/xG2AU5KruHdjB8dozdTmyTW4QSXq8TtAXfiOczTn28zI1bjGC7zBzwC1Yw+XaMR9KbkOu1HtHU6jnQ9BvMBb/C81N1VOriZ33+MoAK+ihSJfnnIkci+2Y6adUaEK45jCEkaKRpr1nCSmEZT2lhLMYQ2DRbKzWDlXv4SCZQwXuZ3FCueJWUxgHmk9H0/RhmUe/Ej7m6u0iNHY68nnnOzHBg7C0H+RZAVDWMB0uY+RsJ+wigGs5xRs4SPaHgAT/z+0+ejOmgAAAABJRU5ErkJggg==" width="15" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
@@ -291,7 +291,6 @@
       }
     }
   }
-
   .motions-list {
     border-bottom: 1px solid black;
     padding: 0.5rem 0;

@@ -2,7 +2,7 @@
     <div class="motionCommentsContainer">
       <div class="header">
         <div class="logo">
-          <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+          <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
         </div>
         <div class="header-buttons">
           <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>
@@ -179,7 +179,7 @@
   .textAreaButton {
     position:absolute;
     bottom:0;
-    right:10px;
+    right:25px;
     background:none;
     border:none;
     margin:0;
