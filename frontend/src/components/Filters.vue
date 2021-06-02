@@ -377,6 +377,11 @@ export default {
       .popup-container {
         opacity: 1;
         z-index: 2;
+        transition: z-index 0s;
+
+        .popup-box label.popup-text {
+          cursor: pointer;
+        }
       }
     }
 
@@ -420,9 +425,11 @@ export default {
     &.filters-selected {
       background-color: #d6eafd;
       border-color: #d6eafd;
-      span {
-        // font-size: 14px;
+
+      &.selected {
+        border-color: #3098f3;
       }
+
       img {
         width: 25%;
       }
@@ -430,14 +437,15 @@ export default {
 
     .popup-container {
       opacity: 0;
-      transition: opacity 0.2s;
+      z-index: -1;
+      transition: opacity 0.2s, z-index .1s 0.2s;
       background-color: white;
       color: black;
       border: 4px solid #3098f3;
       padding: 8px;
       position: absolute;
-      z-index: -1;
       box-shadow: 0 0 27px 3px rgba(48, 152, 243, 0.5);
+      cursor: default;
 
       &#keywordFilter {
         min-width: 300px;
@@ -487,6 +495,10 @@ export default {
           @media (min-width: 992px) {
             grid-template-columns: 45% 45%;
           }
+        }
+
+        label.popup-text {
+          cursor: default;
         }
 
         .popup-apply {
