@@ -96,7 +96,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
   position: absolute;
   top: 0;
   left: 0;
@@ -121,7 +120,15 @@
     }
 
     img {
-      height: 50px;
+      height: 30px;
+      margin-left: 20px;
+    }
+  }
+
+  .btn {
+    @media (max-width: 575px) {
+      padding: 5px 5px;
+      font-size: 10px;
     }
   }
 }

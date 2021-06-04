@@ -1,7 +1,3 @@
-
-
-
-
 <template>
 <div class="background container">
   <div class="header">
@@ -19,9 +15,9 @@
     <div class="motionSuggestContainer">
         <div class='user-container'>
           <h1>{{username}}</h1>
-          <p @click="reset"> Change your password </p>
+          <p @click="reset">Change your password</p>
           <div/>
-          <p @click="logout"> Log out </p>
+          <p @click="logout">Log out</p>
           <div/>
         </div>
         <motion-list type="getMyMotions" :headers="false" title="Submited Motions"/>
@@ -78,6 +74,7 @@ import MotionList from '../components/MotionList.vue'
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #3098f3;
+    padding-right: 30px;
 
     .logo {
       display: flex;
@@ -96,12 +93,12 @@ import MotionList from '../components/MotionList.vue'
       }
 
       img {
-        height: 50px;
+        height: 30px;
         margin: 10px 10px 10px 30px;
-        display: none;
 
         @media (min-width: 768px) {
-          display: block;
+          height: 40px;
+          margin: 10px 10px 10px 40px;
         }
 
         @media (min-width: 768px) {
@@ -111,6 +108,13 @@ import MotionList from '../components/MotionList.vue'
         @media (min-width: 1200px) {
           margin: 10px 10px 10px 100px;
         }
+      }
+    }
+
+    .btn {
+      @media (max-width: 575px) {
+        padding: 5px 5px;
+        font-size: 10px;
       }
     }
   }
@@ -159,27 +163,35 @@ import MotionList from '../components/MotionList.vue'
 }
 
 .user-container {
-  padding: 0 40px;
+  padding: 0 20px;
+  margin-bottom: 30px;
+
+  @media (min-width: 992px) {
+    padding: 0 40px;
+  }
 
   p {
     color: #252525;
     font-family: Poppins;
-    font-size: 24px;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: normal;
-    
+    font-size: 20px;
+    @media (min-width: 992px) {
+      font-size: 24px;
+    }
+
   }
   p:hover {
     cursor: pointer;
   }
   h1 {
-      color: #252525;
-      font-family: "Poppins";
+    color: #252525;
+    font-family: "Poppins";
+    font-size: 20px;
+    margin-bottom: 0;
+    font-weight: bold;
+
+    @media (min-width: 992px) {
       font-size: 30px;
-      font-weight: 700;
-      font-style: normal;
-      letter-spacing: normal;
+    }
   }
   div {
     margin: 0;
@@ -255,7 +267,7 @@ import MotionList from '../components/MotionList.vue'
             width: 100%;
           }
         }
- 
+
 
 
     span {
@@ -269,7 +281,7 @@ import MotionList from '../components/MotionList.vue'
       margin-bottom: 10px;
       width: 100%
     }
-    
+
   }
 
   &:last-child {

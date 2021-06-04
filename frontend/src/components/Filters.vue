@@ -9,9 +9,8 @@
       >
         <div class="content">
           <img src="../assets/topic.svg">
-          <span data-type="categoryFilter"><i>Category</i></span>
-          <!--<span v-if="chosenCategoryFilters.length === 1">{{chosenCategoryFilters[0].value}}</span>
-          <span v-if="chosenCategoryFilters.length > 1">{{chosenCategoryFilters[0].value}} + 1 more category</span>-->
+          <span v-if="chosenCategoryFilters.length === 0" data-type="categoryFilter"><i>Category</i></span>
+          <span v-if="chosenCategoryFilters.length > 0">{{ chosenFiltersText(chosenCategoryFilters) }}</span>
         </div>
         <div class="popup-container" id="categoryFilter" @click.stop>
           <div class="popup-box">
@@ -210,7 +209,7 @@
       </div>
     </div>
     <div class="apply-button">
-      <button class="btn" @click="closeFilters">Close</button>
+      <button class="btn" @click="closeFilters">Apply</button>
     </div>
   </div>
 </template>
@@ -352,7 +351,7 @@ export default {
     background-color: white;
     cursor: pointer;
     border: 4px solid white;
-    height: 150px;
+    height: 120px;
 
     @media (min-width: 576px) {
       position: relative;
