@@ -35,6 +35,7 @@ export default {
     background-repeat: no-repeat;
     cursor:pointer;
     background-color: #ff2b62;
+
   }
   .unselected {
     background-image: url('../assets/favourite.svg');
@@ -44,6 +45,7 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     cursor:pointer;
+
   }
 
   .container {
@@ -56,6 +58,16 @@ export default {
     flex-shrink: 0;
     margin-right: 20px;
     background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
+  }
+  .container:hover {
+    background-color: #ff2b62;
+    background-image: none;
+
+    .unselected {
+      background-image: url('../assets/favourite-selected.svg');
+      background-color: #ff2b62;
+      }
+
   }
   img {
     cursor: pointer;

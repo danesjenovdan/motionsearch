@@ -62,6 +62,12 @@ export const mutations = {
   }
 }
 
+const mapUsersToComments = async(context, comments, userIDs) => {
+  const filterString = `id=${Array.from(userIDs).join(',')}`
+  const users = await actions.getUsers(context, {filterString})
+  comments.map((comment) => comment.user = users.results.find((user) => user.id === comment.user))
+  return comments
+}
 
 const mapFilters = (filters) => {
   let filterString = ''
@@ -113,7 +119,6 @@ export const actions = {
         }) // body data type must match "Content-Type" header
       });
       const body = await response.json()
-      console.log('body: ', body);
       if(body.error) {
         commit('access_token', null);
         commit('refresh_token', null);
@@ -166,10 +171,13 @@ export const actions = {
     return getters.motion_length
   },
 
-  async logout () {
+  async logout ({ commit }) {
     try {
-      await this.$auth.logout()
+      commit('access_token', null);
+      commit('refresh_token', null);
+      commit('token_expiration', null);
       toast.success("Succesfully loged out.");
+      return true
     } catch (error) {
       toast.error("There was a problem, with logging out.");
       return error
@@ -179,6 +187,20 @@ export const actions = {
     try {
       const filters = mapFilters(getters.getFilters)
       const result = await fetch(`${api}/api/v1/users/me/`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${getters.access_token}`
+          }
+        })
+      return await result.json();
+    } catch (error) {
+      return error
+    }
+  },
+  async getUsers ({ getters, commit }, payload) {
+    try {
+      const result = await fetch(`${api}/api/v1/users?${payload.filterString}`, {
           method: 'get',
           headers: {
             'content-type': 'application/json',
@@ -215,9 +237,21 @@ export const actions = {
         })
       response = await response.json();
       const idArray = response.map(motion => motion.id)
-      console.log('idArray: ', idArray);
       const filters = mapFilters({id:idArray, ...payload.filters})
       response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
+        method: 'get',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      return await response.json();
+    } catch (error) {
+      return error
+    }
+  },
+  async getCategoryMotions ({ getters, commit }, payload) {
+    try {
+      let response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${payload.filters}`, {
         method: 'get',
         headers: {
           'content-type': 'application/json'
@@ -257,7 +291,7 @@ export const actions = {
     }
   },
   async postMotion ({ getters, commit }, payload) {
-    payload.user = 0
+    //payload.user = 0
     await actions.checkAndRefreshToken({ getters, commit })
     try {
       const response = await fetch(`${api}/api/v1/motions/`, {
@@ -268,12 +302,13 @@ export const actions = {
         },
         body: JSON.stringify(payload) // body data type must match "Content-Type" header
       });
+      if(response.status === 400) throw new Error(response.statusText)
       const body = await response.json()
       toast.success("Succesfully posted a motion.");
       return body
     } catch (error) {
       toast.error("There was an error with posting motion.");
-      return error
+      throw new Error(error)
     }
   },
   async getFavorites ({ getters }, payload) {
@@ -285,14 +320,13 @@ export const actions = {
       },
     });
     const body = await response.json()
-    console.log('body: ', body);
     return body
   },
   async getFavoritesMotions ({ getters, commit }, payload) {
     try {
       await actions.checkAndRefreshToken({ getters, commit })
       let response =  await actions.getFavorites({ getters }, payload)
-      const idArray = response.map(favorite => favorite.id)
+      const idArray = response.map(favorite => favorite.motion)
       const filters = mapFilters({id:idArray, ...payload.filters})
       response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
           method: 'get',
@@ -352,7 +386,12 @@ export const actions = {
           }
         })
       const body = await result.json(); // .json() is asynchronous and therefore must be awaited
-      return body;
+      let uniqueUsers = new Set()
+      body.forEach((obj) => {
+        uniqueUsers.add(obj.user)
+      })
+      const comments = mapUsersToComments(context, body, uniqueUsers);
+      return comments;
     } catch (error) {
       console.log(error);
     }
@@ -371,7 +410,6 @@ export const actions = {
         }) // body data type must match "Content-Type" header
       });
       const body = await response.json()
-      console.log('body: ', body);
       toast.success("Comment was submited successfully");
       return body
     } catch (error) {
@@ -490,7 +528,6 @@ export const actions = {
     let filters = ''
     if (payload.filters) filters = mapFilters(payload.filters)
     try {
-      console.log('`${api}/api/v1/motions/${payload.type}?page=1&${filters}`: ', `${api}/api/v1/motions/${payload.type}?page=1&${filters}`);
       let next = `${api}/api/v1/motions/${payload.type}?page=1&${filters}`;
       let results = []; 
       while (next) {
@@ -504,7 +541,6 @@ export const actions = {
         const body = await result.json();
         next = body.next;
         next = next?.includes('http://') ? next.replace('http://', 'https://') : next
-        console.log('next: ', next);
         results = [...results, ...body.results];
       }
       return results;

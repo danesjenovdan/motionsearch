@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div @click="toggleSelectedUp" :class="{ 'upvote-button': upSelected, 'upvote-button-unselected': !upSelected }"/>
+    <svg  :class="{ 'upvote-button': upSelected, 'upvote-button-unselected': !upSelected }" @click="toggleSelectedUp"  height='100px' width='100px'  fill="#000000" xmlns="http://www.w3.org/2000/svg" data-name="Layer 2" viewBox="0 0 32 32" x="0px" y="0px"><title>Arrows black</title><path d="M25.18,14.76,16.93,4.19a1.18,1.18,0,0,0-1.86,0L6.82,14.76a1.18,1.18,0,0,0,.93,1.9H9.18V26a1.74,1.74,0,0,0,2.23,1.67L15,25.87a2.3,2.3,0,0,1,2.09,0l3.54,1.81A1.74,1.74,0,0,0,22.82,26V16.67h1.43A1.18,1.18,0,0,0,25.18,14.76Z"></path></svg>
     <span class="upvotes-number">{{number}}</span>
-    <div @click="toggleSelectedDown" :class="{ 'downvote-button': downSelected, 'downvote-button-unselected': !downSelected }"/>
+    <svg :class="{ 'downvote-button': downSelected, 'downvote-button-unselected': !downSelected }" @click="toggleSelectedDown"  height='100px' width='100px'  fill="#000000" xmlns="http://www.w3.org/2000/svg" data-name="Layer 2" viewBox="0 0 32 32" x="0px" y="0px"><title>Arrows black</title><path d="M25.18,14.76,16.93,4.19a1.18,1.18,0,0,0-1.86,0L6.82,14.76a1.18,1.18,0,0,0,.93,1.9H9.18V26a1.74,1.74,0,0,0,2.23,1.67L15,25.87a2.3,2.3,0,0,1,2.09,0l3.54,1.81A1.74,1.74,0,0,0,22.82,26V16.67h1.43A1.18,1.18,0,0,0,25.18,14.76Z"></path></svg>
   </div>
 </template>
 
@@ -54,36 +54,28 @@ export default {
 
 <style scoped lang="scss">
   .upvote-button {
-    background-image: url('../assets/up-selected.png');
-    width: 100px;
-    height: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
+    fill: #3098f3;;
     cursor:pointer;
   }
   .upvote-button-unselected {
-    background-image: url('../assets/up-unselected.png');
-    width: 100px;
-    height: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
+    fill: #9e9e9e;
     cursor:pointer;
   }
+  .upvote-button-unselected:hover {
+    fill: #3098f3;;
+  }
   .downvote-button {
-    background-image: url('../assets/down-selected.png');
-    width: 100px;
-    height: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
+    fill: #f25049;
+    transform: rotate(180deg);
     cursor:pointer;
   }
   .downvote-button-unselected {
-    background-image: url('../assets/down-unselected.png');
-    width: 100px;
-    height: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
+    fill: #9e9e9e;
+    transform: rotate(180deg);
     cursor:pointer;
+  }
+  .downvote-button-unselected:hover {
+    fill: #f25049;
   }
 
   .container {

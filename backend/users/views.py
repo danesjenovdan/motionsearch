@@ -51,6 +51,14 @@ class FavoritesFilterSet(FilterSet):
         model = FavoriteMotion
         fields = ('id', 'user', 'motion')
 
+class UsersFilterSet(FilterSet):
+    id = MultiValueKeyFilter(field_name='id')
+    username = MultiValueKeyFilter(field_name='username')
+    email = MultiValueKeyFilter(field_name='email')
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email')
+
 
 class Me(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-created_at')
@@ -91,6 +99,9 @@ class MyVotes(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('first_name', 'last_name')
     serializer_class = UserSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = UsersFilterSet
+    filter_fields = ('id', 'username', 'email')
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

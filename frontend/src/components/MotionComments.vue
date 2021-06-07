@@ -2,7 +2,7 @@
     <div class="motionCommentsContainer">
       <div class="header">
         <div class="logo">
-          <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+          <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
         </div>
         <div class="header-buttons">
           <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>
@@ -20,26 +20,27 @@
           <div class="left">
             <h3>Comments</h3>
               <div v-show="isAuth" class="textAreaContainer">
-                <textarea rows="3" cols="20" name="comment" id="comment" form="usrform"> Write your comment here!
-                </textarea>
+                <textarea rows="3" cols="20" name="comment" id="comment"  placeholder="Write your comment here!" form="usrform"/>
                   <button class="textAreaButton" v-on:click="addUsedWhere(id)">Submit</button>
               </div>
               <p v-for="el in usedWhere" :key="el">{{el}}</p>
               <div class="commentContainer" v-for="comment in comments" :key="comment._id">
-                <i><p>{{comment.username}} | {{comment.created_at?.split('T')[0]}}</p></i>
+                <i><p>{{comment.user.username}} {{comment.created_at?.split('T')[0]}}</p></i>
                 <p>{{comment.text}}</p>
                 <div>
               </div>
             </div>
           </div>
-            <div class="right">
+            <div v-if="whereUsed.length > 0 || links.length > 0" class="right">
               <div v-show="whereUsed" class="links">
                 <h3>Where was it used</h3>
                   <p v-for="text in whereUsed" :key="text._id">{{text.value}}</p><br/>
                 </div>
               <div v-show="links" class="links">
                 <h3>Links</h3>
-                  <a v-for="link in links" :key="link._id" :href="link.value">{{link.text}}</a><br/>
+                <div v-for="link in links" :key="link._id" >
+                  <a target="_blank" :href="link.value">{{link.text}}</a><br/>
+                  </div>
                 </div>
             </div>
     </div>
@@ -68,8 +69,6 @@
         try {
           const response = await this.$store.dispatch('setComment', {text: comment.value, id})
         } catch (error) {
-          console.log('error: ', error);
-
         }
         this.comments = await this.$store.dispatch('getComments', {id: id})
 
@@ -99,7 +98,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
   position: absolute;
   top: 0;
   left: 0;
@@ -124,7 +122,15 @@
     }
 
     img {
-      height: 50px;
+      height: 30px;
+      margin-left: 20px;
+    }
+  }
+
+  .btn {
+    @media (max-width: 575px) {
+      padding: 5px 5px;
+      font-size: 10px;
     }
   }
 }
@@ -166,6 +172,7 @@
     min-width:0; /* Remove the automatic minimum size set so the element can shrink*/
     width: 100%; /* Set any value of width here as reference*/
     flex: 1; /* make the item grow to fill the remaining space */
+    font-size: 14px;
   }
 
   .commentContainer {
@@ -181,7 +188,7 @@
   .textAreaButton {
     position:absolute;
     bottom:0;
-    right:10px;
+    right:25px;
     background:none;
     border:none;
     margin:0;
@@ -237,6 +244,10 @@
     background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
     padding: 20px;
     margin-top: 20px;
+
+    p {
+      font-family: "Poppins";
+    }
 
     h3 {
       margin-top: 0;

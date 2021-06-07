@@ -6,9 +6,9 @@
     <footer>
       <div class="left-side">
         <p>Development team:</p>
-        <img src="./assets/ZiP_logo.png" alt="ZiP logo">
-        <img src="./assets/HDD_logo.png" alt="HDD logo">
-        <img src="./assets/IDEA_logo.png" alt="IDEA logo">
+        <a href="https://zainproti.si/" target="_blank"><img src="./assets/ZiP_logo.png" alt="ZiP logo"></a>
+        <a href="http://hdd.hr/" target="_blank"><img src="./assets/HDD_logo.png" alt="HDD logo"></a>
+        <a href="https://idebate.org/" target="_blank"><img src="./assets/IDEA_logo.png" alt="IDEA logo"></a>
       </div>
       <img src="./assets/EU_logo.png" alt="EU logo">
     </footer>

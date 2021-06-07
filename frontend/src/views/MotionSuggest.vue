@@ -2,13 +2,13 @@
 <div class="background container">
   <div class="header">
     <div class="logo">
-      <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+      <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
       <span>Easiest way to find a motion for debating</span>
     </div>
     <div class="header-buttons">
-      <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>
-      <router-link to="/login" v-if="!isAuth" class="btn login">Log in</router-link>
-      <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
+      <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion</span></router-link>
+      <router-link to="/login" v-if="!isAuth" class="button button--pan"><span>Log in</span></router-link>
+      <router-link to="/profile" v-if="isAuth" class="button button--pan"><span>Profile</span></router-link>
     </div>
   </div>
   <div class="wrapper">
@@ -22,18 +22,18 @@
           <div class="inputContainer">
             <label >Category</label>
               <div class="arrayContainer">
-                <div v-for="(element, index) in chosenCategory" :element="element" :key="element" :vid-id="index">
-                    <span v-on:click="removeCategory(index)">x</span> {{categoryOptions[element-1].value}}
+                <div class="linkContainer" v-for="(element, index) in chosenCategory" :element="element" :key="element" :vid-id="index">
+                    <span v-on:click="removeCategory(index)"><img src="/x.svg"/></span>{{categoryOptions[element]}}
                 </div>
               <div class="select-wrapper-full">
                 <select v-model="categories" name="Category" id="categories">
-                  <option v-for="category in categoryOptions" v-bind:key="category" :value="category.id">{{category.value}}</option>
+                  <option v-for="(value, id) in categoryOptions" v-bind:key="id" :value="id">{{value}}</option>
                 </select>
               </div>
               </div>
           </div>
           <div class="inputContainer">
-            <label>Dificulty</label>
+            <label>Difficulty</label>
             <div class="select-wrapper">
               <select v-model="difficulty" name="Dificulty" id="difficulty">
                 <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
@@ -100,9 +100,9 @@
               <label>Add is used where</label><br/>
               <label class="subtitle"> Press Enter after each input</label>
             </div>
-            <div class="arrayContainer">
-              <div v-for="(element, index) in usedWhere" :element="element.value" :key="element.value" :vid-id="index">
-                  <span v-on:click="removeUsedWhere(index)">x</span> {{element.value}}
+            <div class="arrayContainer" id="whereUsedContainer">
+              <div class="linkContainer" v-for="(element, index) in usedWhere" :element="element.value" :key="element.value" :vid-id="index">
+                  <span v-on:click="removeUsedWhere(index)"><img src="/x.svg"/></span> {{element.value}}
               </div>
               <input type="text" id="used" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
             </div>
@@ -113,8 +113,8 @@
               <label class="subtitle">Press Enter after each input</label>
             </div>
             <div class="arrayContainer">
-              <div v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                <span v-on:click="removeLink(index)">x</span> <a target="_blank" :href="link.value">{{link.text}}</a>
+              <div class="linkContainer" v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
+                <span v-on:click="removeLink(index)"><img src="/x.svg"/></span> <a target="_blank" :href="link.value">{{link.text}}</a>
               </div>
               <input type="text" id="link" key="links.title" placeholder="Type name here..." />
               <input type="text" id="url" key="links.url" placeholder="Type url here..."/>
@@ -161,17 +161,12 @@
     methods: {
       addUsedWhere(event) {
         event.preventDefault()
+        const width = document.getElementById('whereUsedContainer').offsetWidth;
         this.usedWhere.push({value: event.target.value})
         used.value = ''
       },
       removeUsedWhere(index) {
         this.usedWhere.splice(index, 1)
-      },
-      addCategory(event) {
-        console.log('event: ', event);
-        event.preventDefault()
-        this.chosenCategory.push({value: event.target.value})
-        used.value = ''
       },
       removeCategory(index) {
         this.chosenCategory.splice(index, 1)
@@ -208,7 +203,7 @@
             training_focus: this.trainingFocus,
             impro_prep: this.improPrep
           })
-          window.location.href = '/';
+          this.$router.push('/')
         } catch (error) {
           console.log('error: ', error);
         }
@@ -216,7 +211,11 @@
     },
     computed:{
       categoryOptions() {
-        return this.categoryArray;
+        const options = this.categoryArray.reduce((result, object) => {
+            result[object.id] = object.value;
+            return result;
+        },{});
+        return options;
       },
       difficultiesOptions() {
         return this.difficultiesArray;
@@ -269,6 +268,7 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #3098f3;
+    padding-right: 30px;
 
     .logo {
       display: flex;
@@ -287,21 +287,30 @@
       }
 
       img {
-        height: 50px;
-        margin: 10px 10px 10px 30px;
-        display: none;
+        height: 30px;
+        margin-left: 20px;
 
         @media (min-width: 768px) {
-          display: block;
+          height: 40px;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
+          margin: 10px 10px 10px 40px;
           height: 74px;
         }
 
         @media (min-width: 1200px) {
           margin: 10px 10px 10px 100px;
         }
+      }
+    }
+
+    .btn {
+      color:white;
+
+      @media (max-width: 575px) {
+        padding: 5px 5px;
+        font-size: 10px;
       }
     }
   }
@@ -352,7 +361,7 @@
 .inputContainer {
   display: flex;
   border-top: 1px solid black;
-  padding: 10px;
+  padding: 10px 0;
   flex-direction: column;
 
   @media (min-width: 576px) {
@@ -382,7 +391,7 @@
       appearance: none;
       padding-right: 50px;
       cursor: pointer;
-    }
+  }
 
     &:after {
       content: "";
@@ -393,6 +402,7 @@
       background-image: url("../assets/dropdown.svg");
       background-size: contain;
       position: absolute;
+      pointer-events: none;
 
       @media (min-width: 768px) {
         width: 30px;
@@ -406,17 +416,21 @@
   .arrayContainer {
     display: flex;
     flex-direction: column;
+    font-family: Poppins;
     @media (min-width: 576px) {
       width: 50%;
     }
+    img {
+      width: 14px;
+    }
 
-        .select-wrapper-full {
-          width: 100%;
-          @media (min-width: 576px) {
-            width: 100%;
-          }
-        }
- 
+    .select-wrapper-full {
+      width: 100%;
+      @media (min-width: 576px) {
+        width: 100%;
+      }
+    }
+
 
 
     span {
@@ -430,7 +444,13 @@
       margin-bottom: 10px;
       width: 100%
     }
-    
+
+    .linkContainer {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
   }
 
   &:last-child {
