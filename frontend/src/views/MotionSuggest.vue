@@ -23,7 +23,7 @@
             <label >Category</label>
               <div class="arrayContainer">
                 <div class="linkContainer" v-for="(element, index) in chosenCategory" :element="element" :key="element" :vid-id="index">
-                    <span v-on:click="removeCategory(index)"><img src="/x.svg"/></span>{{categoryOptions[element]}}
+                    <span v-on:click="removeCategory(index)"><img src="../assets/x.svg"/></span>{{categoryOptions[element]}}
                 </div>
               <div class="select-wrapper-full">
                 <select v-model="categories" name="Category" id="categories">
@@ -102,7 +102,7 @@
             </div>
             <div class="arrayContainer" id="whereUsedContainer">
               <div class="linkContainer" v-for="(element, index) in usedWhere" :element="element.value" :key="element.value" :vid-id="index">
-                  <span v-on:click="removeUsedWhere(index)"><img src="/x.svg"/></span> {{element.value}}
+                  <span v-on:click="removeUsedWhere(index)"><img src="../assets/x.svg"/></span> {{element.value}}
               </div>
               <input type="text" id="used" key="used" placeholder="Type here..." @keydown.enter="addUsedWhere"/>
             </div>
@@ -114,7 +114,7 @@
             </div>
             <div class="arrayContainer">
               <div class="linkContainer" v-for="(link, index) in links" :link="link" :key="link" :vid-id="index">
-                <span v-on:click="removeLink(index)"><img src="/x.svg"/></span> <a target="_blank" :href="link.value">{{link.text}}</a>
+                <span v-on:click="removeLink(index)"><img src="../assets/x.svg"/></span> <a target="_blank" :href="link.value">{{link.text}}</a>
               </div>
               <input type="text" id="link" key="links.title" placeholder="Type name here..." />
               <input type="text" id="url" key="links.url" placeholder="Type url here..."/>

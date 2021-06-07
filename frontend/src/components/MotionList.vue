@@ -31,7 +31,7 @@
       </div>
       <ul class="tags">
         <li class="tag" v-for="tag, index in tags" :key="tag.id">
-          <span class="tag-text"><img  v-on:click="removeFilter(tag.filterValue.value, tag.filter, index)" src="/x.svg"/>{{ tag.filterValue.value }}</span>
+          <span class="tag-text"><img  v-on:click="removeFilter(tag.filterValue.value, tag.filter, index)" src="../assets/x.svg"/>{{ tag.filterValue.value }}</span>
         </li>
       </ul>
       <div v-if="motions.length > 0" class="motions-list" v-for="motion in motions" :key="motion.id">
