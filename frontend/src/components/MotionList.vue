@@ -1,0 +1,393 @@
+<template>
+  <div class="parent-container">
+    <div v-if="headers" class="header">
+      <div class="logo">
+        <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+      </div>
+      <div class="header-buttons">
+        <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>
+        <router-link to="/login" v-if="!isAuth"  class="btn login">Log in</router-link>
+        <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
+      </div>
+    </div>
+    <div  v-if="headers" class="line"/>
+    <div class="motions-container">
+      <div class="motions-title-bar">
+        <div>
+          <h3>{{title}}</h3>
+          <button class="btn" @click="toggleFilters">Filters</button>
+        </div>
+        <div class="motions-sort">
+          <p>Sort by</p>
+          <div class="sort-button" @click="toggleDateSort">
+            <span>Date Added</span>
+            <svg :class="{'toggled': dateSortAscend}" width="13" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 13 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>down-arrow_2796734</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAPCAYAAAA/I0V3AAAAvklEQVQ4T83SIW4CQRQA0LfBkTQguAOmSXFwAWQVjiNUNHCCOgQCJB7BBfC4+vYGKARp0opq0gzZbYZllqxk3Pz8NzP//8mkVxNdfOJUTskq0AeesMJLHdTCT54YburVQW183w/q4A0HzPGQeF6Rc8QsdG+JSV7DBq/4imoaYofHPDYKaIpF1KEtnvP9Hr8RCOF+QA2sMa6YWRwOM1sVw60DzyCcEP+IW/AflFHYp+AFSKEyvAJVqIADvKea8wd56yabc1zKQwAAAABJRU5ErkJggg==" width="13" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+          </div>
+          <div class="sort-button" @click="toggleQualitySort">
+            <span>Quality</span>
+            <svg :class="{'toggled': qualitySortAscend}" width="13" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 13 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>down-arrow_2796734</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAPCAYAAAA/I0V3AAAAvklEQVQ4T83SIW4CQRQA0LfBkTQguAOmSXFwAWQVjiNUNHCCOgQCJB7BBfC4+vYGKARp0opq0gzZbYZllqxk3Pz8NzP//8mkVxNdfOJUTskq0AeesMJLHdTCT54YburVQW183w/q4A0HzPGQeF6Rc8QsdG+JSV7DBq/4imoaYofHPDYKaIpF1KEtnvP9Hr8RCOF+QA2sMa6YWRwOM1sVw60DzyCcEP+IW/AflFHYp+AFSKEyvAJVqIADvKea8wd56yabc1zKQwAAAABJRU5ErkJggg==" width="13" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+          </div>
+        </div>
+      </div>
+      <ul class="tags">
+        <li class="tag" v-for="tag in tags" :key="tag.id">
+          <span class="tag-text">{{ tag.value }}</span>
+        </li>
+      </ul>
+      <div class="motions-list" v-for="motion in motions" :key="motion.id">
+        <div class="motion-text-container">
+          <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
+          <a :href="'/motion/'+motion.id" class="motions-title">{{motion.topic}}</a>
+        </div>
+        <div class="votes">
+          <voting :votes="motion.votes" :id="motion.id" :choice="motion.choice"/>
+        </div>
+      </div>
+    </div>
+    <div class="pagination">
+      <div>
+        <button @click="changeSite(1)">
+          <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 15 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286633 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAABRUlEQVQ4T33TzyunURQG8I8Vq7GympHZkJoampSmNNhY2TELKavRZCFZSBYaRbLAQrJhh1kwO6vJhomSEjaT0dTkR03zN0yiq/Pq7dv7dVe3c5/nnOc859wK5U8TDvEZmznYGGbQXlGG24Bf8daCk7j34SvO0FNEfo0/uEMt/gaxB9+wj44UKyW/xG2AU5KruHdjB8dozdTmyTW4QSXq8TtAXfiOczTn28zI1bjGC7zBzwC1Yw+XaMR9KbkOu1HtHU6jnQ9BvMBb/C81N1VOriZ33+MoAK+ihSJfnnIkci+2Y6adUaEK45jCEkaKRpr1nCSmEZT2lhLMYQ2DRbKzWDlXv4SCZQwXuZ3FCueJWUxgHmk9H0/RhmUe/Ej7m6u0iNHY68nnnOzHBg7C0H+RZAVDWMB0uY+RsJ+wigGs5xRs4SPaHgAT/z+0+ejOmgAAAABJRU5ErkJggg==" width="15" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
+        <button @click="changeSite(page - 1)">
+          <svg width="9" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 9 16"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAQCAYAAADESFVDAAAAbElEQVQoU53SwQmAMAyF4b8buIxHBxCcwJObOYWu4EVwpRIhIDFJxZ6/9iVNCvmZga4kZgR24IqQggMYPKTgBHpJsugFLHLBE4VA0QKswAZMXrdS0yckl5txmtAsPIW/PtO+GI7FwnDACu9VqZ6vHIcNAterAAAAAElFTkSuQmCC" width="9" height="16" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
+        <ul>
+          <li v-for="p in pagesNo" :key="p" :class="{'active-page': p === page}" @click="changeSite(p)">{{p}}</li>
+        </ul>
+        <button @click="changeSite(page + 1)">
+          <svg width="8" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 8 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAPCAYAAADZCo4zAAAAs0lEQVQoU3XRIWuCURTG8Z9p4AfR4ldYM70Y1lbWDAoaDLIos24YBsoWrJY1gxisxsGCZfsgwzg54IWXy91p9/I//wfO08AZL5gpTAM/aOEBm5wJIOaALu6wrUMJiL8TOrjHR4LqQBNf17gK+4DqQLxv8Hk13eKYA8n8jTaq/4CI+y1FJMM7BnguGZYYYYpFDqzRxxxPeUTSvmKS3yF6iK3o5DG/5BuGWGFc6uIPO/RKbV4A0xUb4dD0ryEAAAAASUVORK5CYII=" width="8" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
+        <button @click="changeSite(pagesNo)">
+          <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 15 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286633</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAA+ElEQVQ4T5XTvyuHQRwH8Ne3TFabxB+gKDEpk0UMfvwJJoxSBiYMpJTJ4E/wYxDFioXFbCKDRUaLkq7uct+ne756brque70/93meuxaGcIAlPPsbK5jEXLbWNm1hGE/4QR/e445FHOMWE6WAgMPox2shYBbndQEJdwoIxz4rBeS4cUAVNwoo4RAwgBd8YARv8dvM4xTXmKrDYW8XviPqwWecz+AC953wGvZwhFV8RXyCBSzX4f0ItrGZ/eNHjGIaVyWc4A42MviAsQTDehX/B0O/lykwx41gqtyNQ4S7nPfYixsMoq1iXnkcd9jFetZj6Hcr77H6OH4BUthBPqob+J4AAAAASUVORK5CYII=" width="15" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import Voting from './Voting.vue'
+
+  export default {
+    props: ['id', 'type', 'title', 'headers'],
+    data() {
+      return {
+        motions: [],
+        page: 1,
+        refresh: true,
+        isAuth: false,
+        motionsNo: 0,
+        dateSortAscend: false,
+        qualitySortAscend: false,
+        votes: [],
+        tags: []
+      }
+    },
+    computed: {
+      pagesNo: function() {
+        return Math.ceil(this.motionsNo/10)
+      }
+    },
+    components: {
+      Voting
+    },
+    methods: {
+      async changeSite (p) {
+        if (p > 0 && p <= this.pagesNo) {
+          try {
+            const response = await this.$store.dispatch(this.type, {page: p})
+            if (response) {
+              this.motions = response.results
+              this.motionsNo = response.count
+              await this.getUserVotes()
+              this.page = p
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      },
+      async getUserVotes() {
+        this.votes = await this.$store.dispatch('getUpvotes')
+        this.motions.forEach(motion => {
+          const choice = this.votes.find(vote => vote.motion === motion.id)
+          if (choice) motion.choice = choice.choices;
+       });
+      },
+      toggleFilters() {
+        this.$emit('toggle-filters')
+      },
+      toggleDateSort() {
+        this.dateSortAscend = !this.dateSortAscend
+        this.$store.state.motions.filters['ordering'] = this.dateSortAscend ? 'created_at' : '-created_at'
+        this.$store.state.motions.filterCount += 1
+      },
+      toggleQualitySort() {
+        this.qualitySortAscend = !this.qualitySortAscend
+        this.$store.state.motions.filters['ordering'] = this.qualitySortAscend ? 'votes' : '-votes'
+        this.$store.state.motions.filterCount += 1
+      }, mapFiltersToTags() {
+        this.tags = []
+        Object.keys(this.$store.state.motions.filters).forEach(filter => {
+          if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
+            this.tags.push(filterValue)
+          })
+        })
+      }
+    },
+    watch: {
+      '$store.state.motions.filterCount': async function() {
+        await this.mapFiltersToTags()
+        const response = await this.$store.dispatch(this.type, {page: 1, filters: this.$store.state.motions.filters})
+        this.motions = response.results
+        this.motionsNo = response.count
+        await this.getUserVotes()
+      }
+    },
+    async created() {
+      this.$store.state.motions.filters = {} // clean filter if we have bad state
+      this.isAuth = await this.$store.dispatch('isAuth')
+      const response = await this.$store.dispatch(this.type, {page: 1})
+      this.motions = response.results
+      this.motionsNo = response.count
+      await this.mapFiltersToTags()
+      await this.getUserVotes()
+    }
+  }
+
+</script>
+
+<style scoped lang="scss">
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 20px;
+  margin: 10px 0;
+
+  @media (min-width: 576px) {
+    justify-content: space-between;
+  }
+
+  @media (min-width: 992px) {
+    justify-content: flex-end;
+    padding: 20px;
+  }
+
+  @media (min-width: 1200px) {
+    padding: 30px;
+  }
+
+  .logo {
+    display: none;
+
+    @media (min-width: 576px) and (max-width: 992px) {
+      display: block;
+    }
+
+    img {
+      height: 40px;
+    }
+  }
+}
+
+.motions-container {
+  display: flex;
+  flex-direction: column;
+  // overflow: hidden;
+  padding: 0 20px;
+  margin-bottom: 20px;
+
+  @media (min-width: 992px) {
+    padding: 0 40px;
+  }
+
+  .motions-title-bar {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid black;
+
+    @media (min-width: 992px) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    div:nth-child(1) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+
+      @media (min-width: 992px) {
+        padding: 20px 0;
+      }
+    }
+
+    h3 {
+      font-size: 16px;
+      margin: 0;
+      color: #252525;
+      font-family: "Poppins";
+
+      @media (min-width: 768px) {
+        font-size: 30px;
+        line-height: 60px;
+      }
+    }
+
+    button {
+      font-size: 14px;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+
+      @media (min-width: 992px) {
+        display: none;
+      }
+    }
+
+    .motions-sort {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 10px;
+
+      @media (min-width: 992px) {
+        margin-bottom: 0;
+      }
+
+      .sort-button, p {
+        font-family: "IBM Plex Mono";
+        font-size: 12px;
+        line-height: 14px;
+
+        @media (min-width: 992px) {
+          font-size: 14px;
+          line-height: 18px;
+        }
+      }
+
+      .sort-button {
+        border-radius: 20px;
+        background-color: rgb(48, 152, 243, 0.2);
+        padding: 5px 10px;
+        margin-left: 10px;
+        cursor: pointer;
+        color: #000000;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+
+        svg {
+          margin-left: 0.5rem;
+          transition: transform 0.5s;
+          height: 14px;
+          &.toggled {
+            transform: rotate(-180deg);
+          }
+        }
+      }
+    }
+  }
+
+  .motions-list {
+    border-bottom: 1px solid black;
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    // width: 100%;
+
+    .motion-text-container {
+      display: flex;
+      flex-direction: column;
+      color: #252525;
+      margin: 1rem 0;
+
+      .motions-date {
+        font-family: "IBM Plex Mono";
+        font-size: 14px;
+        font-style: italic;
+        line-height: 18px;
+        margin: 0 0 0.25rem;
+      }
+
+      .motions-title {
+        color: #252525;
+        font-family: Poppins;
+        font-size: 24px;
+        text-decoration: none;
+      }
+    }
+
+    .votes {
+      width: 78px;
+      height: 78px;
+      flex-shrink: 0;
+      // margin-right: 20px;
+      margin-left: 20px;
+      background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
+    }
+  }
+}
+
+.share-bar {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  // background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
+  background-image: linear-gradient(-62deg, #cee7fd 0%, #f7fafd 100%);
+  z-index: 2;
+
+  .share-bar-split {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    &.hidden {
+      display: none !important;
+    }
+  }
+
+  h1 {
+      margin-top: 0;
+      // width: 100%;
+  }
+
+  input {
+      margin-left: 20px;
+  }
+}
+
+.parent-container {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: initial;
+  overflow-x: auto;
+}
+
+.favourite{
+  background-image: '../assets/favourite.svg';
+}
+
+.motionButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.line {
+  margin: 0;
+  border-top: 1px solid #3098f3;
+}
+
+</style>

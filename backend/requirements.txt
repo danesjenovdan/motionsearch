@@ -1,0 +1,7 @@
+django
+djangorestframework
+django-oauth-toolkit
+django-cors-headers
+drf_social_oauth2
+django-filter
+six

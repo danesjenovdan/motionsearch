@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: motionsearch
+resources:
+  - frontend.yaml
+  - backend.yaml
+images:
+  - name: motion-search-backend
+    newName: rg.fr-par.scw.cloud/djnd/motion-search-backend
+    newTag: '0b5610c92cb3919ebfa907b1a8cc247f6952ccee'
+  - name: motion-search-frontend
+    newName: rg.fr-par.scw.cloud/djnd/motion-search-frontend
+    newTag: '0b5610c92cb3919ebfa907b1a8cc247f6952ccee'
