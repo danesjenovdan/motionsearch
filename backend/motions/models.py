@@ -27,43 +27,62 @@ class VoteValue:
 
 class MotionCategory(BaseModel):
     value = models.CharField(max_length=255, null=True, blank=True)
+    def __str__(self):
+        return self.value
 
 
 class MotionDifficulty(BaseModel):
     value = models.CharField(max_length=255, null=True, blank=True)
+    def __str__(self):
+        return self.value
 
 
 class DebateFormat(BaseModel):
     value = models.CharField(max_length=255, null=False, blank=False)
+    def __str__(self):
+        return self.value
 
 
 class MotionAgeRange(BaseModel):
     value = models.CharField(max_length=255, null=False, blank=False)
+    def __str__(self):
+        return self.value
 
 
 class MotionType(BaseModel):
     value = models.CharField(max_length=255, null=False, blank=False)
+    def __str__(self):
+        return self.value
 
 
 class MotionTrainingFocus(BaseModel):
     value = models.CharField(max_length=255, null=False, blank=False)
+    def __str__(self):
+        return self.value
 
 
 class MotionImproPrep(BaseModel):
     value = models.CharField(max_length=255, null=False, blank=False)
+    def __str__(self):
+        return self.value
 
 
 class MotionWhereUsed(BaseModel):
     value = models.CharField(max_length=255, null=False, blank=False)
+    def __str__(self):
+        return self.value
 
 
 class MotionInfoText(BaseModel):
     value = models.TextField( null=True, blank=True)
-
+    def __str__(self):
+        return str(self.value)
 
 class MotionLink(BaseModel):
     text = models.TextField( null=True, blank=True)
     value = models.URLField(null=True, blank=True)
+    def __str__(self):
+        return str(self.value)
 
 
 class MotionComment(BaseModel):

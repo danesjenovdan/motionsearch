@@ -1,5 +1,5 @@
 <template>
-  <div class="parent-container">
+  <div v-if="motions.length > 0" class="parent-container">
     <div v-if="headers" class="header">
       <div class="logo">
         <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
@@ -326,6 +326,9 @@
         @media (min-width: 992px) {
           font-size: 24px;
         }
+      }
+      .motions-title:hover {
+        color: #3098f3;
       }
     }
 
