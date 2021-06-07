@@ -44,7 +44,7 @@
         </div>
       </div>
     <div class="notFound" v-else>
-      <img src="/filters-not-found.svg"/>
+      <img src="../assets/filters-not-found.svg"/>
       <span>No results found.<br>
         Please try different filters.
       </span>

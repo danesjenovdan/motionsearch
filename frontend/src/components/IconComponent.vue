@@ -1,10 +1,10 @@
 <template>
-    <img src="/tick.png">
+    <img src="../assets/tick.png">
 </template>
 
 <script>
 export default {
-  
+
 }
 </script>
 
