@@ -10,7 +10,7 @@
   <ul class="tags">
     <li v-on:click="getFilteredMotions(category)" @click="toggleSelected"
  class="tag" v-for="category in motion.category" :key="category">
-      <span class="tag-text"><img  v-if="category === tags" v-on:click="removeFilter()" src="/x.svg"/>{{ categoriesDictionary[category] }}</span>
+      <span class="tag-text"><img  v-if="category === tags" v-on:click="removeFilter()" src="../assets/x.svg"/>{{ categoriesDictionary[category] }}</span>
     </li>
   </ul>
   <div v-if="motions.length > 0 && tags" class="line"></div>
