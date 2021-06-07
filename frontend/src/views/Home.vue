@@ -10,7 +10,7 @@
      </div>
    </div>
    <div class="container-child">
-     <motion-list type="getMotions" :headers="true" title="Motions" @toggle-filters="toggleFilters"/>
+     <motion-list type="getMotions" :headers="true" :hideAll="true" title="Motions" @toggle-filters="toggleFilters"/>
    </div>
  </div>
 </template>

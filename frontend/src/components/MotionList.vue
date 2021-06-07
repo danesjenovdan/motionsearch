@@ -1,13 +1,13 @@
 <template>
-  <div v-if="motions.length > 0" class="parent-container">
+  <div v-if="motions.length > 0 || hideAll" class="parent-container">
     <div v-if="headers" class="header">
       <div class="logo">
         <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
       </div>
       <div class="header-buttons">
-        <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>
-        <router-link to="/login" v-if="!isAuth"  class="btn login">Log in</router-link>
-        <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
+        <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion</span></router-link>
+        <router-link to="/login" v-if="!isAuth"  class="button button--pan"><span>Log in</span></router-link>
+        <router-link to="/profile" v-if="isAuth" class="button button--pan"><span>Profile</span></router-link>
       </div>
     </div>
     <div v-if="headers" class="line"/>
@@ -30,11 +30,11 @@
         </div>
       </div>
       <ul class="tags">
-        <li class="tag" v-for="tag in tags" :key="tag.id">
-          <span class="tag-text">{{ tag.value }}</span>
+        <li class="tag" v-for="tag, index in tags" :key="tag.id">
+          <span class="tag-text"><img  v-on:click="removeFilter(tag.filterValue.value, tag.filter, index)" src="/x.svg"/>{{ tag.filterValue.value }}</span>
         </li>
       </ul>
-      <div class="motions-list" v-for="motion in motions" :key="motion.id">
+      <div v-if="motions.length > 0" class="motions-list" v-for="motion in motions" :key="motion.id">
         <div class="motion-text-container">
           <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
           <a :href="'/motion/'+motion.id" class="motions-title">{{motion.topic}}</a>
@@ -43,6 +43,12 @@
           <voting :votes="motion.votes" :id="motion.id" :choice="motion.choice"/>
         </div>
       </div>
+    <div class="notFound" v-else>
+      <img src="/filters-not-found.svg"/>
+      <span>No results found.<br>
+        Please try different filters.
+      </span>
+    </div>
     </div>
     <div v-if="pagesNo > 1" class="pagination">
       <div>
@@ -70,7 +76,7 @@
   import Voting from './Voting.vue'
 
   export default {
-    props: ['id', 'type', 'title', 'headers'],
+    props: ['id', 'type', 'title', 'headers', 'hideAll', 'propsMotions'],
     data() {
       return {
         motions: [],
@@ -123,6 +129,11 @@
         this.$store.state.motions.filters['ordering'] = this.dateSortAscend ? 'created_at' : '-created_at'
         this.$store.state.motions.filterCount += 1
       },
+      removeFilter(filter, type, index) {
+        this.tags.splice(index, 1)
+        this.$store.state.motions.filters[type] = this.$store.state.motions.filters[type].filter((obj) => obj.value !== filter);
+        this.$store.state.motions.filterCount += 1
+      },
       toggleQualitySort() {
         this.qualitySortAscend = !this.qualitySortAscend
         this.$store.state.motions.filters['ordering'] = this.qualitySortAscend ? 'votes' : '-votes'
@@ -131,7 +142,7 @@
         this.tags = []
         Object.keys(this.$store.state.motions.filters).forEach(filter => {
           if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
-            this.tags.push(filterValue)
+            this.tags.push({filterValue, filter})
           })
         })
       }
@@ -146,10 +157,11 @@
       }
     },
     async created() {
-      this.$store.state.motions.filters = {} // clean filter if we have bad state
+      this.$store.state.motions.filters = {} // clean filter if we have bad state or propfilters
       this.isAuth = await this.$store.dispatch('isAuth')
-      const response = await this.$store.dispatch(this.type, {page: 1})
-      this.motions = response.results
+      let response = []
+      if (!this.propsMotions) response = await this.$store.dispatch(this.type, {page: 1})
+      this.motions = this.propsMotions ? this.propsMotions : response.results
       this.motionsNo = response.count
       await this.mapFiltersToTags()
       await this.getUserVotes()
@@ -167,11 +179,11 @@
 
   @media (min-width: 992px) {
     justify-content: flex-end;
-    padding: 20px;
+    padding: 10px;
   }
 
   @media (min-width: 1200px) {
-    padding: 30px;
+    padding: 10px;
   }
 
   .logo {
@@ -293,6 +305,9 @@
           }
         }
       }
+      .sort-button:hover {
+        background-color:  #ffcc00;
+      }
     }
   }
   .motions-list {
@@ -339,6 +354,27 @@
       // margin-right: 20px;
       margin-left: 20px;
       background-image: linear-gradient(to right, #f5f2e8 0%, #faf9f6 100%);
+    }
+  }
+  .notFound {
+    display: flex;
+    flex-direction: column;
+    img {
+      margin-top: 50px;
+      width: 80px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    span {
+    color: #252525;
+    font-family: Poppins;
+    font-size: 20px;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
+    line-height: 30px;
+    text-align: center;
     }
   }
 }

@@ -172,10 +172,14 @@ export const actions = {
     return getters.motion_length
   },
 
-  async logout () {
+  async logout ({ commit }) {
     try {
-      await this.$auth.logout()
+      commit('access_token', null);
+      commit('refresh_token', null);
+      commit('token_expiration', null);
       toast.success("Succesfully loged out.");
+      window.location.href = '/login'
+      return true
     } catch (error) {
       toast.error("There was a problem, with logging out.");
       return error
@@ -237,6 +241,19 @@ export const actions = {
       const idArray = response.map(motion => motion.id)
       const filters = mapFilters({id:idArray, ...payload.filters})
       response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
+        method: 'get',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      return await response.json();
+    } catch (error) {
+      return error
+    }
+  },
+  async getCategoryMotions ({ getters, commit }, payload) {
+    try {
+      let response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${payload.filters}`, {
         method: 'get',
         headers: {
           'content-type': 'application/json'
@@ -512,7 +529,6 @@ export const actions = {
     let filters = ''
     if (payload.filters) filters = mapFilters(payload.filters)
     try {
-      console.log('`${api}/api/v1/motions/${payload.type}?page=1&${filters}`: ', `${api}/api/v1/motions/${payload.type}?page=1&${filters}`);
       let next = `${api}/api/v1/motions/${payload.type}?page=1&${filters}`;
       let results = []; 
       while (next) {

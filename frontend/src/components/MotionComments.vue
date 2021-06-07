@@ -31,14 +31,16 @@
               </div>
             </div>
           </div>
-            <div class="right">
+            <div v-if="whereUsed.length > 0 || links.length > 0" class="right">
               <div v-show="whereUsed" class="links">
                 <h3>Where was it used</h3>
                   <p v-for="text in whereUsed" :key="text._id">{{text.value}}</p><br/>
                 </div>
               <div v-show="links" class="links">
                 <h3>Links</h3>
-                  <a v-for="link in links" :key="link._id" :href="link.value">{{link.text}}</a><br/>
+                <div v-for="link in links" :key="link._id" >
+                  <a target="_blank" :href="link.value">{{link.text}}</a><br/>
+                  </div>
                 </div>
             </div>
     </div>
@@ -242,6 +244,10 @@
     background-image: linear-gradient(-62deg, #f2f6fa 0%, #dbe7f1 100%);
     padding: 20px;
     margin-top: 20px;
+
+    p {
+      font-family: "Poppins";
+    }
 
     h3 {
       margin-top: 0;

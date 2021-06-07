@@ -6,9 +6,9 @@
       <span>Easiest way to find a motion for debating</span>
     </div>
     <div class="header-buttons">
-      <router-link to="/motionSuggest" class="btn"><span>Suggest a motion </span></router-link>
-      <router-link to="/login" v-if="!isAuth" class="btn login">Log in</router-link>
-      <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
+      <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion </span></router-link>
+      <router-link to="/login" v-if="!isAuth" class="button button--pan"><span>Log in</span></router-link>
+      <router-link to="/profile" v-if="isAuth" class="button button--pan"><span>Profile</span></router-link>
     </div>
   </div>
   <div class="wrapper">
@@ -21,7 +21,7 @@
           <div/>
         </div>
         <motion-list type="getMyMotions" :headers="false" title="My submitted motions"/>
-        <router-link to="/motionSuggest" class="btn suggest"><span>Suggest a motion </span></router-link>
+        <router-link to="/motionSuggest" class="button button--suggest suggest"><span>Suggest a motion </span></router-link>
         <motion-list type="getFavoritesMotions" :headers="false" title="Favourited Motions" />
     </div>
   </div>
@@ -46,10 +46,8 @@ import MotionList from '../components/MotionList.vue'
       reset() {
         window.location.href = '/reset'
       },
-      logout() {
-        this.$store.state.motions.acces_token = null
-        this.$store.state.motions.refresh_token = null
-        window.location.href = '/login'
+      async logout() {
+        await this.$store.dispatch('logout')
       }
     },
     async created() {
@@ -112,7 +110,7 @@ import MotionList from '../components/MotionList.vue'
       }
     }
 
-    .btn {
+    .button {
       @media (max-width: 575px) {
         padding: 5px 5px;
         font-size: 10px;

@@ -290,6 +290,21 @@ export default {
       }
     },
     closeFilters() {
+      const filterArrays = [
+        { filters: this.categoryFilter, type: 'categoryFilter' },
+        { filters: this.difficultyFilter, type: 'difficultyFilter'  },
+        { filters: this.ageFilter, type: 'ageFilter'  },
+        { filters: this.formatFilter, type: 'formatFilter'  },
+        { filters: this.trainingFilter, type: 'trainingFilter' },
+        { filters: this.improPrepFilter, type: 'improPrepFilter' },
+        { filters: this.keywordFilter, type: 'keywordFilter'  }   
+      ]
+
+      filterArrays.forEach((arr) => {
+        this.$store.state.motions.filters[arr.type] = {}
+        this.$store.state.motions.filters[arr.type] = arr.filters
+      })
+      this.$store.state.motions.filterCount += 1
       this.$emit('toggle-filters');
     },
     toggleFilters(event) {
@@ -573,6 +588,10 @@ export default {
     }
   }
 
+  .filter-box:hover {
+    background-color: #D6EAFD;
+    border:#3098f3;
+  }
   .randomFilterBox {
     background-color: transparent;
     border: 4px solid white;
@@ -584,6 +603,10 @@ export default {
     span {
       font-size: 16px;
     }
+  }
+    .randomFilterBox:hover {
+    background-color: transparent;
+    border: 4px solid #ffcc00;
   }
 }
 
