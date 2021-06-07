@@ -48,6 +48,7 @@ import MotionList from '../components/MotionList.vue'
       },
       async logout() {
         await this.$store.dispatch('logout')
+        this.$router.push('/login')
       }
     },
     async created() {

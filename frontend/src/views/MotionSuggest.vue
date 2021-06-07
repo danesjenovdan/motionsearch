@@ -203,7 +203,7 @@
             training_focus: this.trainingFocus,
             impro_prep: this.improPrep
           })
-          window.location.href = '/';
+          this.$router.push('/')
         } catch (error) {
           console.log('error: ', error);
         }

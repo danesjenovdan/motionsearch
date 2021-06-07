@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { useToast } from "vue-toastification";
-import IconComponent from "../components/IconComponent.vue"
 
 const toast = useToast();
 
@@ -178,7 +177,6 @@ export const actions = {
       commit('refresh_token', null);
       commit('token_expiration', null);
       toast.success("Succesfully loged out.");
-      window.location.href = '/login'
       return true
     } catch (error) {
       toast.error("There was a problem, with logging out.");
@@ -304,12 +302,13 @@ export const actions = {
         },
         body: JSON.stringify(payload) // body data type must match "Content-Type" header
       });
+      if(response.status === 400) throw new Error(response.statusText)
       const body = await response.json()
       toast.success("Succesfully posted a motion.");
       return body
     } catch (error) {
       toast.error("There was an error with posting motion.");
-      return error
+      throw new Error(error)
     }
   },
   async getFavorites ({ getters }, payload) {
