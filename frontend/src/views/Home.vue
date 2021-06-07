@@ -46,9 +46,9 @@ export default {
 
 .container-child:first-child {
   position: absolute;
-  top: 66px;
   opacity: 0;
   z-index: -1;
+  height: 100%;
 
   &.opened {
     opacity: 1;

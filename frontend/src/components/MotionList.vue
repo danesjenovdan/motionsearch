@@ -10,12 +10,12 @@
         <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
       </div>
     </div>
-    <div  v-if="headers" class="line"/>
+    <div v-if="headers" class="line"/>
     <div class="motions-container">
       <div class="motions-title-bar">
         <div>
           <h3>{{title}}</h3>
-          <button class="btn" @click="toggleFilters">Filters</button>
+          <button v-if="headers" class="btn" @click="toggleFilters">Filters</button>
         </div>
         <div class="motions-sort">
           <p>Sort by</p>
@@ -162,14 +162,8 @@
 
 .header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  margin: 10px 0;
-
-  @media (min-width: 576px) {
-    justify-content: space-between;
-  }
 
   @media (min-width: 992px) {
     justify-content: flex-end;
@@ -181,14 +175,24 @@
   }
 
   .logo {
-    display: none;
-
-    @media (min-width: 576px) and (max-width: 992px) {
-      display: block;
-    }
-
     img {
-      height: 40px;
+      margin-left: 20px;
+      height: 30px;
+
+      @media (min-width: 576px) {
+        height: 40px;
+      }
+
+      @media (min-width: 992px) {
+        display: none;
+      }
+    }
+  }
+
+  .btn {
+    @media (max-width: 575px) {
+      padding: 5px 5px;
+      font-size: 10px;
     }
   }
 }
@@ -226,7 +230,7 @@
     }
 
     h3 {
-      font-size: 16px;
+      font-size: 20px;
       margin: 0;
       color: #252525;
       font-family: "Poppins";
@@ -317,8 +321,11 @@
       .motions-title {
         color: #252525;
         font-family: Poppins;
-        font-size: 24px;
+        font-size: 20px;
         text-decoration: none;
+        @media (min-width: 992px) {
+          font-size: 24px;
+        }
       }
       .motions-title:hover {
         color: #3098f3;

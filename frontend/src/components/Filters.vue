@@ -9,9 +9,8 @@
       >
         <div class="content">
           <img src="../assets/topic.svg">
-          <span data-type="categoryFilter"><i>Category</i></span>
-          <!--<span v-if="chosenCategoryFilters.length === 1">{{chosenCategoryFilters[0].value}}</span>
-          <span v-if="chosenCategoryFilters.length > 1">{{chosenCategoryFilters[0].value}} + 1 more category</span>-->
+          <span v-if="chosenCategoryFilters.length === 0" data-type="categoryFilter"><i>Category</i></span>
+          <span v-if="chosenCategoryFilters.length > 0">{{ chosenFiltersText(chosenCategoryFilters) }}</span>
         </div>
         <div class="popup-container" id="categoryFilter" @click.stop>
           <div class="popup-box">
@@ -210,7 +209,7 @@
       </div>
     </div>
     <div class="apply-button">
-      <button class="btn" @click="closeFilters">Close</button>
+      <button class="btn" @click="closeFilters">Apply</button>
     </div>
   </div>
 </template>
@@ -352,7 +351,7 @@ export default {
     background-color: white;
     cursor: pointer;
     border: 4px solid white;
-    height: 150px;
+    height: 120px;
 
     @media (min-width: 576px) {
       position: relative;
@@ -377,6 +376,11 @@ export default {
       .popup-container {
         opacity: 1;
         z-index: 2;
+        transition: z-index 0s;
+
+        .popup-box label.popup-text {
+          cursor: pointer;
+        }
       }
     }
 
@@ -420,9 +424,11 @@ export default {
     &.filters-selected {
       background-color: #d6eafd;
       border-color: #d6eafd;
-      span {
-        // font-size: 14px;
+
+      &.selected {
+        border-color: #3098f3;
       }
+
       img {
         width: 25%;
       }
@@ -430,21 +436,23 @@ export default {
 
     .popup-container {
       opacity: 0;
-      transition: opacity 0.2s;
+      z-index: -1;
+      transition: opacity 0.2s, z-index .1s 0.2s;
       background-color: white;
       color: black;
       border: 4px solid #3098f3;
-      padding: 8px;
       position: absolute;
-      z-index: -1;
       box-shadow: 0 0 27px 3px rgba(48, 152, 243, 0.5);
+      cursor: default;
 
       &#keywordFilter {
         min-width: 300px;
       }
 
       .popup-box {
-        margin: 10px;
+        padding: 20px;
+        max-height: 300px;
+        overflow-y: auto;
 
         .keyword-container {
           input {
@@ -474,7 +482,6 @@ export default {
         }
 
         .checkmark-container {
-          margin: 20px 0 10px 0;
           display: grid;
           grid-template-columns: 100%;
           column-gap: 20px;
@@ -487,6 +494,10 @@ export default {
           @media (min-width: 992px) {
             grid-template-columns: 45% 45%;
           }
+        }
+
+        label.popup-text {
+          cursor: default;
         }
 
         .popup-apply {
@@ -552,6 +563,7 @@ export default {
       }
 
       .popup-arrow {
+        bottom: -14px;
         transform: rotate(-45deg);
         display: none;
         @media (min-width: 576px) {

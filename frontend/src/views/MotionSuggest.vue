@@ -33,7 +33,7 @@
               </div>
           </div>
           <div class="inputContainer">
-            <label>Dificulty</label>
+            <label>Difficulty</label>
             <div class="select-wrapper">
               <select v-model="difficulty" name="Dificulty" id="difficulty">
                 <option v-for="difficulty in difficultiesOptions" v-bind:key="difficulty" :value="difficulty.id">{{difficulty.value}}</option>
@@ -267,6 +267,7 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #3098f3;
+    padding-right: 30px;
 
     .logo {
       display: flex;
@@ -285,21 +286,28 @@
       }
 
       img {
-        height: 50px;
-        margin: 10px 10px 10px 30px;
-        display: none;
+        height: 30px;
+        margin-left: 20px;
 
         @media (min-width: 768px) {
-          display: block;
+          height: 40px;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
+          margin: 10px 10px 10px 40px;
           height: 74px;
         }
 
         @media (min-width: 1200px) {
           margin: 10px 10px 10px 100px;
         }
+      }
+    }
+
+    .btn {
+      @media (max-width: 575px) {
+        padding: 5px 5px;
+        font-size: 10px;
       }
     }
   }
@@ -350,7 +358,7 @@
 .inputContainer {
   display: flex;
   border-top: 1px solid black;
-  padding: 10px;
+  padding: 10px 0;
   flex-direction: column;
 
   @media (min-width: 576px) {
@@ -391,7 +399,7 @@
       background-image: url("../assets/dropdown.svg");
       background-size: contain;
       position: absolute;
-      
+
       @media (min-width: 768px) {
         width: 30px;
         height: 30px;
@@ -418,7 +426,7 @@
         width: 100%;
       }
     }
- 
+
 
 
     span {
@@ -432,7 +440,7 @@
       margin-bottom: 10px;
       width: 100%
     }
-    
+
   }
 
   &:last-child {
