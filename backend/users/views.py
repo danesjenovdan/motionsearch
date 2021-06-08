@@ -121,7 +121,9 @@ class UserViewSet(viewsets.ModelViewSet):
         email = EmailMessage(
                     mail_subject, message, to=[to_email]
         )
+        print("Email template was created. Trying to send email...")
         email.send()
+        print("Email was succesfulyl sent.")
         return HttpResponse('Please confirm your email address to complete the registration')
 
     def activate(self, request, *args, **kwargs):
@@ -152,7 +154,9 @@ class UserViewSet(viewsets.ModelViewSet):
         email = EmailMessage(
                     mail_subject, message, to=[to_email]
         )
+        print("Email template was created. Trying to send email...")
         email.send()
+        print("Email was succesfulyl sent.")
         return HttpResponse('Check your email account for password change link')
     
     def changePassword(self, request, *args, **kwargs):
