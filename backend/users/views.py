@@ -113,7 +113,7 @@ class UserViewSet(viewsets.ModelViewSet):
         mail_subject = 'Activate your account.'
         message = render_to_string('acc_active_email.html', {
             'user': user,
-            'domain': 'motion-search-frontend-lb.djnd.si',
+            'domain': 'https://motion-search-frontend.lb.djnd.si',
             'uid':urlsafe_base64_encode(force_bytes(user.pk)),
             'token':account_activation_token.make_token(user),
         })
@@ -164,6 +164,7 @@ class UserViewSet(viewsets.ModelViewSet):
             uid = force_text(urlsafe_base64_decode(kwargs['uidb64']))
             user = User.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            print("User does not exist")
             user = None
         if user is not None and account_activation_token.check_token(user, kwargs['token']):
             user.password = make_password(request.data.get('password', ''))

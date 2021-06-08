@@ -5,9 +5,9 @@
         <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
         </div>
         <div class="header-buttons">
-          <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>
-          <router-link to="/login" v-if="!isAuth" class="btn login">Log in</router-link>
-          <router-link to="/profile" v-if="isAuth" class="btn login">Profile</router-link>
+          <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion</span></router-link>
+          <router-link to="/login" v-if="!isAuth" class="button button-pan">Log in</router-link>
+          <router-link to="/profile" v-if="isAuth" class="utton button-pan">Profile</router-link>
         </div>
       </div>
         <div class="share-bar">
@@ -128,6 +128,12 @@
   }
 
   .btn {
+    @media (max-width: 575px) {
+      padding: 5px 5px;
+      font-size: 10px;
+    }
+  }
+  .button {
     @media (max-width: 575px) {
       padding: 5px 5px;
       font-size: 10px;
