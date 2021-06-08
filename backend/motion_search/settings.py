@@ -90,7 +90,6 @@ DATABASES = {
     }
 }
 
-
 if os.getenv('APP_ENV', 'development') == 'production':
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = os.getenv('EMAIL_HOST', '')
