@@ -31,7 +31,7 @@
       </div>
       <ul class="tags">
         <li class="tag" v-for="tag, index in tags" :key="tag.id">
-          <span class="tag-text"><img  v-on:click="removeFilter(tag.filterValue.value, tag.filter, index)" src="../assets/x.svg"/>{{ tag.filterValue.value }}</span>
+          <span class="tag-text">{{ tag.filterValue.value }} <img  v-on:click="removeFilter(tag.filterValue.value, tag.filter, index)" src="../assets/x.svg"/></span>
         </li>
       </ul>
       <div v-if="motions.length > 0" class="motions-list" v-for="motion in motions" :key="motion.id">
@@ -53,19 +53,19 @@
     <div v-if="pagesNo > 1" class="pagination">
       <div>
         <button @click="changeSite(1)">
-          <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 15 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286633 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAABRUlEQVQ4T33TzyunURQG8I8Vq7GympHZkJoampSmNNhY2TELKavRZCFZSBYaRbLAQrJhh1kwO6vJhomSEjaT0dTkR03zN0yiq/Pq7dv7dVe3c5/nnOc859wK5U8TDvEZmznYGGbQXlGG24Bf8daCk7j34SvO0FNEfo0/uEMt/gaxB9+wj44UKyW/xG2AU5KruHdjB8dozdTmyTW4QSXq8TtAXfiOczTn28zI1bjGC7zBzwC1Yw+XaMR9KbkOu1HtHU6jnQ9BvMBb/C81N1VOriZ33+MoAK+ihSJfnnIkci+2Y6adUaEK45jCEkaKRpr1nCSmEZT2lhLMYQ2DRbKzWDlXv4SCZQwXuZ3FCueJWUxgHmk9H0/RhmUe/Ej7m6u0iNHY68nnnOzHBg7C0H+RZAVDWMB0uY+RsJ+wigGs5xRs4SPaHgAT/z+0+ejOmgAAAABJRU5ErkJggg==" width="15" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        <svg class="rotate-arrow" height='15' width='15'  fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1" x="0px" y="0px"><title>icon/double-chevron-right-solid</title><desc>Created with Sketch Beta.</desc><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><path d="M11.8789,2.6816 L13.2929,1.2676 L23.9999,11.9746 L13.2929,22.6816 L11.8789,21.2676 L21.1719,11.9746 L11.8789,2.6816 Z M5.293,22.6816 L3.879,21.2676 L13.172,11.9746 L3.879,2.6816 L5.293,1.2676 L16,11.9746 L5.293,22.6816 Z" fill="#000000"></path></g></svg>
         </button>
         <button @click="changeSite(page - 1)">
-          <svg width="9" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 9 16"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAQCAYAAADESFVDAAAAbElEQVQoU53SwQmAMAyF4b8buIxHBxCcwJObOYWu4EVwpRIhIDFJxZ6/9iVNCvmZga4kZgR24IqQggMYPKTgBHpJsugFLHLBE4VA0QKswAZMXrdS0yckl5txmtAsPIW/PtO+GI7FwnDACu9VqZ6vHIcNAterAAAAAElFTkSuQmCC" width="9" height="16" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+          <svg height='15' width='15'  fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1" x="0px" y="0px"><title>icon/chevron-left-solid</title><desc>Created with Sketch Beta.</desc><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><polygon fill="#000000" points="16.1211 21.2676 6.8281 11.9746 16.1211 2.6816 14.7071 1.2676 4.0001 11.9746 14.7071 22.6816"></polygon></g></svg>
         </button>
         <ul>
           <li v-for="p in pagesNo" :key="p" :class="{'active-page': p === page}" @click="changeSite(p)">{{p}}</li>
         </ul>
         <button @click="changeSite(page + 1)">
-          <svg width="8" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 8 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286605 copy</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAPCAYAAADZCo4zAAAAs0lEQVQoU3XRIWuCURTG8Z9p4AfR4ldYM70Y1lbWDAoaDLIos24YBsoWrJY1gxisxsGCZfsgwzg54IWXy91p9/I//wfO08AZL5gpTAM/aOEBm5wJIOaALu6wrUMJiL8TOrjHR4LqQBNf17gK+4DqQLxv8Hk13eKYA8n8jTaq/4CI+y1FJMM7BnguGZYYYYpFDqzRxxxPeUTSvmKS3yF6iK3o5DG/5BuGWGFc6uIPO/RKbV4A0xUb4dD0ryEAAAAASUVORK5CYII=" width="8" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        <svg class="rotate-arrow" height='15' width='15'  fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1" x="0px" y="0px"><title>icon/chevron-left-solid</title><desc>Created with Sketch Beta.</desc><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><polygon fill="#000000" points="16.1211 21.2676 6.8281 11.9746 16.1211 2.6816 14.7071 1.2676 4.0001 11.9746 14.7071 22.6816"></polygon></g></svg>
         </button>
         <button @click="changeSite(pagesNo)">
-          <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 15 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>noun_chevron_2286633</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAA+ElEQVQ4T5XTvyuHQRwH8Ne3TFabxB+gKDEpk0UMfvwJJoxSBiYMpJTJ4E/wYxDFioXFbCKDRUaLkq7uct+ne756brque70/93meuxaGcIAlPPsbK5jEXLbWNm1hGE/4QR/e445FHOMWE6WAgMPox2shYBbndQEJdwoIxz4rBeS4cUAVNwoo4RAwgBd8YARv8dvM4xTXmKrDYW8XviPqwWecz+AC953wGvZwhFV8RXyCBSzX4f0ItrGZ/eNHjGIaVyWc4A42MviAsQTDehX/B0O/lykwx41gqtyNQ4S7nPfYixsMoq1iXnkcd9jFetZj6Hcr77H6OH4BUthBPqob+J4AAAAASUVORK5CYII=" width="15" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+        <svg height='15' width='15'  fill="#ffffff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1" x="0px" y="0px"><title>icon/double-chevron-right-solid</title><desc>Created with Sketch Beta.</desc><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><path d="M11.8789,2.6816 L13.2929,1.2676 L23.9999,11.9746 L13.2929,22.6816 L11.8789,21.2676 L21.1719,11.9746 L11.8789,2.6816 Z M5.293,22.6816 L3.879,21.2676 L13.172,11.9746 L3.879,2.6816 L5.293,1.2676 L16,11.9746 L5.293,22.6816 Z" fill="#000000"></path></g></svg>
         </button>
       </div>
     </div>
@@ -76,7 +76,7 @@
   import Voting from './Voting.vue'
 
   export default {
-    props: ['id', 'type', 'title', 'headers', 'hideAll', 'propsMotions'],
+    props: ['id', 'type', 'title', 'headers', 'hideAll', 'propsMotions', 'category'],
     data() {
       return {
         motions: [],
@@ -151,6 +151,7 @@
       '$store.state.motions.filterCount': async function() {
         await this.mapFiltersToTags()
         const response = await this.$store.dispatch(this.type, {page: 1, filters: this.$store.state.motions.filters})
+        console.log('response: ', response);
         this.motions = response.results
         this.motionsNo = response.count
         await this.getUserVotes()
@@ -158,8 +159,12 @@
     },
     async created() {
       this.$store.state.motions.filters = {} // clean filter if we have bad state or propfilters
+      if(this.category ) { 
+        this.$store.state.motions.filters.categoryFilter = [{id: this.category[1], value: this.category[0]}];
+        }
       this.isAuth = await this.$store.dispatch('isAuth')
       let response = []
+      console.log('this.type: ', this.type);
       if (!this.propsMotions) response = await this.$store.dispatch(this.type, {page: 1})
       this.motions = this.propsMotions ? this.propsMotions : response.results
       this.motionsNo = response.count
@@ -179,11 +184,9 @@
 
   @media (min-width: 992px) {
     justify-content: flex-end;
-    padding: 10px;
   }
 
   @media (min-width: 1200px) {
-    padding: 10px;
   }
 
   .logo {
@@ -218,7 +221,8 @@
 .motions-container {
   display: flex;
   flex-direction: column;
-  // overflow: hidden;
+  height: 100vh;
+  overflow-y: scroll;
   padding: 0 20px;
   margin-bottom: 20px;
 

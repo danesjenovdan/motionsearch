@@ -10,7 +10,7 @@
      </div>
    </div>
    <div class="container-child">
-     <motion-list type="getMotions" :headers="true" :hideAll="true" title="Motions" @toggle-filters="toggleFilters"/>
+     <motion-list type="getMotions" :category="category" :headers="true" :hideAll="true" title="Motions" @toggle-filters="toggleFilters"/>
    </div>
  </div>
 </template>
@@ -22,6 +22,7 @@ import MotionComments from '../components/MotionComments.vue'
 import MotionList from '../components/MotionList.vue'
 
 export default {
+  props: ['category'],
   components: {
     Motion,
     MotionComments,

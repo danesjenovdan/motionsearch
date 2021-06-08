@@ -8,13 +8,11 @@
   <span class="motion-text">{{motion.topic}}</span>
   <div class="line"></div>
   <ul class="tags">
-    <li v-on:click="getFilteredMotions(category)" @click="toggleSelected"
+    <li  v-on:click="getFilteredMotions(category)"
  class="tag" v-for="category in motion.category" :key="category">
-      <span class="tag-text"><img  v-if="category === tags" v-on:click="removeFilter()" src="../assets/x.svg"/>{{ categoriesDictionary[category] }}</span>
+      <span class="tag-text">{{ categoriesDictionary[category] }}</span>
     </li>
   </ul>
-  <div v-if="motions.length > 0 && tags" class="line"></div>
-  <motion-list v-if="motions.length > 0 && tags" type="getCategoryMotions" :headers="false" :propsMotions="motions" :hideAll="false" title="Motions:"/>
 </div>
 </template>
 
@@ -40,9 +38,7 @@
      props: ['id', 'motion'],
     methods: {
       async getFilteredMotions(category) {
-        const response = await this.$store.dispatch('getCategoryMotions', {page:1, filters: "category="+category})
-        this.tags =  this.tags === category ? null : category
-        this.motions = response.results;
+      this.$router.push({ name: 'Home', params: {category: [this.categoriesDictionary[category], category ] }})
       }
     },
     removeFilter () {
