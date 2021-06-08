@@ -470,7 +470,6 @@ export const actions = {
       const body = await response.json()
       toast.success("Registration completed successfully. Check email to confirm address.");
       return body
-      
     } catch (error) {
       toast.error("Registration could not be completed");
       return error
@@ -487,10 +486,13 @@ export const actions = {
           email: payload.email,
         })
       });
+      console.log('body: ', response);
       const body = await response.json()
+      console.log('body: ', body);
       toast.info("Password reset link, was sent to your email account.");
       return body
     } catch (error) {
+      console.log('error: ', error);
       toast.error("Password change was not possible");
       return error
     }
@@ -507,10 +509,13 @@ export const actions = {
           password: payload.password,
         })
       });
+      console.log('response: ', response);
       const body = await response.json()
+      console.log('body: ', body);
       toast.success("Password was successfully changed.");
       return body
     } catch (error) {
+      console.log('error: ', error);
       toast.error("Password change was not possible");
       return error
     }
@@ -518,11 +523,14 @@ export const actions = {
 
   async resetPassword (context, payload) {
     try {
-      await axios.post('v1/restore-password/', {
+      const response = await axios.post('v1/restore-password/', {
         email: payload.email
       })
+      console.log('response: ', response);
       toast.info("Password reset link, was sent to your email account.");
+      return await response.json()
     } catch (error) {
+      console.log('error: ', error);
       toast.error("Password change was not possible");
       return error
     }

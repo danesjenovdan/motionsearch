@@ -207,6 +207,12 @@
       font-size: 10px;
     }
   }
+  .button {
+    @media (max-width: 575px) {
+      padding: 5px 5px;
+      font-size: 10px;
+    }
+  }
 }
 
 .motions-container {
