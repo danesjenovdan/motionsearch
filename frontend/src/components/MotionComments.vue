@@ -6,7 +6,7 @@
         </div>
         <div class="header-buttons">
           <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion</span></router-link>
-          < to="/login" v-if="!isAuth" class="button button--pan"><span>Log in</span></router-link>
+          <router-link to="/login" v-if="!isAuth" class="button button--pan"><span>Log in</span></router-link>
           <router-link to="/profile" v-if="isAuth" class="button button--pan"><span>Profile</span></router-link>
         </div>
       </div>
