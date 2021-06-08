@@ -2,7 +2,7 @@
     <div class="motionCommentsContainer">
       <div class="header">
         <div class="logo">
-          <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
+        <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
         </div>
         <div class="header-buttons">
           <router-link to="/motionSuggest" class="btn"><span>Suggest a motion</span></router-link>

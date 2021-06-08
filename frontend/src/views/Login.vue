@@ -2,8 +2,8 @@
   <div class="login-container background">
     <div class="wrapper">
       <div class="debate-logo">
-        <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
-        <span>Easiest way to find a motion for debating</span>
+      <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
+         <span>Easiest way to find a motion for debating</span>
       </div>
       <div class="registration-form-container">
         <form @submit="login">
@@ -13,13 +13,13 @@
           <label for="password">Password</label>
           <input type="password" id="password" name="password">
           <div class="password-reset-text">
-            <a href="/reset" class="link">Forgot your password?</a>
+            <router-link to="/reset" class="link">Forgot your password?</router-link>
           </div>
           <button class="login" type="submit">LOG IN</button>
         </form>
         <hr class="line"/>
         <div class="login-text">
-          <p>Don't have an account? <a href="/register" class="link">Register now.</a></p>
+          <p>Don't have an account? <router-link to="/register" class="link">Register now.</router-link></p>
         </div>
       </div>
     </div>

@@ -18,13 +18,13 @@ export default {
   }, 
   methods: {
     toggleSelectedUp: async function () {
-      this.upSelected = !this.upSelected;
-      if(this.downSelected) { 
-        this.downSelected = !this.downSelected;
-        this.number += 1;  
-      }
-      this.number = this.upSelected ? this.number+1 : this.number-1
-      await this.$store.dispatch('upvote', {choice: this.upSelected ? 1 : 3, id: this.id})
+        this.upSelected = !this.upSelected;
+        if(this.downSelected) { 
+          this.downSelected = !this.downSelected;
+          this.number += 1;  
+        }
+        this.number = this.upSelected ? this.number+1 : this.number-1
+        await this.$store.dispatch('upvote', {choice: this.upSelected ? 1 : 3, id: this.id})
     },
     toggleSelectedDown: async function () {
       this.downSelected = !this.downSelected;

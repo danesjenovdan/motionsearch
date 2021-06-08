@@ -225,7 +225,7 @@ export default {
       formatArray: [],
       typeArray: [],
       trainingFocusArray: [],
-      improPrepArray: [{id: 0, value: 'impro'}, { id: 1, value: 'prep' }], // we don't have it saved in database
+      improPrepArray: [],
       ageFilter: [],
       categoryFilter: [],
       formatFilter: [],
@@ -318,7 +318,7 @@ export default {
       this.keywordFilter = ''
     },
     randomMotion() {
-      window.location.href = '/motion/' + (Math.floor((Math.random() * this.motion_length))+1);
+  this.$router.push('/motion/' + (Math.floor((Math.random() * this.motion_length))+1))
     },
     chosenFiltersText (array) {
       if (array.length === 1) {
@@ -334,6 +334,7 @@ export default {
     this.ageArray = await this.$store.dispatch('getMotionAttributes', {type: 'age-ranges'})
     this.formatArray = await this.$store.dispatch('getMotionAttributes', {type: 'debate-formats'})
     this.typeArray = await this.$store.dispatch('getMotionAttributes', {type: 'types'})
+    this.improPrepArray = await this.$store.dispatch('getMotionAttributes', {type: 'impro-prep'})
     this.trainingFocusArray = await this.$store.dispatch('getMotionAttributes', {type: 'training-focuses'})
     this.motion_length = await this.$store.dispatch('getMotionLength')
   }

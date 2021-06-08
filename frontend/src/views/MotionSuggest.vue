@@ -2,7 +2,7 @@
 <div class="background container">
   <div class="header">
     <div class="logo">
-      <a href="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></a>
+        <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
       <span>Easiest way to find a motion for debating</span>
     </div>
     <div class="header-buttons">
