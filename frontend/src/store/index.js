@@ -185,7 +185,6 @@ export const actions = {
   },
   async getMe ({ getters, commit }, payload) {
     try {
-      const filters = mapFilters(getters.getFilters)
       const result = await fetch(`${api}/api/v1/users/me/`, {
           method: 'get',
           headers: {
@@ -237,6 +236,7 @@ export const actions = {
         })
       response = await response.json();
       const idArray = response.map(motion => motion.id)
+      if (idArray.length < 1) return []; 
       const filters = mapFilters({id:idArray, ...payload.filters})
       response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
         method: 'get',
@@ -327,6 +327,7 @@ export const actions = {
       await actions.checkAndRefreshToken({ getters, commit })
       let response =  await actions.getFavorites({ getters }, payload)
       const idArray = response.map(favorite => favorite.motion)
+      if (idArray.length < 1) return []; 
       const filters = mapFilters({id:idArray, ...payload.filters})
       response = await fetch(`${api}/api/v1/motions/?page=${payload.page}&${filters}`, {
           method: 'get',
@@ -431,8 +432,9 @@ export const actions = {
           choices: payload.choice,
         }) // body data type must match "Content-Type" header
       });
-      toast.success('Succesfully voted on motion.')
       const body = await response.json()
+      if (body.detail) toast.error('You need to log in to vote.')
+      else toast.success('Succesfully voted on motion.')
       return body
     } catch (error) {
       toast.error('There was a problem with casting a vote.')
@@ -464,12 +466,13 @@ export const actions = {
           phone_number: payload.phone
         }) // body data type must match "Content-Type" header
       });
-      toast.success("Registration completed successfully. Check email to confirm address.");
+      if(response.status === 400) throw new Error(response.statusText)
       const body = await response.json()
+      toast.success("Registration completed successfully. Check email to confirm address.");
       return body
       
     } catch (error) {
-      toast.success("Registration could not be completed");
+      toast.error("Registration could not be completed");
       return error
     }
   },

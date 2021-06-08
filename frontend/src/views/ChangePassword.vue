@@ -2,7 +2,7 @@
   <div class="login-container background">
     <div class="wrapper">
       <div class="debate-logo">
-        <img src="../assets/motion-generator-logo.svg" alt="motion generator logo">
+        <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
         <span>Easiest way to find a motion for debating</span>
       </div>
       <div class="registration-form-container">
@@ -14,7 +14,7 @@
         </form>
         <hr class="line"/>
         <div class="login-text">
-          <p><a href="/login">Back to log in.</a></p>
+          <p><router-link to="/login">Back to log in.</router-link></p>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
             token: this.$route.params.token, 
             uid: this.$route.params.uid
           })
-        if (response) window.location.href = '/login'
+        if (response) this.$router.push('/login')
       }
     }
   }

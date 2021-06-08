@@ -37,7 +37,7 @@
       <div v-if="motions.length > 0" class="motions-list" v-for="motion in motions" :key="motion.id">
         <div class="motion-text-container">
           <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
-          <a :href="'/motion/'+motion.id" class="motions-title">{{motion.topic}}</a>
+         <router-link :to="'/motion/'+motion.id" class="motions-title">{{motion.topic}}</router-link>
         </div>
         <div class="votes">
           <voting :votes="motion.votes" :id="motion.id" :choice="motion.choice"/>
