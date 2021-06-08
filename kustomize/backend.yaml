@@ -76,13 +76,13 @@ spec:
             - 0.0.0.0:8000
           ports:
             - containerPort: 8000
-          envFrom:
-              - secretRef:
-                  name: motionsearch-credentials
           env:
             - name: DJANGO_SETTINGS_MODULE
               value: motion_search.k8s
               # value: motion_search.settings.k8s
+          envFrom:
+              - secretRef:
+                  name: motionsearch-credentials
           volumeMounts:
             - name: motion-search-backend-persistent-storage
               mountPath: /pvc
