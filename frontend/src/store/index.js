@@ -466,13 +466,13 @@ export const actions = {
           phone_number: payload.phone
         }) // body data type must match "Content-Type" header
       });
-      if(response.status === 400) throw new Error(response.statusText)
-      const body = await response.json()
-      toast.success("Registration completed successfully. Check email to confirm address.");
-      return body
+
+      if(response.status === 200) toast.success("Registration completed successfully. Check email to confirm address.");
+      else toast.error("Registration could not be completed");
+      return true;
     } catch (error) {
       toast.error("Registration could not be completed");
-      return error
+      return false
     }
   },
   async reset (context, payload) {
@@ -486,15 +486,13 @@ export const actions = {
           email: payload.email,
         })
       });
-      console.log('body: ', response);
-      const body = await response.json()
-      console.log('body: ', body);
-      toast.info("Password reset link, was sent to your email account.");
-      return body
+      if(response.status === 200) toast.info("Password reset link, was sent to your email account.");
+      else toast.error("Password change was not possible");
+      return true
     } catch (error) {
       console.log('error: ', error);
       toast.error("Password change was not possible");
-      return error
+      return false
     }
   },
 
@@ -509,15 +507,13 @@ export const actions = {
           password: payload.password,
         })
       });
-      console.log('response: ', response);
-      const body = await response.json()
-      console.log('body: ', body);
-      toast.success("Password was successfully changed.");
-      return body
+      if(response.status === 200) toast.success("Password was successfully changed.");
+      else toast.error("Password change was not possible");
+      return true;
     } catch (error) {
       console.log('error: ', error);
       toast.error("Password change was not possible");
-      return error
+      return false
     }
   },
 
@@ -526,13 +522,13 @@ export const actions = {
       const response = await axios.post('v1/restore-password/', {
         email: payload.email
       })
-      console.log('response: ', response);
-      toast.info("Password reset link, was sent to your email account.");
-      return await response.json()
+      if(response.status === 200) toast.info("Password reset link, was sent to your email account.");
+      else toast.error("Could not send reset link, please try again.");
+      return true;
     } catch (error) {
       console.log('error: ', error);
       toast.error("Password change was not possible");
-      return error
+      return false
     }
   },
   async getMotionAttributes (context, payload) {

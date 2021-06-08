@@ -124,7 +124,7 @@ class UserViewSet(viewsets.ModelViewSet):
         print("Email template was created. Trying to send email...")
         email.send()
         print("Email was succesfulyl sent.")
-        return HttpResponse('Please confirm your email address to complete the registration')
+        return Response('Please confirm your email address to complete the registration')
 
     def activate(self, request, *args, **kwargs):
         try:
@@ -137,16 +137,16 @@ class UserViewSet(viewsets.ModelViewSet):
             user.save()
             login(request, user)
             # return redirect('home')
-            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+            return Response('Thank you for your email confirmation. Now you can login your account.')
         else:
-            return HttpResponse('Activation link is invalid!')
+            return Response('Activation link is invalid!')
 
     def forgot(self, request, *args, **kwargs):
         user = User.objects.get(email=request.data.get('email', ''))
         mail_subject = 'Reset your account.'
         message = render_to_string('acc_reset_password.html', {
             'email': user,
-            'domain': 'motion-search-frontend-lb.djnd.si',
+            'domain': 'https://motion-search-frontend.lb.djnd.si',
             'uid':urlsafe_base64_encode(force_bytes(user.pk)),
             'token':account_activation_token.make_token(user),
         })
@@ -157,7 +157,7 @@ class UserViewSet(viewsets.ModelViewSet):
         print("Email template was created. Trying to send email...")
         email.send()
         print("Email was succesfulyl sent.")
-        return HttpResponse('Check your email account for password change link')
+        return Response('Check your email account for password change link')
     
     def changePassword(self, request, *args, **kwargs):
         try:
