@@ -40,7 +40,6 @@ html, body {
 
     @media (min-width: 768px) {
       margin-bottom: 0;
-      margin-right: 20px;
     }
   }
 
@@ -71,7 +70,7 @@ html, body {
  color: black
 }
 .header-buttons {
-  margin: 20px 10px 20px 0;
+  margin: 10px 10px 10px 0;
   router-link {
     color:#fff !important;
   }
@@ -105,7 +104,7 @@ html, body {
       padding: 0 20px;
       display: flex;
       height: 100%;
-      justify-content: center;
+      justify-content: start;
       flex-direction: column;
 
 
@@ -120,9 +119,10 @@ html, body {
         @media (min-width: 768px) {
           display: flex;
           flex-direction: column;
+          justify-content: center;
         }
 
-        @media (min-width: 1200px) {
+        @media (min-width: 992px) {
           margin: 0;
           flex-direction: row;
         }
@@ -133,6 +133,10 @@ html, body {
 
           @media (min-width: 1200px) {
             margin-bottom: 0;
+          }
+
+          @media (max-width: 1200px) {
+            height: 50px;
           }
         }
 
@@ -167,6 +171,7 @@ html, body {
   img {
     height: 1em; 
     vertical-align: middle;
+    margin-bottom: 2px;
   }
 }
 .tag-text {
@@ -445,6 +450,13 @@ label {
   width: 100%;
   margin-bottom: 20px;
 
+
+  .rotate-arrow {
+    transform: rotate(180deg);
+  }
+  path:hover {
+    fill:white;
+  }
   & > div {
     display: flex;
     align-items: center;
@@ -480,7 +492,18 @@ label {
     }
 
     &:hover, &.active-page:hover {
-      background-color: #ffffff;
+      background-color: #3098f3;
+      color:white;
+
+      path {
+        fill:white;
+      }
+      polygon {
+        fill:white;
+      }
+      li {
+        color:white;
+      }
     }
 
     &.disabled {
@@ -499,7 +522,7 @@ label {
 
 .button {
   text-decoration: none;
-  margin-left: 6px;
+  margin-left: 15px;
   padding: 10px 15px;
   border-radius: 30px;
   font-size: 14px;
@@ -524,13 +547,13 @@ label {
   }
 
   @media (min-width: 768px) {
-    margin-left: 10px;
     border-width: 4px;
   }
 
   @media (min-width: 1200px) {
     font-size: 24px;
     letter-spacing: 2px;
+
   }
 }
 

@@ -296,11 +296,10 @@
 
         @media (min-width: 992px) {
           margin: 10px 10px 10px 40px;
-          height: 74px;
         }
 
         @media (min-width: 1200px) {
-          margin: 10px 10px 10px 100px;
+          margin: 10px 10px 10px 40px;
         }
       }
     }
@@ -314,6 +313,7 @@
       }
     }
     .button {
+      margin-left:10px;
       @media (max-width: 575px) {
         padding: 5px 5px;
         font-size: 10px;

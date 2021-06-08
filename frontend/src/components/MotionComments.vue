@@ -6,8 +6,8 @@
         </div>
         <div class="header-buttons">
           <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion</span></router-link>
-          <router-link to="/login" v-if="!isAuth" class="button button-pan">Log in</router-link>
-          <router-link to="/profile" v-if="isAuth" class="utton button-pan">Profile</router-link>
+          < to="/login" v-if="!isAuth" class="button button--pan"><span>Log in</span></router-link>
+          <router-link to="/profile" v-if="isAuth" class="button button--pan"><span>Profile</span></router-link>
         </div>
       </div>
         <div class="share-bar">
@@ -39,7 +39,7 @@
               <div v-show="links" class="links">
                 <h3>Links</h3>
                 <div v-for="link in links" :key="link._id" >
-                  <a target="_blank" :href="link.value">{{link.text}}</a><br/>
+                  <a target="_blank" :href="link.value"> <p>{{link.text}}</p></a><br/>
                   </div>
                 </div>
             </div>
@@ -108,12 +108,10 @@
 
   @media (min-width: 768px) {
     justify-content: flex-end;
-    padding: 20px;
     position: static;
   }
 
   @media (min-width: 1200px) {
-    padding: 30px;
   }
 
   .logo {
@@ -134,6 +132,7 @@
     }
   }
   .button {
+    margin-left:10px;
     @media (max-width: 575px) {
       padding: 5px 5px;
       font-size: 10px;
@@ -184,6 +183,7 @@
   .commentContainer {
     border: 1px solid black;
     padding: 20px;
+    font-family: Poppins, sans-serif;
   }
   .textAreaContainer{
     display:inline-block;

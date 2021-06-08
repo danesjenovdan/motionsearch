@@ -74,7 +74,6 @@ import MotionList from '../components/MotionList.vue'
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #3098f3;
-    padding-right: 30px;
 
     .logo {
       display: flex;
@@ -102,16 +101,15 @@ import MotionList from '../components/MotionList.vue'
         }
 
         @media (min-width: 768px) {
-          height: 74px;
+          height: 40px;
         }
 
-        @media (min-width: 1200px) {
-          margin: 10px 10px 10px 100px;
-        }
+
       }
     }
 
     .button {
+      margin-left:10px;
       @media (max-width: 575px) {
         padding: 5px 5px;
         font-size: 10px;
@@ -182,6 +180,7 @@ import MotionList from '../components/MotionList.vue'
   }
   p:hover {
     cursor: pointer;
+    color: #3098f3;
   }
   h1 {
     color: #252525;
