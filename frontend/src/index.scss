@@ -565,8 +565,8 @@ label {
   position: absolute;
   top: 0;
   left: 0;
-  width: 200%;
-  height: 200%;
+  width: 100%;
+  height: 100%;
 }
 .button--pan {
   border-color: #ffcc00;
@@ -600,7 +600,7 @@ label {
   border: 2px solid #3098f3;
   border-radius: 3rem;
   overflow: hidden;
-  background: #D6EAFD;
+  background: #3098f3;
 
   &.suggest {
     width: max-content;
@@ -608,6 +608,10 @@ label {
     margin-bottom: 50px;
   }
 
+}
+
+.button--suggest:hover {
+  background: #D6EAFD;
 }
 
 .button--suggest span {
