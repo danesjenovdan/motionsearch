@@ -60,6 +60,12 @@ const routes = [
       component: ChangePassword
     },
     {
+      path: '/login/:uid/:token',
+      name: 'Activate',
+      component: Login,
+      props: true
+    },
+    {
       path: '/motion/:id',
       name: 'MotionView',
       component: MotionView,

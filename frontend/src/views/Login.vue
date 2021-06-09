@@ -32,6 +32,7 @@
 
   const toast = useToast();
   export default {
+    props: ['uid', 'token'],
     data() {
       return {
         username: '',
@@ -47,6 +48,11 @@
         } catch (error) {
           console.log('error: ', error);
         }
+      }
+    },
+    async created() {
+      if (this.uid && this.token) {
+        await this.$store.dispatch('activate', {uid: this.uid, token: this.token})
       }
     }
   }
