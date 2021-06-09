@@ -197,6 +197,22 @@ export const actions = {
       return error
     }
   },
+  async activate ({ getters, commit }, payload) {
+    try {
+      const result = await fetch(`${api}/api/v1/users/activate/${payload.uid}/${payload.token}`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${getters.access_token}`
+          }
+        })
+      if (result.status === 200) toast.success("Account activated succesfully. You can now log in.");
+      else toast.error("Could not activate your account, please try again.");
+    } catch (error) {
+      toast.error("There was an error with trying to activate your account, please try again.");
+      return error
+    }
+  },
   async getUsers ({ getters, commit }, payload) {
     try {
       const result = await fetch(`${api}/api/v1/users?${payload.filterString}`, {
