@@ -7,7 +7,7 @@ resources:
 images:
   - name: motion-search-backend
     newName: rg.fr-par.scw.cloud/djnd/motion-search-backend
-    newTag: 'f3eb29a0719353345ec7fb7df6731d280e2ace72'
+    newTag: '5bd042c33b5cfbebf9417d78476a9521685b657a'
   - name: motion-search-frontend
     newName: rg.fr-par.scw.cloud/djnd/motion-search-frontend
-    newTag: 'f3eb29a0719353345ec7fb7df6731d280e2ace72'
+    newTag: '5bd042c33b5cfbebf9417d78476a9521685b657a'
