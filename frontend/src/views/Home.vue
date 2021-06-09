@@ -56,13 +56,17 @@ export default {
     z-index: 1;
     width: 100%;
     height: 100vh;
+
+  @media (min-width: 992px) {
+      height: 100%;
+    }
   }
 
   @media (min-width: 992px) {
     position: static;
     opacity: 1;
     z-index: 1;
-    height: 100vh;
+    height: 100%;
   }
 }
 
