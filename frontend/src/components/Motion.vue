@@ -109,10 +109,10 @@
   }
   .tag-text {
     color: #000000;
-    font-family: "IBM Plex Mono - Semi Bold Italic";
+    font-family: "IBM Plex Mono";
     font-size: 14px;
     font-weight: 400;
-    font-style: normal;
+    font-style: italic;
     letter-spacing: normal;
     line-height: 18px;
     text-align: center;
