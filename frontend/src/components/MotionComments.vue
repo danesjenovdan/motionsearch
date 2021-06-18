@@ -183,7 +183,13 @@
   .commentContainer {
     border: 1px solid black;
     padding: 20px;
-    font-family: Poppins, sans-serif;
+    font-family: "Ibm Plex Mono", sans-serif;
+    color: #252525;
+    font-size: 18px;
+    i {
+      font-size: 14px;
+      font-style: italic;
+    }
   }
   .textAreaContainer{
     display:inline-block;
