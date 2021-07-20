@@ -59,6 +59,13 @@ spec:
           # envFrom:
           #   - secretRef:
           #       name: motion-search-backend-credentials
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 1Gi
+              cpu: 500m
       containers:
         - name: motion-search-backend
           image: motion-search-backend
@@ -87,6 +94,13 @@ spec:
             - name: motion-search-backend-persistent-storage
               mountPath: /pvc
           #     value: motion-search-backend_project.settings.k8s
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 1Gi
+              cpu: 500m
 ---
 apiVersion: v1
 kind: Service

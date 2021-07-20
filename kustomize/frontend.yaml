@@ -19,6 +19,13 @@ spec:
           image: motion-search-frontend
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 200m
+            limits:
+              memory: 500Mi
+              cpu: 200m
 ---
 apiVersion: v1
 kind: Service
