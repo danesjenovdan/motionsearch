@@ -241,6 +241,20 @@ export const actions = {
       return error
     }
   },
+  async getRandomMotions ({ getters, commit }, payload) {
+    try {
+      const filters = mapFilters(getters.getFilters)
+      const result = await fetch(`${api}/api/v1/motions/random?page=${payload.page}&${filters}`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+      return await result.json();
+    } catch (error) {
+      return error
+    }
+  },
   async getMyMotions ({ getters, commit }, payload) {
     try {
       let response = await fetch(`${api}/api/v1/users/me/motions?page=${payload.page}`, {
