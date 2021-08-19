@@ -207,6 +207,13 @@ class MotionVoteViewSet(viewsets.ModelViewSet):
                 motion.votes += vote
                 return Response(serializer.data)
 
+class MotionRandomViewSet(viewsets.ModelViewSet):
+    queryset = Motion.objects.all().order_by('?')
+    serializer_class = MotionSerializer  # for basic info - topic and category
+    serializer_detailed_class = MotionDetailedSerializer  # for detailed info - all Motion model fields
+
+    def get_serializer_class(self):
+        return super(MotionRandomViewSet, self).get_serializer_class()
 class MotionViewSet(viewsets.ModelViewSet):
     queryset = Motion.objects.all()
     serializer_class = MotionSerializer  # for basic info - topic and category
