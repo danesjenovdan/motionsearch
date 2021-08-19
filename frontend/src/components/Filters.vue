@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="search"><h3>Search for motions</h3></div>
     <div class="filters-container">
       <div
           class="filter-box bottom-popup"
@@ -9,7 +10,7 @@
       >
         <div class="content">
           <img src="../assets/topic.svg">
-          <span v-if="chosenCategoryFilters.length === 0" data-type="categoryFilter"><i>Category</i></span>
+          <span v-if="chosenCategoryFilters.length === 0" data-type="categoryFilter"><i>Themes</i></span>
           <span v-if="chosenCategoryFilters.length > 0">{{ chosenFiltersText(chosenCategoryFilters) }}</span>
         </div>
         <div class="popup-container" id="categoryFilter" @click.stop>
@@ -59,7 +60,7 @@
       >
         <div class="content">
           <img src="../assets/format.svg">
-          <span v-if="chosenFormatFilters.length === 0" data-type="formatFilter"><i>Format</i></span>
+          <span v-if="chosenFormatFilters.length === 0" data-type="formatFilter"><i>Formats</i></span>
           <span v-if="chosenFormatFilters.length > 0">{{ chosenFiltersText(chosenFormatFilters) }}</span>
         </div>
         <div class="popup-container" id="formatFilter" @click.stop>
@@ -188,7 +189,7 @@
         </div>
         <div class="popup-container" id="keywordFilter" @click.stop>
           <div class="popup-box">
-            <span class="keyword-text">Enter key words, separated by comma.</span>
+            <span class="keyword-text">Enter keyword(s), separated by a comma</span>
             <div class="keyword-container">
               <input class="" v-model="keywordFilter"/>
             </div>
@@ -201,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div @click="randomMotion" :class="['filter-box', 'randomFilterBox']">
+      <div @click="randomMotion" :disabled="isDisabled" :class="['filter-box', 'randomFilterBox']">
         <div class="content">
           <img src="../assets/random.svg">
           <span ><i>Show me a random motion</i></span>
@@ -260,6 +261,9 @@ export default {
     },
     chosenKeywordFilters () {
       return this.$store.getters.getFilters.keywordFilter;
+    },
+    isDisabled () {
+      return this.$store.getters.motion_length > 0
     }
   },
   directives: {
@@ -318,7 +322,7 @@ export default {
       this.keywordFilter = ''
     },
     randomMotion() {
-  this.$router.push('/motion/' + (Math.floor((Math.random() * this.motion_length))+1))
+      if(this.motion_length > 0) this.$router.push('/motion/' + (Math.floor((Math.random() * this.motion_length))+1))
     },
     chosenFiltersText (array) {
       if (array.length === 1) {
@@ -343,6 +347,27 @@ export default {
 
 <style scoped lang="scss">
 
+
+.search {
+  font-size: 20px;
+  margin: 0;
+  color: #252525;
+  font-family: "Poppins";
+  width: 90%;
+  @media (min-width: 768px) {
+    font-size: 30px;
+  }
+
+    @media (min-width: 1400px) {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1600px) {
+    width: 80%;
+  }
+
+}
 .filters-container {
   margin: 40px auto;
   width: 100%;
@@ -588,7 +613,6 @@ export default {
       }
     }
   }
-
   .filter-box:hover {
     background-color: #D6EAFD;
     border:#3098f3;
