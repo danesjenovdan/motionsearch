@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="debate-logo">
       <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
-         <span>Easiest way to find a motion for debating</span>
+         <span>The easiest way to find a motion for debating!</span>
       </div>
       <div class="registration-form-container">
         <form @submit="login">
