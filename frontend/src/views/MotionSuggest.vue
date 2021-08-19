@@ -3,7 +3,7 @@
   <div class="header">
     <div class="logo">
         <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
-      <span>Easiest way to find a motion for debating</span>
+      <span>The easiest way to find a motion for debating!</span>
     </div>
     <div class="header-buttons">
       <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion</span></router-link>
@@ -20,7 +20,7 @@
             <textarea rows="3" cols="20" name="topic" ref="topic"></textarea>
           </div>
           <div class="inputContainer">
-            <label >Category</label>
+            <label >Themes</label> <!-- client wish to change from category -> Themes -->
               <div class="arrayContainer">
                 <div class="linkContainer" v-for="(element, index) in chosenCategory" :element="element" :key="element" :vid-id="index">
                     <span v-on:click="removeCategory(index)"><img src="../assets/x.svg"/></span>{{categoryOptions[element]}}

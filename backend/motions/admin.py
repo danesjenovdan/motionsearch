@@ -15,6 +15,8 @@ class MotionsAdmin(admin.ModelAdmin):
         'user',
         'created_at'
     ]
+    list_display_links = ('topic', 'id')
+
 admin.site.register(Motion, MotionsAdmin)
 admin.site.register(MotionCategory)
 admin.site.register(MotionDifficulty)

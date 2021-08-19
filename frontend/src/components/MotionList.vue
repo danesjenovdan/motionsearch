@@ -24,8 +24,11 @@
             <svg :class="{'toggled': dateSortAscend}" width="13" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 13 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>down-arrow_2796734</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAPCAYAAAA/I0V3AAAAvklEQVQ4T83SIW4CQRQA0LfBkTQguAOmSXFwAWQVjiNUNHCCOgQCJB7BBfC4+vYGKARp0opq0gzZbYZllqxk3Pz8NzP//8mkVxNdfOJUTskq0AeesMJLHdTCT54YburVQW183w/q4A0HzPGQeF6Rc8QsdG+JSV7DBq/4imoaYofHPDYKaIpF1KEtnvP9Hr8RCOF+QA2sMa6YWRwOM1sVw60DzyCcEP+IW/AflFHYp+AFSKEyvAJVqIADvKea8wd56yabc1zKQwAAAABJRU5ErkJggg==" width="13" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
           </div>
           <div class="sort-button" @click="toggleQualitySort">
-            <span>Quality</span>
+            <span>Votes</span>
             <svg :class="{'toggled': qualitySortAscend}" width="13" height="15" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 13 15"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>down-arrow_2796734</title><image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAPCAYAAAA/I0V3AAAAvklEQVQ4T83SIW4CQRQA0LfBkTQguAOmSXFwAWQVjiNUNHCCOgQCJB7BBfC4+vYGKARp0opq0gzZbYZllqxk3Pz8NzP//8mkVxNdfOJUTskq0AeesMJLHdTCT54YburVQW183w/q4A0HzPGQeF6Rc8QsdG+JSV7DBq/4imoaYofHPDYKaIpF1KEtnvP9Hr8RCOF+QA2sMa6YWRwOM1sVw60DzyCcEP+IW/AflFHYp+AFSKEyvAJVqIADvKea8wd56yabc1zKQwAAAABJRU5ErkJggg==" width="13" height="15" transform="matrix(1,0,0,1,0,0)" ></image></g></g></svg>
+          </div>
+          <div class="sort-button" @click="randomSort">
+            <span>Random</span>
           </div>
         </div>
       </div>
@@ -87,7 +90,8 @@
         dateSortAscend: false,
         qualitySortAscend: false,
         votes: [],
-        tags: []
+        tags: [],
+        motionType: 'getMotions'
       }
     },
     computed: {
@@ -102,7 +106,7 @@
       async changeSite (p) {
         if (p > 0 && p <= this.pagesNo) {
           try {
-            const response = await this.$store.dispatch(this.type, {page: p})
+            const response = await this.$store.dispatch(this.motionType, {page: p})
             if (response) {
               this.motions = response.results
               this.motionsNo = response.count
@@ -125,9 +129,22 @@
         this.$emit('toggle-filters')
       },
       toggleDateSort() {
+        this.motionType = 'getMotions'
         this.dateSortAscend = !this.dateSortAscend
         this.$store.state.motions.filters['ordering'] = this.dateSortAscend ? 'created_at' : '-created_at'
         this.$store.state.motions.filterCount += 1
+      },
+      async randomSort() {
+        this.$store.state.motions.filters = {} // clean filter if we have bad state or propfilters
+        this.isAuth = await this.$store.dispatch('isAuth')
+        let response = []
+        this.motionType = 'getRandomMotions'
+        if (!this.propsMotions) response = await this.$store.dispatch(this.motionType, {page: 1})
+        this.motions = this.propsMotions ? this.propsMotions : response.results
+        this.motionsNo = response.count
+        this.$store.state.motions.motion_length = this.motionsNo;
+        await this.mapFiltersToTags()
+        await this.getUserVotes()
       },
       removeFilter(filter, type, index) {
         this.tags.splice(index, 1)
@@ -135,6 +152,7 @@
         this.$store.state.motions.filterCount += 1
       },
       toggleQualitySort() {
+        this.motionType = 'getMotions'
         this.qualitySortAscend = !this.qualitySortAscend
         this.$store.state.motions.filters['ordering'] = this.qualitySortAscend ? 'votes' : '-votes'
         this.$store.state.motions.filterCount += 1
@@ -150,10 +168,10 @@
     watch: {
       '$store.state.motions.filterCount': async function() {
         await this.mapFiltersToTags()
-        const response = await this.$store.dispatch(this.type, {page: 1, filters: this.$store.state.motions.filters})
-        console.log('response: ', response);
-        this.motions = response.results
-        this.motionsNo = response.count
+        const response = await this.$store.dispatch(this.motionType, {page: 1, filters: this.$store.state.motions.filters})
+        this.motions = response.results;
+        this.motionsNo = response.count;
+        this.$store.state.motions.motion_length = this.motionsNo;
         await this.getUserVotes()
       }
     },
@@ -164,10 +182,10 @@
         }
       this.isAuth = await this.$store.dispatch('isAuth')
       let response = []
-      console.log('this.type: ', this.type);
-      if (!this.propsMotions) response = await this.$store.dispatch(this.type, {page: 1})
+      if (!this.propsMotions) response = await this.$store.dispatch(this.motionType, {page: 1})
       this.motions = this.propsMotions ? this.propsMotions : response.results
       this.motionsNo = response.count
+      this.$store.state.motions.motion_length = this.motionsNo;
       await this.mapFiltersToTags()
       await this.getUserVotes()
     }

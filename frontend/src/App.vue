@@ -8,7 +8,7 @@
         <p>Development team:</p>
         <a href="https://zainproti.si/" target="_blank"><img src="./assets/ZiP_logo.png" alt="ZiP logo"></a>
         <a href="http://hdd.hr/" target="_blank"><img src="./assets/HDD_logo.png" alt="HDD logo"></a>
-        <a href="https://idebate.org/" target="_blank"><img src="./assets/IDEA_logo.png" alt="IDEA logo"></a>
+        <a href="https://idebate.org/" target="_blank"><img src="./assets/IDEA_logo.jpg" alt="IDEA logo"></a>
       </div>
       <img src="./assets/EU_logo.png" alt="EU logo">
     </footer>

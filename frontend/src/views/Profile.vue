@@ -3,7 +3,7 @@
   <div class="header">
     <div class="logo">
       <router-link to="/"><img src="../assets/motion-generator-logo.svg" alt="motion generator logo"></router-link>
-      <span>Easiest way to find a motion for debating</span>
+      <span>The easiest way to find a motion for debating!</span>
     </div>
     <div class="header-buttons">
       <router-link to="/motionSuggest" class="button button--suggest"><span>Suggest a motion </span></router-link>
