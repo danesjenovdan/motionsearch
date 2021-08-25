@@ -104,7 +104,7 @@ class MotionVote(BaseModel):
 
 class Motion(BaseModel):
     topic = models.TextField(blank=True, null=True)
-    category = models.ManyToManyField(MotionCategory, blank=True)
+    category = models.ManyToManyField(MotionCategory, blank=True, related_name="motions")
     difficulties = models.ForeignKey(MotionDifficulty, on_delete=models.CASCADE)
     debate_formats = models.ForeignKey(DebateFormat, on_delete=models.CASCADE)
     age_range = models.ForeignKey(MotionAgeRange, on_delete=models.CASCADE)
@@ -124,3 +124,6 @@ class Motion(BaseModel):
     @property
     def leaning_score(self):
         return 0
+
+    def __str__(self):
+        return str(self.topic)

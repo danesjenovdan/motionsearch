@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'users',
     'oauth2_provider',
     'django_filters',
+    'import_export',
 ]
 
 MIDDLEWARE = [

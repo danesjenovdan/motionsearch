@@ -5,3 +5,4 @@ django-cors-headers
 drf_social_oauth2
 django-filter
 six
+import_export
