@@ -9,6 +9,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from motions.models import Motion, MotionCategory, MotionDifficulty, DebateFormat, MotionAgeRange, MotionImproPrep, \
     MotionTrainingFocus, MotionType, MotionInfoText, MotionWhereUsed, MotionLink, MotionComment
+from users.models import User
 
 class CategoryAdminForm(forms.ModelForm):
     motions = forms.ModelMultipleChoiceField(
@@ -36,16 +37,67 @@ class CategoryAdminForm(forms.ModelForm):
             category.save()
 
         if category.pk:
-            print("yeeet 1")
             category.motions.set(self.cleaned_data['motions'])
-            print("yeeet 2")
             self.save_m2m()
 
         return category
 
 class CategoryAdmin(admin.ModelAdmin):
     form = CategoryAdminForm
+
+def valueToId(Model, row, rowName):
+    values = row[rowName].split(',')
+    if len(values) == 1 and values[0] == '':
+        return ''
+    ids = []
+    for value in values:
+        res = Model.objects.filter(value=value).first()
+        ids += [res.id]
+    return ','.join(str(x) for x in ids)
+
+def usernameToId(username):
+    user = User.objects.filter(username=username).first()
+    return user.id
+
+def textsToId(Model, row, rowName):
+    values = row[rowName].split(',')
+    if len(values) == 1 and values[0] == '':
+        return ''
+    ids = []
+    for value in values:
+        res = Model.objects.get_or_create(
+                value=value
+            )
+        ids += [res[0].id]
+    return ','.join(str(x) for x in ids)
 class MotionResource(resources.ModelResource):
+    def before_import_row(self, row, **kwargs):
+        category = valueToId(MotionCategory, row, 'category')
+        difficulties = valueToId(MotionDifficulty, row, 'difficulties')
+        debate_formats = valueToId(DebateFormat, row, 'debate_formats')
+        age_range = valueToId(MotionAgeRange, row, 'age_range')
+        type = valueToId(MotionType, row, 'type')
+        training_focus = valueToId(MotionTrainingFocus, row, 'training_focus')
+        impro_prep = valueToId(MotionImproPrep, row, 'impro_prep')
+        user = usernameToId(row['user'])
+        info_text = textsToId(MotionInfoText, row, 'info_text')
+        where_used = textsToId(MotionWhereUsed, row, 'where_used')
+        links = textsToId(MotionLink, row, 'links')
+
+        row['category'] = category
+        row['difficulties'] = difficulties
+        row['debate_formats'] = debate_formats
+        row['age_range'] = age_range
+        row['type'] = type
+        row['training_focus'] = training_focus
+        row['impro_prep'] = impro_prep
+        row['info_text'] = info_text
+        row['where_used'] = where_used
+        row['links'] = links
+        row['user'] = user
+
+        return super().before_import_row(row, **kwargs)
+
     class Meta:
         model = Motion
 class MotionsAdmin(ImportExportModelAdmin):
