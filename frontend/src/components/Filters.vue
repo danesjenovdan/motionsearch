@@ -195,7 +195,7 @@
             </div>
             <div class="keyword-apply">
               <span :onclick="clearKeywords">Clear all</span>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="keywordFilter">Apply</div>
+              <div class="popup-apply" :onclick="applyKeywords"  data-type="keywordFilter">Apply</div>
             </div>
           </div>
           <div class="popup-arrow">
@@ -234,7 +234,7 @@ export default {
       difficultyFilter: [],
       typeFilter: [],
       trainingFilter: [],
-      keywordFilter: ''
+      keywordFilter: []
     }
   },
   computed: {
@@ -315,6 +315,17 @@ export default {
       const popup = document.getElementById(event.target.getAttribute('data-type'));
       this.$store.state.motions.filters[event.target.getAttribute('data-type')] = {} // clean filter if we have bad state
       this.$store.state.motions.filters[event.target.getAttribute('data-type')] = this[event.target.getAttribute('data-type')]
+      this.$store.state.motions.filterCount += 1
+      popup.parentElement.classList.toggle('selected');
+    },
+    async applyKeywords(event) {
+      const popup = document.getElementById(event.target.getAttribute('data-type'));
+      // change keywords, to array of keywords
+      let keywords = this[event.target.getAttribute('data-type')].split(',')
+      // get IDs of fitlered keywords
+      keywords = await this.$store.dispatch('getMotionAttributes', {type: 'keywords', filters: {value: keywords}})
+      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = {} // clean filter if we have bad state
+      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = keywords
       this.$store.state.motions.filterCount += 1
       popup.parentElement.classList.toggle('selected');
     },

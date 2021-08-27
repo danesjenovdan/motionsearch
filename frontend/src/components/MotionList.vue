@@ -156,7 +156,8 @@
         this.qualitySortAscend = !this.qualitySortAscend
         this.$store.state.motions.filters['ordering'] = this.qualitySortAscend ? 'votes' : '-votes'
         this.$store.state.motions.filterCount += 1
-      }, mapFiltersToTags() {
+      },
+      mapFiltersToTags() {
         this.tags = []
         Object.keys(this.$store.state.motions.filters).forEach(filter => {
           if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
