@@ -2,12 +2,13 @@ from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 from motions.views import MotionViewSet, MotionCategoryViewSet, MotionDifficultyViewSet, DebateFormatViewSet, \
     MotionAgeRangeViewSet, MotionTypeViewSet, MotionTrainingFocusViewSet, MotionImproPrepViewSet, MotionInfoTextViewSet, \
-    MotionLinkViewSet, MotionCommentViewSet, MotionWhereUsedViewSet, MotionVoteViewSet, MotionRandomViewSet
+    MotionLinkViewSet, MotionCommentViewSet, MotionWhereUsedViewSet, MotionVoteViewSet, MotionRandomViewSet, MotionKeywordsViewSet
 
 app_name = 'motions'
 
 router = DefaultRouter()
 router.register(r'categories', MotionCategoryViewSet, basename='MotionCategory')
+router.register(r'keywords', MotionKeywordsViewSet, basename='MotionKeywords')
 router.register(r'difficulties', MotionDifficultyViewSet, basename='MotionDifficulty')
 router.register(r'debate-formats', DebateFormatViewSet, basename='DebateFormat')
 router.register(r'age-ranges', MotionAgeRangeViewSet, basename='MotionAgeRange')

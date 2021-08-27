@@ -8,7 +8,7 @@ from import_export.admin import  ImportExportModelAdmin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from motions.models import Motion, MotionCategory, MotionDifficulty, DebateFormat, MotionAgeRange, MotionImproPrep, \
-    MotionTrainingFocus, MotionType, MotionInfoText, MotionWhereUsed, MotionLink, MotionComment
+    MotionTrainingFocus, MotionType, MotionInfoText, MotionWhereUsed, MotionLink, MotionComment, MotionKeywords
 from users.models import User
 
 class CategoryAdminForm(forms.ModelForm):
@@ -83,6 +83,7 @@ class MotionResource(resources.ModelResource):
         info_text = textsToId(MotionInfoText, row, 'info_text')
         where_used = textsToId(MotionWhereUsed, row, 'where_used')
         links = textsToId(MotionLink, row, 'links')
+        keywords = textsToId(MotionKeywords, row, 'keywords')
 
         row['category'] = category
         row['difficulties'] = difficulties
@@ -95,6 +96,7 @@ class MotionResource(resources.ModelResource):
         row['where_used'] = where_used
         row['links'] = links
         row['user'] = user
+        row['keywords'] = keywords
 
         return super().before_import_row(row, **kwargs)
 
@@ -103,7 +105,7 @@ class MotionResource(resources.ModelResource):
 class MotionsAdmin(ImportExportModelAdmin):
     resource_class = MotionResource
     model = Motion
-    filter_horizontal = ('category',) #If you don't specify this, you will get a multiple select widget.
+    filter_horizontal = ('category', 'keywords') #If you don't specify this, you will get a multiple select widget.
     list_display = [
         'id',
         'topic',
@@ -126,3 +128,5 @@ admin.site.register(MotionWhereUsed)
 admin.site.register(MotionInfoText)
 admin.site.register(MotionLink)
 admin.site.register(MotionComment)
+admin.site.register(MotionKeywords)
+

@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import uuid
 from django.utils.translation import gettext as _
 from django.db import models
 from motions.behaviors.models import BaseModel
 from django.db import models
 from django.utils import timezone
 
-
 class AutoDateTimeField(models.DateTimeField):
     def pre_save(self, model_instance, add):
         return timezone.now()
-
-
 
 
 class VoteValue:
@@ -29,7 +27,10 @@ class MotionCategory(BaseModel):
     value = models.CharField(max_length=255, null=True, blank=True)
     def __str__(self):
         return self.value
-
+class MotionKeywords(BaseModel):
+    value = models.CharField(max_length=255, null=True, blank=True)
+    def __str__(self):
+        return self.value
 
 class MotionDifficulty(BaseModel):
     value = models.CharField(max_length=255, null=True, blank=True)
@@ -116,6 +117,7 @@ class Motion(BaseModel):
     links = models.ManyToManyField(MotionLink, blank=True)
     votes = models.IntegerField(default=0, blank=True, db_index=True)
     user = models.ForeignKey('users.User', null=True, blank=False, on_delete=models.CASCADE)
+    keywords =  models.ManyToManyField(MotionKeywords, blank=True, related_name="motions")
 
     @property
     def quality_score(self):
@@ -127,3 +129,4 @@ class Motion(BaseModel):
 
     def __str__(self):
         return str(self.topic)
+

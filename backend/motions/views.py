@@ -10,11 +10,12 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend, Filter, FilterSet, filters
 from django.shortcuts import get_object_or_404
 from motions.models import MotionCategory, MotionDifficulty, DebateFormat, Motion, MotionAgeRange, MotionType, \
-    MotionTrainingFocus, MotionImproPrep, MotionWhereUsed, MotionInfoText, MotionLink, MotionComment, MotionVote
+    MotionTrainingFocus, MotionImproPrep, MotionWhereUsed, MotionInfoText, MotionLink, MotionComment, MotionVote, \
+    MotionKeywords
 from motions.serializers import MotionCategorySerializer, MotionDifficultySerializer, DebateFormatSerializer, \
     MotionAgeRangeSerializer, MotionTypeSerializer, MotionTrainingFocusSerializer, \
     MotionImproPrepSerializer, MotionWhereUsedSerializer, MotionInfoTextSerializer, MotionLinkSerializer, \
-    MotionCommentSerializer, MotionDetailedSerializer, MotionSerializer, MotionVoteSerializer
+    MotionCommentSerializer, MotionDetailedSerializer, MotionSerializer, MotionVoteSerializer, MotionKeywordsSerializer
 
 from users.models import User
 
@@ -45,6 +46,13 @@ class MotionCategoryFilterSet(FilterSet):
         model = MotionCategory
         fields = ('value','id')
 
+class MotionKeywordsFilterSet(FilterSet):
+    value = MultiValueKeyFilter(field_name='value')
+    id = MultiValueKeyFilter(field_name='id')
+    class Meta:
+        model = MotionKeywords
+        fields = ('value','id')
+
 class MotionLinkFilterSet(FilterSet):
     value = MultiValueKeyFilter(field_name='value')
     id = MultiValueKeyFilter(field_name='id')
@@ -72,6 +80,7 @@ class MotionFilterSet(FilterSet):
     impro_prep = MultiValueKeyFilter(field_name='impro_prep')
     training_focus = MultiValueKeyFilter(field_name='training_focus')
     category = MultiValueKeyFilter(field_name='category')
+    keywords = MultiValueKeyFilter(field_name='keywords')
     difficulties = MultiValueKeyFilter(field_name='difficulties')
     topic = KeywordFilter(field_name='topic')
     class Meta:
@@ -82,6 +91,14 @@ class MotionCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = MotionCategorySerializer
     filter_backends = (DjangoFilterBackend,)
     filter_class = MotionCategoryFilterSet
+    filter_fields = ('value','id')
+    permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+
+class MotionKeywordsViewSet(viewsets.ModelViewSet):
+    queryset = MotionKeywords.objects.all().order_by('value')
+    serializer_class = MotionKeywordsSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = MotionKeywordsFilterSet
     filter_fields = ('value','id')
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
 
@@ -233,6 +250,7 @@ class MotionViewSet(viewsets.ModelViewSet):
         category_data = request.data.get('category', [])
         info_text_data = request.data.get('info_text', [])
         links_data = request.data.get('links', [])
+        keywords_data = request.data.get('keywords', [])
         request.data.update({ "user": request.user.id})
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -255,7 +273,11 @@ class MotionViewSet(viewsets.ModelViewSet):
                 **links
             )
             instance.links.add(response)
-
+        for keyword in keywords_data: 
+            response, created = MotionKeywords.objects.get_or_create(
+                value=keyword
+            )
+            instance.keywords.add(response)
         headers = self.get_success_headers(serializer.data)
 
         data = self.get_serializer(instance).data
