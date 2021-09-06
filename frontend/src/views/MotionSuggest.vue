@@ -124,6 +124,13 @@
               </div>
             </div>
           </div>
+          <div class="textAreaContainer">
+            <div class="subtitleContainer">
+              <label>Keywords</label><br/>
+              <label class="subtitle">Enter keyword(s), separated by a comma</label>
+            </div>
+            <textarea rows="1" cols="20" name="keywords" ref="keywords" placeholder="Type keywords here..."></textarea>
+          </div>
           <button class="btn" type="submit">SUGGEST A MOTION</button>
         </form>
     </div>
@@ -194,6 +201,7 @@
           await this.$store.dispatch('postMotion', {
             topic: this.$refs.topic.value,
             where_used: JSON.parse(JSON.stringify(this.usedWhere)),
+            keywords: this.$refs.keywords.value.split(','),
             links: JSON.parse(JSON.stringify(this.links)),
             category: this.chosenCategory,
             difficulties: this.difficulty,

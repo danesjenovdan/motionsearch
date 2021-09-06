@@ -74,6 +74,7 @@ const mapFilters = (filters) => {
   Object.keys(filters).forEach((key, index) => {
     if(index !== 0) filterString += '&'
     if (key === 'categoryFilter') filterString += 'category='
+    if (key === 'keywordFilter') filterString += 'keywords='
     if (key === 'ageFilter') filterString += 'age_range='
     if (key === 'formatFilter') filterString += 'debate_formats='
     if (key === 'difficultyFilter') filterString += 'difficulties='
@@ -81,8 +82,8 @@ const mapFilters = (filters) => {
     if (key === 'trainingFilter') filterString += 'training_focus='
     if (key === 'improPrepFilter') filterString += 'impro_prep='
     if (key === 'id') filterString += 'id='
+    if (key === 'value') filterString += 'value='
     if (key === 'ordering') filterString += 'ordering='
-    if (key === 'keywordFilter') filterString += 'topic='
 
     if(Array.isArray(filters[key])) {
       filters[key].forEach((value, index) => {

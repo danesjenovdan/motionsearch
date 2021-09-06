@@ -21,8 +21,8 @@
                 <label class="popup-text" :for="'category-' + category.id">{{category.value}}</label>
               </div>
             </div>
-            <div class="popup-apply" :onclick="toggleFilters" data-type="categoryFilter">Apply</div>
           </div>
+          <div class="popup-apply" :onclick="toggleFilters" data-type="categoryFilter">Apply</div>
           <div class="popup-arrow">
           </div>
         </div>
@@ -46,8 +46,8 @@
                 <label class="popup-text" :for="'difficulty-' + difficulty.id">{{difficulty.value}}</label>
               </div>
             </div>
-            <div class="popup-apply" :onclick="toggleFilters" data-type="difficultyFilter">Apply</div>
           </div>
+          <div class="popup-apply" :onclick="toggleFilters" data-type="difficultyFilter">Apply</div>
           <div class="popup-arrow">
           </div>
         </div>
@@ -71,8 +71,8 @@
                 <label class="popup-text" :for="'format-' + format.id">{{format.value}}</label>
               </div>
             </div>
-            <div class="popup-apply" :onclick="toggleFilters"  data-type="formatFilter">Apply</div>
           </div>
+          <div class="popup-apply" :onclick="toggleFilters"  data-type="formatFilter">Apply</div>
           <div class="popup-arrow">
           </div>
         </div>
@@ -96,8 +96,8 @@
                 <label class="popup-text" :for="'age-' + age.id">{{age.value}}</label>
               </div>
             </div>
-            <div class="popup-apply" :onclick="toggleFilters"  data-type="ageFilter">Apply</div>
           </div>
+          <div class="popup-apply" :onclick="toggleFilters"  data-type="ageFilter">Apply</div>
           <div class="popup-arrow">
           </div>
         </div>
@@ -121,8 +121,8 @@
                 <label class="popup-text" :for="'type-' + type.id">{{type.value}}</label>
               </div>
             </div>
-            <div class="popup-apply" :onclick="toggleFilters"  data-type="typeFilter">Apply</div>
           </div>
+          <div class="popup-apply" :onclick="toggleFilters"  data-type="typeFilter">Apply</div>
           <div class="popup-arrow">
           </div>
         </div>
@@ -146,8 +146,8 @@
                 <label class="popup-text" :for="'training-' + training.id">{{training.value}}</label>
               </div>
             </div>
-            <div class="popup-apply" :onclick="toggleFilters"  data-type="trainingFilter">Apply</div>
           </div>
+          <div class="popup-apply" :onclick="toggleFilters"  data-type="trainingFilter">Apply</div>
           <div class="popup-arrow">
           </div>
         </div>
@@ -171,8 +171,8 @@
                 <label class="popup-text" :for="'impro-' + impro.id">{{impro.value}}</label>
               </div>
             </div>
-            <div class="popup-apply" :onclick="toggleFilters"  data-type="improPrepFilter">Apply</div>
           </div>
+          <div class="popup-apply" :onclick="toggleFilters"  data-type="improPrepFilter">Apply</div>
           <div class="popup-arrow">
           </div>
         </div>
@@ -195,7 +195,7 @@
             </div>
             <div class="keyword-apply">
               <span :onclick="clearKeywords">Clear all</span>
-              <div class="popup-apply" :onclick="toggleFilters"  data-type="keywordFilter">Apply</div>
+              <div class="popup-apply" :onclick="applyKeywords"  data-type="keywordFilter">Apply</div>
             </div>
           </div>
           <div class="popup-arrow">
@@ -234,7 +234,7 @@ export default {
       difficultyFilter: [],
       typeFilter: [],
       trainingFilter: [],
-      keywordFilter: ''
+      keywordFilter: []
     }
   },
   computed: {
@@ -315,6 +315,17 @@ export default {
       const popup = document.getElementById(event.target.getAttribute('data-type'));
       this.$store.state.motions.filters[event.target.getAttribute('data-type')] = {} // clean filter if we have bad state
       this.$store.state.motions.filters[event.target.getAttribute('data-type')] = this[event.target.getAttribute('data-type')]
+      this.$store.state.motions.filterCount += 1
+      popup.parentElement.classList.toggle('selected');
+    },
+    async applyKeywords(event) {
+      const popup = document.getElementById(event.target.getAttribute('data-type'));
+      // change keywords, to array of keywords
+      let keywords = this[event.target.getAttribute('data-type')].split(',')
+      // get IDs of fitlered keywords
+      keywords = await this.$store.dispatch('getMotionAttributes', {type: 'keywords', filters: {value: keywords}})
+      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = {} // clean filter if we have bad state
+      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = keywords
       this.$store.state.motions.filterCount += 1
       popup.parentElement.classList.toggle('selected');
     },
@@ -515,6 +526,11 @@ export default {
           span {
             text-decoration: underline;
           }
+        .popup-apply {
+          margin-right: 0;
+          padding-bottom: 0;
+          border-top: 0;
+          }
         }
 
         .keyword-text {
@@ -529,7 +545,6 @@ export default {
           row-gap: 10px;
           width: 100%;
           align-items: start;
-          border-bottom: 1px solid black;
           padding-bottom: 15px;
 
           @media (min-width: 992px) {
@@ -540,17 +555,20 @@ export default {
         label.popup-text {
           cursor: default;
         }
-
-        .popup-apply {
-          color: #3098f3 !important;
-          font-family: Poppins;
-          font-size: 18px;
-          font-weight: 700;
-          text-align: right;
-          text-decoration: underline;
-        }
       }
 
+    .popup-apply {
+      color: #3098f3 !important;
+      margin-right: 20px;
+      padding-bottom: 20px;
+      font-family: Poppins;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: right;
+      text-decoration: underline;
+      border-top: 1px solid black;
+      cursor: pointer;
+      }
       .popup-arrow {
         content: "";
         width: 20px;

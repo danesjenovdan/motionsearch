@@ -20,7 +20,14 @@ class MotionCategorySerializer(serializers.ModelSerializer):
     #def create(self, validated_data):
     #    category = MotionCategory.objects.get_or_create(**validated_data)
     #    return category
-
+class MotionKeywordsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MotionCategory
+        fields = ['id', 'value']
+        required_fields = ['id']
+    #def create(self, validated_data):
+    #    category = MotionCategory.objects.get_or_create(**validated_data)
+    #    return category
 class MotionDifficultySerializer(serializers.ModelSerializer):
     class Meta:
         model = MotionDifficulty
@@ -91,13 +98,14 @@ class MotionSerializer(serializers.ModelSerializer):
         model = Motion
         #fields = ['id', 'topic', 'category', 'created_at', 'debate_formats', 'age_range', 
         #'type', 'training_focus', 'impro_prep', 'where_used', 'info_text', 'links']
-        fields = ['id', 'topic', 'category', 'created_at', 'difficulties', 'age_range', 
+        fields = ['id', 'topic', 'category', 'keywords', 'created_at', 'difficulties', 'age_range', 
         'impro_prep', 'debate_formats', 'type', 'training_focus',  'where_used', 'info_text', 'links', 'votes', 'user']
-        read_only_fields = ['category', "info_text", "where_used", "links"]
+        read_only_fields = ['category', "info_text", "where_used", "links", "keywords"]
 
 
 class MotionDetailedSerializer(serializers.ModelSerializer):
     category = MotionCategorySerializer(many=True)
+    keywords = MotionKeywordsSerializer(many=True)
     difficulties = MotionDifficultySerializer(many=True)
     debate_formats = DebateFormatSerializer(many=True)
     age_range = MotionAgeRangeSerializer(many=True)
