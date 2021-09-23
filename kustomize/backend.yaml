@@ -61,11 +61,11 @@ spec:
           #       name: motion-search-backend-credentials
           resources:
             requests:
-              memory: 1Gi
-              cpu: 200m
+              memory: 300Mi
+              cpu: 100m
             limits:
-              memory: 1Gi
-              cpu: 200m
+              memory: 300Mi
+              cpu: 100m
       containers:
         - name: motion-search-backend
           image: motion-search-backend
@@ -96,11 +96,11 @@ spec:
           #     value: motion-search-backend_project.settings.k8s
           resources:
             requests:
-              memory: 1Gi
-              cpu: 200m
+              memory: 300Mi
+              cpu: 100m
             limits:
-              memory: 1Gi
-              cpu: 200m
+              memory: 300Mi
+              cpu: 100m
 ---
 apiVersion: v1
 kind: Service
