@@ -20,3 +20,6 @@ venv
 
 #certificates
 *.pem
+
+# secrets
+secrets.yaml
