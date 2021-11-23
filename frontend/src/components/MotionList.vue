@@ -90,13 +90,21 @@
         dateSortAscend: false,
         qualitySortAscend: false,
         votes: [],
-        tags: [],
         motionType: 'getMotions'
       }
     },
     computed: {
       pagesNo: function() {
         return Math.ceil(this.motionsNo/10)
+      },
+      tags: function() {
+        let tags = []
+        Object.keys(this.$store.getters.getFilters).forEach(filter => {
+          if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.getters.getFilters[filter].forEach((filterValue) => {
+            tags.push({filterValue, filter})
+          })
+        })
+        return tags;
       }
     },
     components: {
@@ -135,7 +143,8 @@
         this.$store.state.motions.filterCount += 1
       },
       async randomSort() {
-        this.$store.state.motions.filters = {} // clean filter if we have bad state or propfilters
+        // this.$store.state.motions.filters = {} // clean filter if we have bad state or propfilters
+        this.$store.commit('clearFilters');
         this.isAuth = await this.$store.dispatch('isAuth')
         let response = []
         this.motionType = 'getRandomMotions'
@@ -143,7 +152,7 @@
         this.motions = this.propsMotions ? this.propsMotions : response.results
         this.motionsNo = response.count
         this.$store.state.motions.motion_length = this.motionsNo;
-        await this.mapFiltersToTags()
+        // await this.mapFiltersToTags()
         await this.getUserVotes()
       },
       removeFilter(filter, type, index) {
@@ -156,19 +165,11 @@
         this.qualitySortAscend = !this.qualitySortAscend
         this.$store.state.motions.filters['ordering'] = this.qualitySortAscend ? 'votes' : '-votes'
         this.$store.state.motions.filterCount += 1
-      },
-      mapFiltersToTags() {
-        this.tags = []
-        Object.keys(this.$store.state.motions.filters).forEach(filter => {
-          if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
-            this.tags.push({filterValue, filter})
-          })
-        })
       }
     },
     watch: {
       '$store.state.motions.filterCount': async function() {
-        await this.mapFiltersToTags()
+        // await this.mapFiltersToTags()
         const response = await this.$store.dispatch(this.motionType, {page: 1, filters: this.$store.state.motions.filters})
         this.motions = response.results;
         this.motionsNo = response.count;
@@ -187,7 +188,7 @@
       this.motions = this.propsMotions ? this.propsMotions : response.results
       this.motionsNo = response.count
       this.$store.state.motions.motion_length = this.motionsNo;
-      await this.mapFiltersToTags()
+      // await this.mapFiltersToTags()
       await this.getUserVotes()
     }
   }

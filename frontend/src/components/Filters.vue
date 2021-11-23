@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="search"><h3>Search for motions</h3></div>
+    <div class="clear-all-btn-wrapper">
+      <div class="clear-all-btn" @click="resetFilters">Clear all</div>
+    </div>
     <div class="filters-container">
       <div
           class="filter-box bottom-popup"
@@ -313,9 +316,8 @@ export default {
     },
     toggleFilters(event) {
       const popup = document.getElementById(event.target.getAttribute('data-type'));
-      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = {} // clean filter if we have bad state
-      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = this[event.target.getAttribute('data-type')]
-      this.$store.state.motions.filterCount += 1
+      this.$store.commit('addFilter', {filterName: event.target.getAttribute('data-type'), filterValue: this[event.target.getAttribute('data-type')]});
+      this.$store.commit('incrementFilterCount');
       popup.parentElement.classList.toggle('selected');
     },
     async applyKeywords(event) {
@@ -341,6 +343,10 @@ export default {
       } else {
         return `${array[0].value} + ${array.length - 1} more`;
       }
+    },
+    resetFilters() {
+      this.$store.commit('clearFilters');
+      this.$store.commit('resetFilterCount');
     }
   },
   async created() {
@@ -365,11 +371,14 @@ export default {
   color: #252525;
   font-family: "Poppins";
   width: 90%;
+  h3 {
+    margin-bottom: 20px;
+  }
   @media (min-width: 768px) {
     font-size: 30px;
   }
 
-    @media (min-width: 1400px) {
+  @media (min-width: 1400px) {
     width: 90%;
     margin: 0 auto;
   }
@@ -379,8 +388,41 @@ export default {
   }
 
 }
+
+.clear-all-btn-wrapper {
+  text-align: end;
+
+  @media (min-width: 1400px) {
+    margin-right: 5%;
+  }
+
+  @media (min-width: 1600px) {
+    margin-right: 10%;
+  }
+
+  .clear-all-btn {
+    text-transform: uppercase;
+    font-style: italic;
+    color: black;
+    border-radius: 20px;
+    background-color: rgb(214, 234, 253);
+    padding: 5px 10px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-family: "IBM Plex Mono";
+    font-size: 14px;
+    line-height: 18px;
+    
+    &:hover {
+      background-color:  #ffcc00;
+    }
+  }
+}
+
 .filters-container {
-  margin: 40px auto;
+  margin: 15px auto 40px;
   width: 100%;
   display: grid;
   position: relative;
@@ -392,7 +434,7 @@ export default {
     width: 90%;
     column-gap: 5%;
     row-gap: 5%;
-    margin: 80px auto;
+    margin: 15px auto 80px;
   }
 
   @media (min-width: 1600px) {

@@ -59,6 +59,18 @@ export const mutations = {
   },
   motion_length (state, count) {
     state.motion_length = count;
+  },
+  addFilter (state, payload) {
+    state.filters[payload.filterName] = payload.filterValue;
+  },
+  clearFilters (state) {
+    state.filters = {};
+  },
+  incrementFilterCount (state) {
+    state.filterCount++;
+  },
+  resetFilterCount (state) {
+    state.filterCount = 0;
   }
 }
 
