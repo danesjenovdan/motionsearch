@@ -66,6 +66,7 @@ class Me(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         q = self.queryset.filter(pk=request.user.id)
         return Response(data=self.serializer_class(q, many=True).data)
+        
 class MyFavorites(viewsets.ModelViewSet):
     queryset = FavoriteMotion.objects.all().order_by('-created_at')
     serializer_class = UserFavoriteMotionSerializer
@@ -75,9 +76,13 @@ class MyFavorites(viewsets.ModelViewSet):
     filter_class = FavoritesFilterSet
     filter_fields = ('id', 'user', 'motion')
     def retrieve(self, request, *args, **kwargs):
-        user = User.objects.get(pk=request.user.id)
-        q = self.queryset.filter(user=user)
-        return Response(data=self.serializer_class(q, many=True).data)
+        try:
+            user = User.objects.get(pk=request.user.id)
+            q = self.queryset.filter(user=user)
+            return Response(data=self.serializer_class(q, many=True).data)
+        except User.DoesNotExist:
+            return Response(data=[])
+        
 
 class MyMotions(viewsets.ModelViewSet):
     queryset = Motion.objects.all().order_by('-created_at')

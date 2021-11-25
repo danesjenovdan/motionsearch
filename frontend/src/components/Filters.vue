@@ -306,17 +306,17 @@ export default {
         { filters: this.improPrepFilter, type: 'improPrepFilter' },
         { filters: this.keywordFilter, type: 'keywordFilter'  }   
       ]
-
       filterArrays.forEach((arr) => {
-        this.$store.state.motions.filters[arr.type] = {}
-        this.$store.state.motions.filters[arr.type] = arr.filters
+        this.$store.commit('removeFilter', { filterName: arr.type })
+        this.$store.commit('addFilter', { filterName: arr.type, filterValue: arr.filters })
       })
-      this.$store.state.motions.filterCount += 1
+      this.$store.commit('incrementFilterCount');
       this.$emit('toggle-filters');
     },
     toggleFilters(event) {
       const popup = document.getElementById(event.target.getAttribute('data-type'));
-      this.$store.commit('addFilter', {filterName: event.target.getAttribute('data-type'), filterValue: this[event.target.getAttribute('data-type')]});
+      this.$store.commit('removeFilter', { filterName: event.target.getAttribute('data-type') })
+      this.$store.commit('addFilter', { filterName: event.target.getAttribute('data-type'), filterValue: this[event.target.getAttribute('data-type')] });
       this.$store.commit('incrementFilterCount');
       popup.parentElement.classList.toggle('selected');
     },
@@ -326,16 +326,18 @@ export default {
       let keywords = this[event.target.getAttribute('data-type')].split(',')
       // get IDs of fitlered keywords
       keywords = await this.$store.dispatch('getMotionAttributes', {type: 'keywords', filters: {value: keywords}})
-      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = {} // clean filter if we have bad state
-      this.$store.state.motions.filters[event.target.getAttribute('data-type')] = keywords
-      this.$store.state.motions.filterCount += 1
+      this.$store.commit('removeFilter', { filterName: event.target.getAttribute('data-type') })
+      this.$store.commit('addFilter', { filterName: event.target.getAttribute('data-type'), filterValue: keywords })
+      this.$store.commit('incrementFilterCount');
+
       popup.parentElement.classList.toggle('selected');
     },
     clearKeywords(event){
       this.keywordFilter = ''
     },
-    randomMotion() {
-      if(this.motion_length > 0) this.$router.push('/motion/' + (Math.floor((Math.random() * this.motion_length))+1))
+    async randomMotion() {
+      const randomMotionId = await this.$store.dispatch('getRandomMotion')
+      this.$router.push('/motion/' + randomMotionId);
     },
     chosenFiltersText (array) {
       if (array.length === 1) {
@@ -751,8 +753,8 @@ export default {
 }
 
 /* Accessibility */
-[type="checkbox"]:checked:focus + label:before,
-[type="checkbox"]:not(:checked):focus + label:before {
-}
+// [type="checkbox"]:checked:focus + label:before,
+// [type="checkbox"]:not(:checked):focus + label:before {
+// }
 
 </style>

@@ -8,8 +8,7 @@
   <span class="motion-text">{{motion.topic}}</span>
   <div class="line"></div>
   <ul class="tags">
-    <li  v-on:click="getFilteredMotions(category)"
- class="tag" v-for="category in motion.category" :key="category">
+    <li  v-on:click="getFilteredMotions(category)" class="tag" v-for="category in motion.category" :key="category">
       <span class="tag-text">{{ categoriesDictionary[category] }}</span>
     </li>
   </ul>
@@ -35,10 +34,10 @@
       Favourite,
       MotionList
     },
-     props: ['id', 'motion'],
+    props: ['id', 'motion'],
     methods: {
       async getFilteredMotions(category) {
-      this.$router.push({ name: 'Home', params: {category: [this.categoriesDictionary[category], category ] }})
+        this.$router.push({ name: 'Home', params: {category: [this.categoriesDictionary[category], category ] }})
       }
     },
     removeFilter () {
@@ -50,7 +49,6 @@
       categoryArray.forEach(category => {
         this.categoriesDictionary[category.id] = category.value
       });
-
     }
   }
 

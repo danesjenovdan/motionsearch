@@ -23,7 +23,6 @@
                 <textarea rows="3" cols="20" name="comment" id="comment"  placeholder="Write your comment here!" form="usrform"/>
                   <button class="textAreaButton" v-on:click="addUsedWhere(id)">Submit</button>
               </div>
-              <p v-for="el in usedWhere" :key="el">{{el}}</p>
               <div class="commentContainer" v-for="comment in comments" :key="comment._id">
                 <i><p>{{comment.user.username}} {{comment.created_at?.split('T')[0]}}</p></i>
                 <p>{{comment.text}}</p>
@@ -68,14 +67,9 @@
       async addUsedWhere(id) {
         try {
           const response = await this.$store.dispatch('setComment', {text: comment.value, id})
-        } catch (error) {
-        }
+        } catch (error) {}
         this.comments = await this.$store.dispatch('getComments', {id: id})
-
       },
-      removeUsedWhere: (index) => {
-        usedWhere.splice(index, 1)
-      }
     },
     async created() {
       this.isAuth = await this.$store.dispatch('isAuth')

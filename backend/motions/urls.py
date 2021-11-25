@@ -2,7 +2,7 @@ from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 from motions.views import MotionViewSet, MotionCategoryViewSet, MotionDifficultyViewSet, DebateFormatViewSet, \
     MotionAgeRangeViewSet, MotionTypeViewSet, MotionTrainingFocusViewSet, MotionImproPrepViewSet, MotionInfoTextViewSet, \
-    MotionLinkViewSet, MotionCommentViewSet, MotionWhereUsedViewSet, MotionVoteViewSet, MotionRandomViewSet, MotionKeywordsViewSet
+    MotionLinkViewSet, MotionCommentViewSet, MotionWhereUsedViewSet, MotionVoteViewSet, MotionRandomViewSet, OneRandomMotionViewSet, MotionKeywordsViewSet
 
 app_name = 'motions'
 
@@ -19,6 +19,7 @@ router.register(r'info-text', MotionInfoTextViewSet, basename='MotionInfoText')
 router.register(r'where-used', MotionWhereUsedViewSet, basename='MotionWhereUsedText')
 router.register(r'links', MotionLinkViewSet, basename='MotionLink')
 router.register(r'random', MotionRandomViewSet, basename='RandomMotion')
+router.register(r'random-motion', OneRandomMotionViewSet, basename='OneRandomMotion')
 router.register(r'', MotionViewSet, basename='Motion')
 
 urlpatterns = [
