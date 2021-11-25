@@ -15,7 +15,7 @@ from motions.models import MotionCategory, MotionDifficulty, DebateFormat, Motio
 from motions.serializers import MotionCategorySerializer, MotionDifficultySerializer, DebateFormatSerializer, \
     MotionAgeRangeSerializer, MotionTypeSerializer, MotionTrainingFocusSerializer, \
     MotionImproPrepSerializer, MotionWhereUsedSerializer, MotionInfoTextSerializer, MotionLinkSerializer, \
-    MotionCommentSerializer, MotionDetailedSerializer, MotionSerializer, MotionVoteSerializer, MotionKeywordsSerializer
+    MotionCommentSerializer, MotionDetailedSerializer, MotionSerializer, MotionVoteSerializer, MotionKeywordsSerializer, OneRandomMotionSerializer
 
 from users.models import User
 
@@ -86,6 +86,7 @@ class MotionFilterSet(FilterSet):
     class Meta:
         model = Motion
         fields = ('id', 'topic', 'difficulties', 'age_range', 'impro_prep', 'debate_formats', 'type', 'training_focus', 'category')
+
 class MotionCategoryViewSet(viewsets.ModelViewSet):
     queryset = MotionCategory.objects.all().order_by('value')
     serializer_class = MotionCategorySerializer
@@ -93,6 +94,7 @@ class MotionCategoryViewSet(viewsets.ModelViewSet):
     filter_class = MotionCategoryFilterSet
     filter_fields = ('value','id')
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+    pagination_class = None
 
 class MotionKeywordsViewSet(viewsets.ModelViewSet):
     queryset = MotionKeywords.objects.all().order_by('value')
@@ -107,37 +109,42 @@ class MotionDifficultyViewSet(viewsets.ModelViewSet):
     queryset = MotionDifficulty.objects.all().order_by('value')
     serializer_class = MotionDifficultySerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
-
+    pagination_class = None
 
 
 class DebateFormatViewSet(viewsets.ModelViewSet):
     queryset = DebateFormat.objects.all().order_by('value')
     serializer_class = DebateFormatSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    pagination_class = None
 
 
 class MotionAgeRangeViewSet(viewsets.ModelViewSet):
     queryset = MotionAgeRange.objects.all().order_by('value')
     serializer_class = MotionAgeRangeSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    pagination_class = None
 
 
 class MotionTypeViewSet(viewsets.ModelViewSet):
     queryset = MotionType.objects.all().order_by('value')
     serializer_class = MotionTypeSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    pagination_class = None
 
 
 class MotionTrainingFocusViewSet(viewsets.ModelViewSet):
     queryset = MotionTrainingFocus.objects.all().order_by('value')
     serializer_class = MotionTrainingFocusSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    pagination_class = None
 
 
 class MotionImproPrepViewSet(viewsets.ModelViewSet):
     queryset = MotionImproPrep.objects.all().order_by('value')
     serializer_class = MotionImproPrepSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly,]
+    pagination_class = None
 
 
 class MotionWhereUsedViewSet(viewsets.ModelViewSet):
@@ -171,7 +178,7 @@ class MotionCommentViewSet(viewsets.ModelViewSet):
     serializer_class = MotionCommentSerializer
     lookup_field = 'motion_pk'
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
-
+    
     def retrieve(self, request, *args, **kwargs):
         motion = Motion.objects.get(pk=kwargs.get('motion_pk', None))
         q = self.queryset.filter(motion=motion)
@@ -187,7 +194,7 @@ class MotionVoteViewSet(viewsets.ModelViewSet):
     serializer_class = MotionVoteSerializer
     lookup_field = 'motion_pk'
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
-
+    
     def retrieve(self, request, *args, **kwargs):
         motion = Motion.objects.get(pk=kwargs.get('motion_pk', None))
         q = self.queryset.filter(motion=motion)
@@ -228,9 +235,13 @@ class MotionRandomViewSet(viewsets.ModelViewSet):
     queryset = Motion.objects.all().order_by('?')
     serializer_class = MotionSerializer  # for basic info - topic and category
     serializer_detailed_class = MotionDetailedSerializer  # for detailed info - all Motion model fields
+    filter_backends = (DjangoFilterBackend, OrderingFilter, )
+    filter_class = MotionFilterSet
+    filter_fields = ('id', 'topic', 'difficulties', 'age_range', 'impro_prep', 'debate_formats', 'type', 'training_focus', 'category')
 
     def get_serializer_class(self):
         return super(MotionRandomViewSet, self).get_serializer_class()
+        
 class MotionViewSet(viewsets.ModelViewSet):
     queryset = Motion.objects.all()
     serializer_class = MotionSerializer  # for basic info - topic and category
@@ -239,7 +250,7 @@ class MotionViewSet(viewsets.ModelViewSet):
     filter_class = MotionFilterSet
     filter_fields = ('id', 'topic', 'difficulties', 'age_range', 'impro_prep', 'debate_formats', 'type', 'training_focus', 'category')
     ordering_fields = ('votes', 'created_at')
-
+    
     def get_serializer_class(self):
         if self.request.query_params.get('detailed', False):  # arg for detailed motion info
             return self.serializer_detailed_class
@@ -319,3 +330,13 @@ class MotionViewSet(viewsets.ModelViewSet):
 
         data = self.get_serializer(instance).data
         return Response(data, status=status.HTTP_200_OK, headers=headers)
+
+class OneRandomMotionViewSet(viewsets.ModelViewSet):
+    queryset = Motion.objects.all().order_by('?')
+    serializer_class = OneRandomMotionSerializer
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = MotionFilterSet
+    filter_fields = ('id', 'topic', 'difficulties', 'age_range', 'impro_prep', 'debate_formats', 'type', 'training_focus', 'category')
+
+    def get_serializer_class(self):
+        return super(OneRandomMotionViewSet, self).get_serializer_class()

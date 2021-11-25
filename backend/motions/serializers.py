@@ -103,6 +103,12 @@ class MotionSerializer(serializers.ModelSerializer):
         read_only_fields = ['category', "info_text", "where_used", "links", "keywords"]
 
 
+class OneRandomMotionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Motion
+        fields = ['id']
+
+
 class MotionDetailedSerializer(serializers.ModelSerializer):
     category = MotionCategorySerializer(many=True)
     keywords = MotionKeywordsSerializer(many=True)

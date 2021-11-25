@@ -45,6 +45,9 @@ export const getters = {
   getFilters (state) {
     return state.filters
   },
+  getFilterCount (state) {
+    return state.filterCount
+  }
 }
 
 export const mutations = {
@@ -59,6 +62,21 @@ export const mutations = {
   },
   motion_length (state, count) {
     state.motion_length = count;
+  },
+  addFilter (state, payload) {
+    state.filters[payload.filterName] = payload.filterValue;
+  },
+  removeFilter (state, payload) {
+    delete state.filters[payload.filterName];
+  },
+  clearFilters (state) {
+    state.filters = {};
+  },
+  incrementFilterCount (state) {
+    state.filterCount++;
+  },
+  resetFilterCount (state) {
+    state.filterCount = 0;
   }
 }
 
@@ -293,20 +311,20 @@ export const actions = {
       return error
     }
   },
-  async getMyFavorites ({ getters, commit }, payload) {
-    try {
-      const filters = mapFilters(getters.getFilters)
-      const result = await fetch(`${api}/api/v1/users/me/favorites?page=${payload.page}&${filters}`, {
-          method: 'get',
-          headers: {
-            'content-type': 'application/json'
-          }
-        })
-      return await result.json();
-    } catch (error) {
-      return error
-    }
-  },
+  // async getMyFavorites ({ getters, commit }, payload) {
+  //   try {
+  //     const filters = mapFilters(getters.getFilters)
+  //     const result = await fetch(`${api}/api/v1/users/me/favorites?page=${payload.page}&${filters}`, {
+  //         method: 'get',
+  //         headers: {
+  //           'content-type': 'application/json'
+  //         }
+  //       })
+  //     return await result.json();
+  //   } catch (error) {
+  //     return error
+  //   }
+  // },
   async getMotion (context, payload) {
     try {
       const result = await fetch(`${api}/api/v1/motions/${payload.id}`, {
@@ -316,6 +334,24 @@ export const actions = {
           }
         })
       const body = await result.json(); // .json() is asynchronous and therefore must be awaited
+      return body;
+    } catch (error) {
+      return error
+    }
+  },
+  async getRandomMotion ({getters}) {
+    try {
+      const filters = mapFilters(getters.getFilters)
+      const result = await fetch(`${api}/api/v1/motions/random-motion?${filters}`, {
+          method: 'get',
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+      const body = await result.json(); // .json() is asynchronous and therefore must be awaited
+      if (body.results.length > 0) {
+        return body.results[0].id
+      }
       return body;
     } catch (error) {
       return error
@@ -566,27 +602,18 @@ export const actions = {
     let filters = ''
     if (payload.filters) filters = mapFilters(payload.filters)
     try {
-      let next = `${api}/api/v1/motions/${payload.type}?page=1&${filters}`;
-      let results = []; 
-      while (next) {
-        const result = await fetch(next, {
-            method: 'get',
-            headers: {
-              'content-type': 'application/json'
-            }
-          })
-        
-        const body = await result.json();
-        next = body.next;
-        next = next?.includes('http://') ? next.replace('http://', 'https://') : next
-        results = [...results, ...body.results];
-      }
-      return results;
+      const result = await fetch(`${api}/api/v1/motions/${payload.type}?${filters}`, {
+        method: 'get',
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+      const body = await result.json();
+      return body;
     } catch (error) {
       console.log(error);
     }
   },
-
 }
 
 const store = {

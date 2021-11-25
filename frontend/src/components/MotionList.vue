@@ -33,11 +33,11 @@
         </div>
       </div>
       <ul class="tags">
-        <li class="tag" v-for="tag, index in tags" :key="tag.id">
+        <li class="tag" v-for="tag, index in tags" :key="tag.filter">
           <span class="tag-text">{{ tag.filterValue.value }} <img  v-on:click="removeFilter(tag.filterValue.value, tag.filter, index)" src="../assets/x.svg"/></span>
         </li>
       </ul>
-      <div v-if="motions.length > 0" class="motions-list" v-for="motion in motions" :key="motion.id">
+      <div class="motions-list" v-for="motion in motions" :key="motion.id">
         <div class="motion-text-container">
           <p class="motions-date">Added on {{motion.created_at.split('T')[0]}}</p>
          <router-link :to="'/motion/'+motion.id" class="motions-title">{{motion.topic}}</router-link>
@@ -46,7 +46,7 @@
           <voting :votes="motion.votes" :id="motion.id" :choice="motion.choice"/>
         </div>
       </div>
-    <div class="notFound" v-else>
+    <div class="notFound" v-if="motions.length === 0" >
       <img src="../assets/filters-not-found.svg"/>
       <span>No results found.<br>
         Please try different filters.
@@ -90,13 +90,24 @@
         dateSortAscend: false,
         qualitySortAscend: false,
         votes: [],
-        tags: [],
         motionType: 'getMotions'
       }
     },
     computed: {
       pagesNo: function() {
         return Math.ceil(this.motionsNo/10)
+      },
+      tags: function() {
+        let tags = []
+        Object.keys(this.$store.getters.getFilters).forEach(filter => {
+          if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.getters.getFilters[filter].forEach((filterValue) => {
+            tags.push({filterValue, filter})
+          })
+        })
+        return tags;
+      },
+      filterCount: function () {
+        return this.$store.getters.getFilterCount
       }
     },
     components: {
@@ -131,11 +142,11 @@
       toggleDateSort() {
         this.motionType = 'getMotions'
         this.dateSortAscend = !this.dateSortAscend
-        this.$store.state.motions.filters['ordering'] = this.dateSortAscend ? 'created_at' : '-created_at'
-        this.$store.state.motions.filterCount += 1
+        this.$store.commit('addFilter', { filterName: 'ordering', filterValue: this.dateSortAscend ? 'created_at' : '-created_at' })
+        this.$store.commit('incrementFilterCount');
       },
       async randomSort() {
-        this.$store.state.motions.filters = {} // clean filter if we have bad state or propfilters
+        this.$store.commit('removeFilter', { filterName: 'ordering'});
         this.isAuth = await this.$store.dispatch('isAuth')
         let response = []
         this.motionType = 'getRandomMotions'
@@ -143,33 +154,27 @@
         this.motions = this.propsMotions ? this.propsMotions : response.results
         this.motionsNo = response.count
         this.$store.state.motions.motion_length = this.motionsNo;
-        await this.mapFiltersToTags()
+        // await this.mapFiltersToTags()
         await this.getUserVotes()
       },
       removeFilter(filter, type, index) {
         this.tags.splice(index, 1)
-        this.$store.state.motions.filters[type] = this.$store.state.motions.filters[type].filter((obj) => obj.value !== filter);
-        this.$store.state.motions.filterCount += 1
+        const filtered = this.$store.getters.getFilters[type].filter((obj) => obj.value !== filter)
+        this.$store.commit('addFilter', { filterName: type, filterValue: filtered })
+        this.$store.commit('incrementFilterCount');
+
       },
       toggleQualitySort() {
         this.motionType = 'getMotions'
         this.qualitySortAscend = !this.qualitySortAscend
-        this.$store.state.motions.filters['ordering'] = this.qualitySortAscend ? 'votes' : '-votes'
-        this.$store.state.motions.filterCount += 1
-      },
-      mapFiltersToTags() {
-        this.tags = []
-        Object.keys(this.$store.state.motions.filters).forEach(filter => {
-          if(filter !== 'keywordFilter' && filter !== 'ordering') this.$store.state.motions.filters[filter].forEach((filterValue) => {
-            this.tags.push({filterValue, filter})
-          })
-        })
+        this.$store.commit('addFilter', { filterName: 'ordering', filterValue: this.qualitySortAscend ? 'votes' : '-votes' })
+        this.$store.commit('incrementFilterCount');
       }
     },
     watch: {
-      '$store.state.motions.filterCount': async function() {
-        await this.mapFiltersToTags()
-        const response = await this.$store.dispatch(this.motionType, {page: 1, filters: this.$store.state.motions.filters})
+      filterCount: async function() {
+        // await this.mapFiltersToTags()
+        const response = await this.$store.dispatch(this.motionType, {page: 1, filters: this.$store.getters.getFilters})
         this.motions = response.results;
         this.motionsNo = response.count;
         this.$store.state.motions.motion_length = this.motionsNo;
@@ -177,17 +182,17 @@
       }
     },
     async created() {
-      this.$store.state.motions.filters = {} // clean filter if we have bad state or propfilters
-      if(this.category ) { 
-        this.$store.state.motions.filters.categoryFilter = [{id: this.category[1], value: this.category[0]}];
-        }
+      this.$store.commit('clearFilters')
+      if (this.category) { 
+        this.$store.commit('addFilter', { filterName: 'categoryFilter', filterValue: [{id: this.category[1], value: this.category[0]}]})
+      }
       this.isAuth = await this.$store.dispatch('isAuth')
       let response = []
       if (!this.propsMotions) response = await this.$store.dispatch(this.motionType, {page: 1})
       this.motions = this.propsMotions ? this.propsMotions : response.results
       this.motionsNo = response.count
       this.$store.state.motions.motion_length = this.motionsNo;
-      await this.mapFiltersToTags()
+      // await this.mapFiltersToTags()
       await this.getUserVotes()
     }
   }
