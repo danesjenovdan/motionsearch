@@ -49,6 +49,7 @@ metadata:
     # nginx.ingress.kubernetes.io/configuration-snippet: |
     #   try_files $uri $uri/ /index.html;
 spec:
+  ingressClassName: nginx
   tls:
     - hosts:
         - motion-search-frontend.lb.djnd.si
