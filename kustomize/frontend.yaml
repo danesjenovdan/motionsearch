@@ -46,9 +46,20 @@ spec:
   tls:
     - hosts:
         - motion-search-frontend.lb.djnd.si
+        - motionbase.idebate.net
       secretName: motion-search-frontend-tls
   rules:
     - host: motion-search-frontend.lb.djnd.si
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: motion-search-frontend
+                port:
+                  number: 80
+    - host: motionbase.idebate.net
       http:
         paths:
           - path: /
